@@ -1,1 +1,26 @@
-theme: jekyll-theme-midnight
+# Dependencies
+markdown:         redcarpet
+highlighter:      pygments
+
+# Permalinks
+permalink:        pretty
+future: true
+
+# Setup
+title:            Starcube Labs
+tagline:          'A Jekyll theme'
+description:      'A gamedev blog for dinguses to share their experiments and experiences.'
+url:              "http://starcubelabs.github.io"
+baseurl:          ""
+
+author:
+  name:           'Mark Otto'
+  url:            https://twitter.com/mdo
+
+paginate:         5
+
+# Custom vars
+version:          2.1.0
+
+github:
+  repo:           https://github.com/starcubelabs/starcubelabs.github.io
