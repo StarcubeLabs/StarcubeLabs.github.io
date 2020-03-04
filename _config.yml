@@ -1,26 +1,34 @@
-# Dependencies
-markdown:         redcarpet
-highlighter:      pygments
+# Profile information
+name: Starcube Labs
+title: Starcube Labs - Gamedev Blog
+description: > # this means to ignore newlines until "baseurl:"
+  A gamedev blog for dinguses to share their experiments and experiences.
+permalink: ':title/'
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "https://starcubelabs.github.io/" # the base hostname & protocol for your site, e.g. http://example.com
 
-# Permalinks
-permalink:        pretty
-future: true
+# Social
+facebook: #Add your Facebook
+twitter: #Add your Twitter
+google-plus: #Add your Google+
+github: #Add your Github
 
-# Setup
-title:            Starcube Labs
-tagline:          'A Jekyll theme'
-description:      'A gamedev blog for dinguses to share their experiments and experiences.'
-url:              "http://starcubelabs.github.io"
-baseurl:          ""
+# Contact form
+email: #your-email@domain.com
 
-author:
-  name:           'Mark Otto'
-  url:            https://twitter.com/mdo
+# Comments
+discus-identifier: # Add your Disqus identifier
 
-paginate:         5
+# Paginate
+paginate: 5
+paginate_path: /page:num/
 
-# Custom vars
-version:          2.1.0
-
-github:
-  repo:           https://github.com/starcubelabs/starcubelabs.github.io
+# Build settings
+markdown: kramdown
+gems:
+  - jekyll-feed
+  - jekyll-paginate
+exclude:
+  - Gemfile
+  - Gemfile.lock
+include: [_pages]

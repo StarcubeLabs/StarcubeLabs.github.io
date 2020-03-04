@@ -1,36 +1,20 @@
-<div class="sidebar">
-  <div class="container sidebar-sticky">
-    <div class="sidebar-about">
-      <h1>
-        <a href="{{ site.baseurl }}">
-          {{ site.title }}
-        </a>
-      </h1>
-      <p class="lead">{{ site.description }}</p>
+<aside class="sidebar">
+
+  <div class="sidebar-container">
+    <div class="sidebar-logo">
+      <a href="{{site.baseurl}}/" class="logo">{% if site.name %}{{site.name}}{% else %}Fresh{% endif %}</a>
     </div>
 
-    <nav class="sidebar-nav">
-      <a class="sidebar-nav-item{% if page.url == site.baseurl %} active{% endif %}" href="{{ site.baseurl }}">Home</a>
+    <menu class="sidebar-menu">
+      <li class="menu-items"><a class="menu-links" href="{{site.baseurl}}/">Home</a></li>
+      <li class="menu-items"><a class="menu-links" href="{{site.baseurl}}/about/">About</a></li>
+      <li class="menu-items"><a class="menu-links" href="{{site.baseurl}}/archive/">Archive</a></li>
+    </menu>
 
-      {% comment %}
-        The code below dynamically generates a sidebar nav of pages with
-        `layout: page` in the front-matter. See readme for usage.
-      {% endcomment %}
+    <div class="sidebar-social">
+      <!-- <li class="social-items"><a href="https://twitter.com/{{site.twitter}}" class="social-links"><i class="social-icons fa fa-twitter" aria-hidden="true"></i></a></li> -->
+      <li class="social-items"><a href="https://github.com/{{site.github}}" class="social-links"><i class="social-icons fa fa-github" aria-hidden="true"></i></a></li>
+    </div>
 
-      {% assign pages_list = site.pages %}
-      {% for node in pages_list %}
-        {% if node.title != null %}
-          {% if node.layout == "page" %}
-            <a class="sidebar-nav-item{% if page.url == node.url %} active{% endif %}" href="{{ node.url }}">{{ node.title }}</a>
-          {% endif %}
-        {% endif %}
-      {% endfor %}
-
-      <a class="sidebar-nav-item" href="{{ site.github.repo }}/archive/v{{ site.version }}.zip">Download</a>
-      <a class="sidebar-nav-item" href="{{ site.github.repo }}">GitHub project</a>
-      <span class="sidebar-nav-item">Currently v{{ site.version }}</span>
-    </nav>
-
-    <p>&copy; {{ site.time | date: '%Y' }}. All rights reserved.</p>
   </div>
-</div>
+</aside>
