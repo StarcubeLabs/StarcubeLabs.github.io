@@ -20,7 +20,7 @@ Here are some quick facts about us!
 
 * So, why a blog then?
 
-  * Well, so we have a place to put discoveries and pet projects! A Discord starred list  is not an ideal storage spot.
+  * Well, so we have a place to put discoveries and pet projects! A Discord starred list is not an ideal storage spot.
 
 * Game Development? Have you guys ever even made games before?
 
