@@ -4,6 +4,8 @@ title:  "Welcome to Starcube Labs!"
 date:   2020-03-10 00:00:00
 img: logos/StarCubeHeaderWide.png
 description: Learn a bit about us!
+author: Admin
+tags: [Administrative]
 ---
 
 # Welcome to Starcube Labs!
