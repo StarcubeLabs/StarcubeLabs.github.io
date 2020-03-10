@@ -1013,6 +1013,9 @@ img.post-image, img.page-img {
   margin: 0 auto;
   display: block;
 }
+.half-width-image {
+  width: 50%;
+}
 
 @media screen and (max-width: 960px) {
   .sidebar {
