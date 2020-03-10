@@ -1015,11 +1015,11 @@ img.post-image, img.page-img {
 }
 
 .half-width-image {
-  width: 50%;
+  max-width: 50%;
 }
 
 .fifth-width-image {
-  width: 20%;
+  max-width: 20%;
 }
 
 @media screen and (max-width: 960px) {
