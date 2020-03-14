@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "How to use Unity's Preprocess/Postprocess scripts"
-date:   2020-14-10 00:00:00
+date:   2020-03-10 00:00:00
 img: logos/StarCubeHeaderWide.png
 description: Are you tired of making the same changes to imported files in Unity? Here's how to automate those workflows.
 author: Clock
