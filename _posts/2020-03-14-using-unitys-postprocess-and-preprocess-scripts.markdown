@@ -36,7 +36,7 @@ Ordinarily Unity will import .fbx animations with the following naming scheme: "
 
 For the game I am currently working on, I use the following Unity AssetPostprocessor editor class to rename animation clips. By placing the below class in the 'editors' directory as a child of my project's Unity assets directory, I was able to force imported animations to remove the "<model>|" prefix from animations. Now all of the animations imported maintain their original names.
 
-```
+```csharp
 public class AssetImportPostProcess : AssetPostprocessor
 {
     
