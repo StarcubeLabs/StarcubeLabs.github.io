@@ -6,7 +6,6 @@ img: other-silly-questions/header2.png
 description: What to do when the Post Processing Stack isn't cooperating.
 author: Spex130
 tags: [Unity, Breakdown, Post Procesing Stack]
-published: true
 ---
 
 ### The Problem
