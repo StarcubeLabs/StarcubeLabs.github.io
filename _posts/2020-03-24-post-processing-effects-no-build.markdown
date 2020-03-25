@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Why aren't my scene's PPS effects in my build?" and other "Silly Questions"
+title:  "Where'd my Post Processing Stack effect go!?"
 date:   2020-03-24 00:00:00
 img: other-silly-questions/header2.png
 description: What to do when the Post Processing Stack isn't cooperating.
