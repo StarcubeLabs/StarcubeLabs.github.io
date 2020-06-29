@@ -35,9 +35,9 @@ As a side note, this article does not walk you through the process of how to cre
 Here is the inspector view of a material using this shader I’ve added.
 
 
-<img align="center" width="100" height="auto" style="display: block;  margin-left: auto;
+<img align="center" style="display: block;  margin-left: auto;
   margin-right: auto;
-  width: 50%;" src="/assets/img/tying-particles/image0.png">
+  width: 50%; height: auto;" src="/assets/img/tying-particles/image0.png">
 
 <div align="center" style="font-style:italic;">Example Inspector View</div>
 
@@ -128,37 +128,37 @@ Particle Systems pass data to shaders using something called _Custom Vertex Stre
 
 The first step that we have to do is to create a Particle System that has the options set to feed live data to a shader. To do so, we first need to create a new particle system, and then go down to the _Render_ section. Inside, you’ll find a checkbox to turn on _Custom Vertex Streams_.
 
-<img align="center" width="100" height="auto" style="display: block;  margin-left: auto;
+<img align="center" style="display: block;  margin-left: auto;
   margin-right: auto;
-  width: 50%;" src="/assets/img/tying-particles/image1.png">
+  width: 50%; height: auto;" src="/assets/img/tying-particles/image1.png">
 <div align="center" style="font-style:italic;" >Check this Custom Vertex Stream checkbox</div>
 
-<img align="center" width="100" height="auto" style="display: block;  margin-left: auto;
+<img align="center" style="display: block;  margin-left: auto;
   margin-right: auto;
-  width: 50%;" src="/assets/img/tying-particles/image2.png">
+  width: 50%; height: auto;" src="/assets/img/tying-particles/image2.png">
 <div align="center" style="font-style:italic;" >The default values found inside</div>
 
 These default values are pasted over the corresponding HLSL properties found inside the shader itself. And these aren’t the only values that can be pasted, by clicking on the Plus symbol at the bottom you can see anything from Particle Location to actual Pseudorandom values:
 
-<img align="center" width="100" height="auto" style="display: block;  margin-left: auto;
+<img align="center" style="display: block;  margin-left: auto;
   margin-right: auto;
-  width: 50%;" src="/assets/img/tying-particles/image3.png">
+  width: 50%;height: auto;" src="/assets/img/tying-particles/image3.png">
 <div align="center" style="font-style:italic;" >Examples of other things that can be used as Vertex Stream value</div>
 
 So, you’ll notice that there’s already a property in the default values that matches a property we have defined in our shader:
 
-<img align="center" width="100" height="auto" style="display: block;  margin-left: auto;
+<img align="center" style="display: block;  margin-left: auto;
   margin-right: auto;
-  width: 50%;" src="/assets/img/tying-particles/image4.png">
+  width: 50%;height: auto;" src="/assets/img/tying-particles/image4.png">
 
 What this means is that the _color_ value inside the shader itself is being _overwritten_ by the data being produced by the particle system. Why this is important is because _we can actually control color over the lifetime of a particle_. One key thing to remember about shaders is that at the end of the day, everything that is being passed through the shader is a number and can be used like one. Color values in shaders are passed as a number value from 0 to 1, which coincidentally is more or less the same range of values we are using on the *_DissolveAmount* attribute on our shader. So since we can pass in _Color Over Lifetime_ as a value from 0 to 1, we can replace *_DissolveAmount* with this Color Over Lifetime and get the same effect, but automated by the Particle System. Colors as a whole are passed in via RGBA format - you can use any of them, but I will personally be using the Alpha channel of the input color because the Unity UI separates its slider from the rest of the pack.
 
 <div align="center" style="font-style:italic;" >For this example in particular, we are using Color Over Lifetime - we alternatively could be using just Lifetime, but the first option allows us to control the timing and ease of the effect instead of just getting a rote linear output. Being able to control the ease is a crucial step in VFX feel. </div>
 
 This is how I have my _Color Over Lifetime_ values set:
-<img align="center" width="100" height="auto" style="display: block;  margin-left: auto;
+<img align="center" style="display: block;  margin-left: auto;
   margin-right: auto;
-  width: 50%;" src="/assets/img/tying-particles/image5.png">
+  width: 50%;height: auto;" src="/assets/img/tying-particles/image5.png">
 <div align="center" style="font-style:italic;" >The colors here don’t change, but I’ve set the alpha to fade over time</div>
 
 So now that we have this data being transmitted to our shader, we need to modify our shader to use the actual output. Let’s take a look at what logic we’ll need to change in our shader itself.
@@ -189,16 +189,16 @@ But the actual Clip logic requires that my slider go from 0 to 1, Not Visible to
 
 It’s actually pretty easy to set! Simply move down to rendering section down at the bottom of the Particle inspector and place a material using our new shader into the following spot:
 
-<img align="center" width="100" height="auto" style="display: block;  margin-left: auto;
+<img align="center" style="display: block;  margin-left: auto;
   margin-right: auto;
-  width: 50%;" src="/assets/img/tying-particles/image6.png">
+  width: 50%;height: auto;" src="/assets/img/tying-particles/image6.png">
 <div align="center" style="font-style:italic;" >Place your material in the Render section’s Material slot</div>
 
 Now all of your particles will fade over time properly like with real dust puffs. To get the effect we get in the gif at the top of this article, you can use these settings for your particle system: 
 
-<img align="center" width="100" height="auto" style="display: block;  margin-left: auto;
+<img align="center" style="display: block;  margin-left: auto;
   margin-right: auto;
-  width: 50%;" src="/assets/img/tying-particles/image7.png">
+  width: 50%;height: auto;" src="/assets/img/tying-particles/image7.png">
 <div align="center" style="font-style:italic;" >Place your material in the Render section’s Material slot</div>
 
 And that’s it! You can take these same techniques and apply them to any other custom vertex stream that your particle system can output.
