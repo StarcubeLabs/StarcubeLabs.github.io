@@ -199,7 +199,7 @@ Now all of your particles will fade over time properly like with real dust puffs
 <img align="center" style="display: block;  margin-left: auto;
   margin-right: auto;
   width: 50%;height: auto;" src="/assets/img/tying-particles/image7.png">
-<div align="center" style="font-style:italic;" >Place your material in the Render section’s Material slot</div>
+<div align="center" style="font-style:italic;" >An example of some settings you can use for your particle system.</div>
 
 And that’s it! You can take these same techniques and apply them to any other custom vertex stream that your particle system can output.
 
