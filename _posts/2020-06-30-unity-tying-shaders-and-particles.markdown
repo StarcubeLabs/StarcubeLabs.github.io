@@ -144,6 +144,7 @@ What this means is that the _color_ value inside the shader itself is being _ove
 <div align="center" style="font-style:italic;" >For this example in particular, we are using Color Over Lifetime - we alternatively could be using just Lifetime, but the first option allows us to control the timing and ease of the effect instead of just getting a rote linear output. Being able to control the ease is a crucial step in VFX feel. </div>
 
 This is how I have my _Color Over Lifetime_ values set:
+<div align="center">(/assets/img/tying-particles/image5.png)</div>
 <div align="center" style="font-style:italic;" >The colors here don’t change, but I’ve set the alpha to fade over time</div>
 
 So now that we have this data being transmitted to our shader, we need to modify our shader to use the actual output. Let’s take a look at what logic we’ll need to change in our shader itself.
