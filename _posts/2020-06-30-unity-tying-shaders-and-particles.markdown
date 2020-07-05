@@ -41,7 +41,7 @@ Here is the inspector view of a material using this shader I’ve added.
 
 <div align="center" style="font-style:italic;">Example Inspector View</div>
 
-The basics of what we have here is that there is a Main Texture which dictates the look of the material, a Dissolve Texture to dictate how the texture dissolves, and a Slider that goes from 0 to 1.2. In this example, I’ve given the same dust cloud texture to both slots. If the Color Value of the alpha pixel on the Dissolve Texture is less than the Value float on our Slider, that pixel location on the Main Texture isn’t drawn. The higher the slider goes, the less pixels exist (and get drawn) that are greater than the Slider Value, and so we get a neat dissolve effect.
+The basics of what we have here is that there is a Main Texture which dictates the look of the material, a Dissolve Texture to dictate how the texture dissolves, and a Slider that goes from 0 to 1.2. In this example, I’ve given the same dust cloud texture to both slots. If the alpha component of the pixel taken from the Dissolve Texture is less than the Value float on our Slider, that pixel location on the Main Texture isn’t drawn. The higher the slider goes, the less pixels exist (and get drawn) that are greater than the Slider Value, and so we get a neat dissolve effect.
 
 Essentially, `if(MainTexture.rgb < DissolveTexture.alpha){DoNotDraw();}`
 
