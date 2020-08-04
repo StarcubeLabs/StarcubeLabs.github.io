@@ -1,26 +1,23 @@
-Fresh is a free blog template for Jekyll
+<img align="center" width="100" height="auto" style="display: block;  margin-left: auto;
+  margin-right: auto;
+  width: 25%;" src="assets/img/logos/StarcubeLabsLogo.png">
+
+<div align="center" style="font-style:italic;" >The Starcube Labs Blog</div>
 =============================
+# Writing Guide & Tips
 
-![](assets/img/fresh.jpg)
+Starcube Labs' blog is dedicated to tips, tricks, and experiences having to do with video game development. The end goal is to be a repository of neat development processes we've all come across as we make our games! The rules are honestly pretty lax, generally any on-topic article can be posted. 
 
-# Demo
+That said, here are some quick points about what should and shouldn't be on the blog:
+  - Keep it Professional:
+    - <i>Not to say that you need to keep it formal,</i> be as informal as you like! Just make sure you'd be okay showing it to your boss.
+    - This means no NSFW content, and keeping profanity to a bare minimum, please.
+  - Keep it Respectful:
+    - This blog is for helping folks out! So broadly speaking, try not to bring anybody down or keep anybody out, yeah?
+  - Keep it On-Topic:
+    - This bears repeating, this is a blog about video game development processes. The stuff we talk about here generally leans towards being fairly practical topics. 
 
-![GIF](assets/img/fresh.gif)
+# Tools of the Trade
 
-View this jekyll theme in action [here](http://artemsheludko.pw/fresh/)
-
-Integrations
-  - [Google Fonts](https://fonts.google.com/)
-  - [Disqus](https://disqus.com/)
-  - [Font Awesome](http://fontawesome.io/)
-  - Social media links
-
-# How to Use
-
-  For those unfamiliar with how Jekyll works, check out [jekyllrb.com](https://jekyllrb.com/) for all the details,
-  or read up on just the basics of [front matter](https://jekyllrb.com/docs/frontmatter/), [writing posts](https://jekyllrb.com/docs/posts/),
-  and [creating pages](https://jekyllrb.com/docs/pages/).
-
-## License
-
-GNU General Public License v3.0
+- Articles can be written by pulling down the Github Repo and adding a [Markdown](https://www.markdownguide.org/) file written in your Editor of choice. A fantastic example would be [VSCode](https://code.visualstudio.com/) (which comes with a previewer), but if you know what you're doing you could do just fine in Notepad. 
+- Alternatively you can also add and edit your Markdown files directly in the Github Editor online.
