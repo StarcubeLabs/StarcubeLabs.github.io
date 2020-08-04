@@ -1,6 +1,6 @@
-<img align="center" width="100" height="auto" style="display: block;  margin-left: auto;
+<center><img align="center" width="100" height="auto" style="display: block;  margin-left: auto;
   margin-right: auto;
-  width: 25%;" src="assets/img/logos/StarcubeLabsLogo.png">
+  width: 25%;" src="assets/img/logos/StarcubeLabsLogo.png"></center>
 
 <div align="center" style="font-style:italic;" >The Starcube Labs Blog</div>
 =============================
