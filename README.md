@@ -1,9 +1,11 @@
-<center><img align="center" width="100" height="auto" style="display: block;  margin-left: auto;
-  margin-right: auto;
-  width: 25%;" src="assets/img/logos/StarcubeLabsLogo.png"></center>
+<center><img align="center" width="25%" height="auto" style="display: block;  margin-left: auto;
+  margin-right: auto;" src="assets/img/logos/StarcubeLabsLogo.png"></center>
 
-<div align="center" style="font-style:italic;" >The Starcube Labs Blog</div>
+
+# The Starcube Labs Blog
+
 =============================
+
 # Writing Guide & Tips
 
 Starcube Labs' blog is dedicated to tips, tricks, and experiences having to do with video game development. The end goal is to be a repository of neat development processes we've all come across as we make our games! The rules are honestly pretty lax, generally any on-topic article can be posted. 
