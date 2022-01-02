@@ -19,8 +19,6 @@ This article takes a peek into what HLSL shaders in Unity3D are from a coder's p
 
 ### P1-A: Wait, what do renders pass anyways?
 
-<br>
-
 So, the first thing to learn about shaders is what shaders can do. There are _two types of information_ that (basic) Unity shaders can manipulate - that being the actual model data (the **Vertices**) and the resulting pixels from rendering that model data (the pixel **Fragments**). Shaders manipulate this information in two discrete steps, better known as **Render Passes**.
 
 * The **Vert** pass is run **first**, and can:
@@ -57,8 +55,6 @@ But wait? Doesn't that sound like a lot of data to be brute forcing through in a
 
 ### P1-C: Beware the FOR Loops
 
-<br>
-
 What's important to understand here is that *these FOR Loops are inescapable*. You can't manipulate the data before it goes into the loop, and on a basic level you can't reach other data points in the array other than the one you are handed. It's like a library check-out system. Your pass is handed a data block from library. While you have it you can do WHATEVER you want to it, but once you're done it needs to go back in the library before you're given the next data block.
 
 Over in C# Land we're pretty used to Object Oriented Programming where we can access the entire swath of data, or at least relevant sections of it (like asking for a certain section of vertices to modify for example). Over here in Shader World we can't do that, so the key to working with these two FOR Loops is to create code that can work look at our one data block and depending on what we get, execute different logic.
@@ -67,8 +63,14 @@ Over in C# Land we're pretty used to Object Oriented Programming where we can ac
 
 ### P1-D: It's all 0s and 1s
 
-<br>
-
 The last tidbit I'll leave over here in this section is a note regarding how data is actually stored in Shaders. Sometimes they're stored in arrays, sometimes they're not, but know this: **When it comes to the Frag pass, every relevant data block provided to you by the system that you're going to be manipulating in some way is going to be a float between 0 and 1**. 
 
 And when I say everything, I mean EVERYTHING. Pixels are handed to you in a **Float4** format, which is an array of Size 4 where each entry reads out the RGBA values. Literally `[R, G, B, A]`. If you can start thinking of colors and textures as *just numbers*, some of the funky shader math magic you can do here starts to make some sense. You don't have to internalize this just yet, just keep it in mind: `Colors = 4 floats in a trenchcoat`. We're going to be looking at some concrete examples later.
+
+<br>
+
+### Epilogue
+
+This is the first article in a series - we're going to be looking at the individual sections of a working shader next, so stay tuned!
+
+- Spex from Team Starcube
