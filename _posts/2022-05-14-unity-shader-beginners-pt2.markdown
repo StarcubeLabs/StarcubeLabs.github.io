@@ -102,9 +102,9 @@ To me, HLSL is easier to understand if you think of it kind of like a potion bre
 <br>
 <br>
 
-### P2-A: **Input Variable Declaration**
+### P2-A: <span style="background-color:blue;"> **Input Variable Declaration**</span>
 
-<span style="display:table; background-color:blue;"> 
+
           
     Shader "StarcubeLabs/BasicVertFrag"
     {
@@ -114,7 +114,7 @@ To me, HLSL is easier to understand if you think of it kind of like a potion bre
         }
   
 
-</span>
+
 
 <br>
 The first part of writing a shader is declaring what parts you want to be dragging in or handling from the Unity side. This includes everything from Textures, Colors, pure float or int Values, or even Ranges between two numbers. For our example, this declaration gives us one texture to be used in the material inspector:
@@ -132,17 +132,15 @@ You can declare as many things as you want here, but be aware that *simply decla
 
 <br>
 
-### P2-B: **Tag Attribute Declaration**
+### P2-B: <span style="background-color:gray;">  **Tag Attribute Declaration** </span>
 
-<span style="display:table; background-color:gray;"> 
+
     
     SubShader
     {
         Tags { "RenderType"="Opaque" }
         LOD 100
 
-
-</span>
 
 <br>
 
