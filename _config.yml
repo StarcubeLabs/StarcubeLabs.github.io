@@ -2,7 +2,7 @@
 name: Starcube Labs
 title: Starcube Labs - Gamedev Blog
 description: > # this means to ignore newlines until "baseurl:"
-  A gamedev blog for dinguses to share their experiments and experiences.
+  A gamedev blog for hobbyists to share their experiments and experiences.
 permalink: ':title/'
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://starcubelabs.github.io/" # the base hostname & protocol for your site, e.g. http://example.com
@@ -11,7 +11,7 @@ url: "https://starcubelabs.github.io/" # the base hostname & protocol for your s
 facebook: #Add your Facebook
 twitter: #Add your Twitter
 google-plus: #Add your Google+
-github: #Add your Github
+github: "https://github.com/StarcubeLabs/StarcubeLabs.github.io"
 
 # Contact form
 email: #your-email@domain.com
