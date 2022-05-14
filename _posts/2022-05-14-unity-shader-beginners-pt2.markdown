@@ -17,10 +17,6 @@ tags: [Unity, Breakdown, Shaders]
 
 Before we jump in, let's me make sure we're all on the same page. For this article we'll be using the [following shader](https://github.com/StarcubeLabs/StarcubeLabs.github.io/blob/30d964ba4078f34797c627230a81648608898b28/assets/examplecode/BasicVertFrag.shader):
 
-<details>
-<summary><i>Expandable: BasicVertFrag.shader</i></summary>
-
-
 
     Shader "StarcubeLabs/BasicVertFrag"
     {
@@ -81,9 +77,6 @@ Before we jump in, let's me make sure we're all on the same page. For this artic
         }
     }
 
-
-
-</details>
 
 <br>
 
