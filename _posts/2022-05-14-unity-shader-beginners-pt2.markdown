@@ -95,7 +95,7 @@ To me, HLSL is easier to understand if you think of it kind of like a potion bre
 <br>
 <br>
 
-### P2-A: <span style="background-color:blue;"> **Input Variable Declaration**</span>
+### P2-A: <span style="color:white; background-color:blue;"> **Input Variable Declaration**</span>
 
 
           
@@ -125,7 +125,7 @@ You can declare as many things as you want here, but be aware that *simply decla
 
 <br>
 
-### P2-B: <span style="background-color:gray;">  **Tag Attribute Declaration** </span>
+### P2-B: <span style="color:white; background-color:gray;">  **Tag Attribute Declaration** </span>
 
 
     
@@ -195,9 +195,9 @@ Lastly, we have our `#include` directives, which simply allow us to import the c
 
 <br>
 
-### P2-D: **Pragma Attribute Manifestation**
+### P2-D: <span style="color:white;background-color:brown;"> **Pragma Attribute Manifestation**</span>
 
-<span style="display:table; background-color:brown;"> 
+
 
     struct appdata
     {
@@ -212,7 +212,7 @@ Lastly, we have our `#include` directives, which simply allow us to import the c
         float4 vertex : SV_POSITION;
     };
 
-</span>
+
 
 <br>
 
@@ -238,14 +238,14 @@ You'll see this in action later, when we write the actual `vert()` and `frag()` 
 <br>
 
 
-### P2-E: **Input Variable Manifestation**
+### P2-E:<span style="color:shite; background-color:blue;">  **Input Variable Manifestation**</span>
 
-<span style="display:table; background-color:blue;"> 
+
 
     sampler2D _MainTex;
     float4 _MainTex_ST;
 
-</span>
+
 
 <br>
 
