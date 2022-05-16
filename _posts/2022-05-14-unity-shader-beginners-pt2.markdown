@@ -165,9 +165,9 @@ Tags work by ensuring that resources that shaders do not need are not allocated 
 
 <br>
 
-### P2-C: **Shader Attribute Declaration**
+### P2-C: <span style="color:white; background-color:brown;"> **Shader Attribute Declaration**</span>
 
-<span style="display:table; background-color:brown;"> 
+
 
     Pass
     {
@@ -179,7 +179,7 @@ Tags work by ensuring that resources that shaders do not need are not allocated 
 
         #include "UnityCG.cginc"
 
-</span>
+
 
 <br>
 
@@ -230,7 +230,7 @@ Down in the `v2f` struct, `vertex` has an `SV_POSITION` attribute - this means t
 
 One thing you'll notice is that there are **two structs**. The reason for this is that each Directive we need a struct. But there's more to it than that as well - if you'll recall from our [previous part](https://www.starcubelabs.com/unity-shader-beginners/) that *the Vert Pass runs before the Frag Pass and that data in the Frag Pass needs to come from the Vert pass*. *This section that we are looking at* is a key part of the process of passing the data between those passes. You'll notice that both `appdata` and `v2f` both contain a `uv` variable and a `vertex` variable. We set up our first struct `appdata` to work with the `vert` method, and within that `vert` method we are going to give the the data stored in `appdata` to a `v2f` object to be used in the `frag` method. That's right. `vertex` to `vertex`, `uv` to `uv`.
 
-`v2f` actually stands for `Vert To Frag` - it's an object specifically meant to bring data from the Vert pass to the Frag pass. (In this case, v2f can be replaced with literally any text but v2f is traditionally used as it is the most descriptive.)
+`v2f` actually stands for `Vert To Frag` - it's an struct specifically meant to bring data from the Vert pass to the Frag pass. (In this case, v2f can be replaced with literally any text but v2f is traditionally used as it is the most descriptive.)
 
 You'll see this in action later, when we write the actual `vert()` and `frag()` methods.
 
@@ -238,7 +238,7 @@ You'll see this in action later, when we write the actual `vert()` and `frag()` 
 <br>
 
 
-### P2-E:<span style="color:shite; background-color:blue;">  **Input Variable Manifestation**</span>
+### P2-E:<span style="color:white; background-color:blue;">  **Input Variable Manifestation**</span>
 
 
 
@@ -272,10 +272,10 @@ Once all of our inputs have been manifested here, they will be usable within the
 
 This is it. Where it all comes together. The color coding here is *purple*, because it involves every other part of the shader we've looked at so far.
 
-It works in two parts. The Vert method takes in any pre-calculated stuff we've set up for our first `appdata` struct, makes any geometry changes we want, and then passes that data to a `v2f` object that it returns. The Frag method takes in that `v2f` object that the Vert method returned, and does any calculations it needs before returning a `fixed4` color back to the Unity engine.
+It works in two parts. The Vert method takes in any pre-calculated stuff we've set up for our first `appdata` struct, makes any geometry changes we want, and then passes that data to a `v2f` struct that it returns. The Frag method takes in that `v2f` struct that the Vert method returned, and does any calculations it needs before returning a `fixed4` color back to the Unity engine.
 
-#### *The vert() Method*
-<span style="display:table; background-color:purple;"> 
+#### <span style="color:white;  background-color:purple;"> *The vert() Method*</span>
+
 
     v2f vert (appdata v)
     {
@@ -285,19 +285,19 @@ It works in two parts. The Vert method takes in any pre-calculated stuff we've s
         UNITY_TRANSFER_FOG(o,o.vertex);
         return o;
     }
-</span>
+
 
 <br>
 
-You can see here that our `vert` method is of return type `v2f`, and takes in an `appdata` struct that we call `v`. Inside the method, we make a new `v2f` object we call `o` - and then we set the `o` version of our variables to the `v` version of our variables, with some additional calculations. `o.vertex` is set to `v.vertex` while taking into account Clip Position, `o.uv` is set to a Texture Transform of `v.uv` with respect to the Main Texture, and `o`'s `fogCoord` (which is an included thing we get for declaring we're using fog in our earlier sections) is combined with all the precalculated data and `v.vertex`. Finally, `o` is returned to be picked up by the `frag` method later.
+You can see here that our `vert` method is of return type `v2f`, and takes in an `appdata` struct that we call `v`. Inside the method, we make a new `v2f` struct we call `o` - and then we set the `o` version of our variables to the `v` version of our variables, with some additional calculations. `o.vertex` is set to `v.vertex` while taking into account Clip Position, `o.uv` is set to a Texture Transform of `v.uv` with respect to the Main Texture, and `o`'s `fogCoord` (which is an included thing we get for declaring we're using fog in our earlier sections) is combined with all the precalculated data and `v.vertex`. Finally, `o` is returned to be picked up by the `frag` method later.
 
 This is the most basic `vert` method you can make, and pretty much every other `vert` you see will be in some way built on what you see here.
 
 <br>
 
-#### *The frag() Method*
+#### <span style="color:white;  background-color:purple;">*The frag() Method*</span>
 
-<span style="display:table; background-color:purple;"> 
+
 
     fixed4 frag (v2f i) : SV_Target
     {
@@ -308,11 +308,10 @@ This is the most basic `vert` method you can make, and pretty much every other `
         return col;
     }
 
-</span>
 
 <br>
 
-The `frag` method is the final step of the shader. We take the `v2f` object that our `vert` method prepared earlier, do some work with it, and then return a single pixel of type `fixed4`. Also, our method has the attribute of `SV_Target`, to make sure it complies with the Unity Camera Clip Position.
+The `frag` method is the final step of the shader. We take the `v2f` struct that our `vert` method prepared earlier, do some work with it, and then return a single pixel of type `fixed4`. Also, our method has the attribute of `SV_Target`, to make sure it complies with the Unity Camera Clip Position.
 
 For this method, it's very simple. We simply get the color of the pixel on the main texture at the current coordinates, apply the fog we got from the `vert` method to it, then return it.
 
