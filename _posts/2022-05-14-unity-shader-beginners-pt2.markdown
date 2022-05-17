@@ -98,14 +98,14 @@ To me, HLSL is easier to understand if you think of it kind of like a potion bre
 ### P2-A: <span style="color:white; background-color:blue;"> **Input Variable Declaration**</span>
 
 
-          
+```hlsl        
     Shader "StarcubeLabs/BasicVertFrag"
     {
     Properties
         {
         _MainTex ("Texture", 2D) = "white" {}
         }
-  
+```
 
 
 
@@ -128,12 +128,12 @@ You can declare as many things as you want here, but be aware that *simply decla
 ### P2-B: <span style="color:white; background-color:gray;">  **Tag Attribute Declaration** </span>
 
 
-    
+```hlsl
     SubShader
     {
         Tags { "RenderType"="Opaque" }
         LOD 100
-
+```
 
 <br>
 
@@ -165,7 +165,7 @@ Tags work by ensuring that resources that shaders do not need are not allocated 
 ### P2-C: <span style="color:white; background-color:brown;"> **Shader Attribute Declaration**</span>
 
 
-
+```hlsl
     Pass
     {
         CGPROGRAM
@@ -175,7 +175,7 @@ Tags work by ensuring that resources that shaders do not need are not allocated 
         #pragma multi_compile_fog
 
         #include "UnityCG.cginc"
-
+```
 
 
 <br>
@@ -195,7 +195,7 @@ Lastly, we have our `#include` directives, which simply allow us to import the c
 ### P2-D: <span style="color:white;background-color:brown;"> **Pragma Attribute Manifestation**</span>
 
 
-
+```hlsl
     struct appdata
     {
         float4 vertex : POSITION;
@@ -208,7 +208,7 @@ Lastly, we have our `#include` directives, which simply allow us to import the c
         UNITY_FOG_COORDS(1)
         float4 vertex : SV_POSITION;
     };
-
+```
 
 
 <br>
@@ -238,10 +238,10 @@ You'll see this in action later, when we write the actual `vert()` and `frag()` 
 ### P2-E:<span style="color:white; background-color:blue;">  **Input Variable Manifestation**</span>
 
 
-
+```hlsl
     sampler2D _MainTex;
     float4 _MainTex_ST;
-
+```
 
 
 <br>
@@ -273,7 +273,7 @@ It works in two parts. The Vert method takes in any pre-calculated stuff we've s
 
 #### <span style="color:white;  background-color:purple;"> *The vert() Method*</span>
 
-
+```hlsl
     v2f vert (appdata v)
     {
         v2f o;
@@ -282,7 +282,7 @@ It works in two parts. The Vert method takes in any pre-calculated stuff we've s
         UNITY_TRANSFER_FOG(o,o.vertex);
         return o;
     }
-
+```
 
 <br>
 
@@ -295,7 +295,7 @@ This is the most basic `vert` method you can make, and pretty much every other `
 #### <span style="color:white;  background-color:purple;">*The frag() Method*</span>
 
 
-
+```hlsl
     fixed4 frag (v2f i) : SV_Target
     {
         // sample the texture
@@ -304,7 +304,7 @@ This is the most basic `vert` method you can make, and pretty much every other `
         UNITY_APPLY_FOG(i.fogCoord, col);
         return col;
     }
-
+```
 
 <br>
 
