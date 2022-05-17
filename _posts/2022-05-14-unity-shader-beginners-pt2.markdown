@@ -17,7 +17,7 @@ tags: [Unity, Breakdown, Shaders]
 
 Before we jump in, let's me make sure we're all on the same page. For this article we'll be using the [following shader](https://github.com/StarcubeLabs/StarcubeLabs.github.io/blob/30d964ba4078f34797c627230a81648608898b28/assets/examplecode/BasicVertFrag.shader):
 
-
+```hlsl
     Shader "StarcubeLabs/BasicVertFrag"
     {
         Properties
@@ -76,7 +76,7 @@ Before we jump in, let's me make sure we're all on the same page. For this artic
             }
         }
     }
-
+```
 
 <br>
 
@@ -140,11 +140,8 @@ You can declare as many things as you want here, but be aware that *simply decla
 This section of the shader is kind of unique in that its function is to declare **how many resources your shader is going to use** as a whole via including descriptive **Tags** and other **Sub-Attributes**. Depending on what is declared here, the shader will be wholly capable or incapable of specific things. This example shader we are looking at is currently not tagged to be able to use Transparency or any alpha channel of any kind.
 
 If, for example, we wanted a shader that was capable for transparency, the Tag section would look like this:
-<details>
-<summary> <i>Example Transparent Tag Attribute Section</i> </summary>
 
-<span style="display:table; background-color:gray;">     
-
+```hlsl
     SubShader
     {
 			Tags { "RenderType" = "Transparent" "Queue" = "Transparent" }
@@ -153,9 +150,9 @@ If, for example, we wanted a shader that was capable for transparency, the Tag s
 			Blend SrcAlpha OneMinusSrcAlpha
 			CGPROGRAM
 
-</span>
+```
 
-</details>
+
 
 <br>
 
@@ -268,7 +265,7 @@ Once all of our inputs have been manifested here, they will be usable within the
 
 <br>
 
-### P2-F: **Pragma Method Manifestation**
+### P2-F:<span style="color:white;  background-color:purple;"> **Pragma Method Manifestation**</span>
 
 This is it. Where it all comes together. The color coding here is *purple*, because it involves every other part of the shader we've looked at so far.
 
