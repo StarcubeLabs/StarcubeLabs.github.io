@@ -15,7 +15,7 @@ tags: [Unity, Breakdown, Shaders]
 
 ## Part 2: Parts of a Unity shader
 
-Before we jump in, let's me make sure we're all on the same page. For this article we'll be using the [following shader](https://github.com/StarcubeLabs/StarcubeLabs.github.io/blob/30d964ba4078f34797c627230a81648608898b28/assets/examplecode/BasicVertFrag.shader):
+Before we jump in, let's me make sure we're all on the same page. For this article we'll be using the [following shader](https://github.com/StarcubeLabs/StarcubeLabs.github.io/blob/master/assets/examplecode/BasicVertFrag.shader):
 
 ```hlsl
     Shader "StarcubeLabs/BasicVertFrag"
