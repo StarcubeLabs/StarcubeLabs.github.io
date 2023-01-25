@@ -40,6 +40,9 @@ The metaphor I used to help my conceptualize this task was the idea of "Painting
 
 So I created a new orthographic camera and positioned it at the center of my current level such that the camera could see the entirety of the level. I immediately ran into a limitation: anywhere beyond the bounds of this camera would not bake lighting. My solution: I'll ignore that problem and cross that bridge when I get there. Moving on, I set the culling mask to only render the layers that should be affected by static light sources. Another limitation: enemies won't cast shadows on baked lighting backgrounds. Early tests showed that this was not a major issue so once again, I moved on.
 
+>![Light Settings](/assets/img/baking-2d-lighting/torch-settings.png "Light Settings") <br>
+>*I set the torches to be off by default and ensured they are all on the same layer. This layer is ignored by the default camera that renders the game, and is only seen by the "Baking Camera" as seen in the image below.*
+
 >![Camera Layers](/assets/img/baking-2d-lighting/baking-camera-layers.png "Baking Camera Layers") <br>
 >*The static walls layer contains parts of the level geometry that I know won't move. The "Baking Camera Only" layer contains only the background layer that the light is baked onto.*
 
@@ -107,6 +110,12 @@ Lets look at what the camera bakes now...
 | ---- | ---- | ---- |
 | ![Bake 1](/assets/img/baking-2d-lighting/light_bake_1.png "Light Bake 1") | ![Bake 2](/assets/img/baking-2d-lighting/light_bake_2.png "Light Bake 2") | ![Bake 3](/assets/img/baking-2d-lighting/light_bake_3.png "Light Bake 3") |
 
+and 3 more iterations from another light source
+
+| Iteration 1 | Iteration 2 | Iteration 3 |
+| ---- | ---- | ---- |
+| ![Bake 1](/assets/img/baking-2d-lighting/light_bake_01.png "Light Bake 1") | ![Bake 2](/assets/img/baking-2d-lighting/light_bake_02.png "Light Bake 2") | ![Bake 3](/assets/img/baking-2d-lighting/light_bake_03.png "Light Bake 3") |
+
 You can't really tell the light position is being randomized that much, but it doesn't need to move too much to create soft shadows. The color changes also help to create a more realistic "soft fire light source" effect. Now that we have our camera taking pictures, we need to write a shader that composites these textures together, and bakes them into the background game texture!
 
 # Shaders and Materials: Putting it all together
@@ -134,18 +143,28 @@ fixed4 frag(v2f i) : SV_Target
 
 These two bits of code are the only things I changed from the boilerplate Unity unlit shader. I created a material from this shader, and used it in the `Graphics.Blit` call in the code block from the previous section to combine the images. Here are 3 more images taken by the Baking Camera:
 
-| Iteration 1 | Iteration 2 | Iteration 3 |
-| ---- | ---- | ---- |
-| ![Bake 1](/assets/img/baking-2d-lighting/light_bake_01.png "Light Bake 1") | ![Bake 2](/assets/img/baking-2d-lighting/light_bake_02.png "Light Bake 2") | ![Bake 3](/assets/img/baking-2d-lighting/light_bake_03.png "Light Bake 3") |
-
-By combining these three images with the three iterations from before, we get the following composite texture:
+By combining the two light sources from the six iterations from before, we get the following composite texture:
 
 > ![Light Baking Composite](/assets/img/baking-2d-lighting/light_bake_result.png "Light Baking Composite") <br>
-> *As you can see, it adds the lighting from each iteration together, and also applies a subtle blur that amplifies the "soft lighting" effect.*
+> *As you can see, it adds the lighting from each iteration together, and also applies a subtle blur that amplifies the "soft lighting" effect. Inadvertently, the blur also simulates a little bit of Ambient Occlusion! A happy little accident.*
 
-Ok, so now we have this texture. How do we apply it to the ground textures and ensure that the player light source still works too? This is where we crack open the Shader Graph.
-
-We start with how to sample this texture we've created. Since this texture is essentially a picture taken by a camera in world space, we need to use world space coordinates to sample the texture.
+Ok, so now we have this texture. How do we apply it to the ground textures and ensure that the player light source still works too? This is where we crack open the Shader Graph. We start with how to sample this texture we've created. Since this texture is essentially a picture taken by a camera in world space, we need to use world space coordinates to sample the texture.
 
 > ![Shader Graph World Sampling](/assets/img/baking-2d-lighting/shader-graph-world-pos.png "Shader Graph World Sampling") <br>
-> *As you can see, it adds the lighting from each iteration together, and also applies a subtle blur that amplifies the "soft lighting" effect.*
+> *We have to divide the world position by 100 because the Baking Camera has an orthographic size of 50. We also add 0.5 to the X and Y coordinates because the Baking Camera to make sure the texture is centered properly*
+
+I also added an extra property to offset the UVs further, because I knew that eventually I would want to move the Baking Camera around as the player explored the open world. We use the result from all this math to sample the composite texture we created before.
+
+> ![Shader Graph Sampling Composite Texture](/assets/img/baking-2d-lighting/shader-graph-offset.png "Shader Graph Sampling Composite Texture") <br>
+> *After sampling the texture, I also multiply the color by a "Global Tint" which allows me to fade the entire baked lighting to black for scene transitions.*
+
+Thus far we have only handled sampling the composite baked light texture, but now we need to add the dynamic lighting coming from the player and the enemies. After a little research, I realized that Unity's Shader Graph provides access to the `2D Light Texture` node that outputs a texture which can be sampled using the `Screen Position` node. I multiply the result by the `Vertex Color` to ensure that the sprite tint color comes through. Finally, we `Add` it to the composite texture we sampled earlier.
+
+> ![Shader Graph Sampling Dynamic Lighting](/assets/img/baking-2d-lighting/shader-graph-2d-lighting.png "Shader Graph Sampling Dynamic Lighting") <br>
+> *I've gone back and forth on whether to multiply the vertex color here, or after sampling the sprite texture. I landed on this because I think it makes the lighting look more accurate, but I may change my mind again in the future. Trust the process.*
+
+Finally, we sample the actual texture of the sprite itself, and `Multiply` it by the combined dynamic and baked lighting. Multiplying the combined dynamic and baked lighting makes the shadows darken the sprite texture, and the lights illuminate the appropriate parts while tinting them based on the light colors. Earlier I mentioned the format of the RenderTextures being important: this is why. The 'Result' texture that is used here is set to 'HDR', which ensures that color values with a magnitude greater than 1 are allowed. This is what allows the texture here to properly illuminate the world realistically.
+
+> ![Shader Graph Final](/assets/img/baking-2d-lighting/shader-graph-final.png "Shader Graph Final") <br>
+> *I also assign the normal texture node here, with control over the intensity using the `Normal Strength` node. The normal texture is technically ignored by the baked lighting, but that is ok because surface imperfections would anyways be mostly ignored by soft lighting.*
+
