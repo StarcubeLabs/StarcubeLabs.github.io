@@ -168,3 +168,20 @@ Finally, we sample the actual texture of the sprite itself, and `Multiply` it by
 > ![Shader Graph Final](/assets/img/baking-2d-lighting/shader-graph-final.png "Shader Graph Final") <br>
 > *I also assign the normal texture node here, with control over the intensity using the `Normal Strength` node. The normal texture is technically ignored by the baked lighting, but that is ok because surface imperfections would anyways be mostly ignored by soft lighting.*
 
+... and thats it! Here's a birds-eye-view of the final shader graph:
+
+![Shader Graph Full](/assets/img/baking-2d-lighting/shader-graph-full.png "Shader Graph Full")
+
+as well as a graphic to help explain the overall thought process behind the shader:
+
+![Lighting Breakdown](/assets/img/baking-2d-lighting/LightingBreakdown.png "Lighting Breakdown")
+
+# Closing Thoughts
+
+I knew I had my work cut out for me when I started trying to make a game that heavily utilized darkness as a game mechanic. Many games have tried this before, to different results. Taking something visual and making it into a game mechanic, especially something that is also as technically complex as light/dark and shadows was a massive risk. I had to immediately adapt many other aspects of the game to react to technical limitations of what I was able to accomplish with the light baking. In the end, I found those limitations actually created some of the more interesting level design in this game.
+
+I know for a fact this could have been made a lot more efficient. With the exception of a few small edge cases, there's no reason this NEEDS to be done at runtime. I could bake a smaller texture *per* light source that saves what it *will* look like if it is turned on, and then add those "pre-baked" textures to the composite baked lighting at runtime. That way the performance hit of enabling lights could be mitigated further. Right now I am not really being challenged by it so I'll cross that bridge if I find it.
+
+Lastly, I never really covered how this system interacts with the open-world design we have ended up going with Void Sols. The short version is that as you cross certain boundaries, we have designed narrow and dark corridors that serve as transition points as the player leaves one area behind and enters a new one. This ended up being necessary for loading new zones of content anyway, and also helped hiding as we fade out the old baked texture and slowly fade in the baked lighting of the new zone the player has entered.
+
+I hope this was an interesting read. Please let me know if you found my approach hack-y, brilliant, or "you dummy there's an asset that does all this for you!". Whatever it is, I like talking to other devs. Usually. Hit me up on [twitter](https://twitter.com/kiniperson) or [mastodon](https://mastodon.gamedev.place/@kiniperson).
