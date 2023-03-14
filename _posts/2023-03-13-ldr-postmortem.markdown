@@ -10,52 +10,49 @@ tags: [Retrospective]
 
 # Intro
 
-This is a retrospective/post-mortem on development for our game Att's Assault for the [7DRL 2023 roguelike game jam.](https://itch.io/jam/7drl-challenge-2023). We (several members of Starcube) worked for 7 days (sometimes more) to create a roguelike, Att's Assault. We're all extremely pleased with the result and I felt it would be a waste to leave out any important lessons learned. So I'm writing this post to learn for my learning and anyone interested about our dev process.
+This is a retrospective/post-mortem on development for our game Att's Assault for the [7DRL 2023 roguelike game jam.](https://itch.io/jam/7drl-challenge-2023). We (several members of Starcube) worked for 7 days (sometimes more) to create a roguelike, Att's Assault. We're all extremely pleased with the result and I felt it would be a waste to leave out any important lessons learned. I'm writing this post to collect my thoughts and share with anyone interested about our dev processes.
 
 ***Important Note:*** Unless otherwise mentioned, these are my personal take aways from the jam.
 <br> 
 <br> 
 ## What worked
-<br> 
 
 ### Pre-jam Setup
 
-According to the rules of the 7DRL game jam, our team was permitted to bring in existing code. This was a solid opportunity to get our game off to a solid beginning. I took the extra days to setup a basic input system, a scene management flow, and the roguelike procedurally generated layouts. The first two would be necessary in any game, and the last one was a must-have feature for roguelikes. Since these items were setup by the time the jam started work, we could instead focus working on what made our game unique.
+According to the rules of the 7DRL game jam, our team was permitted to bring in existing code. This was a solid opportunity to get our game off to a solid beginning. I took the extra days to setup a basic input system, a scene management flow, and the framework for a roguelike's procedurally generated layouts. The first two would be necessary in any game, and the last one was a must-have feature for roguelikes. Since these items were setup by the time the jam started work, we could instead focus working on what made our game unique.
 <br> 
 <br> 
 ### Test Levels/ Feature Sandboxing
 
-Combining game dev work from multiple team members during development is a notoriously difficult process. Doubly so during a high intensity development sprint like a game jam. Without a special process you can run into code conflicts that have to be resolved.
+Combining game dev work from multiple team members during development is a notoriously difficult process. Doubly so during a high intensity development sprint like a game jam. Without a special process devs can run into code conflicts that have to be resolved.
 
-To solve this the team pointed out a concept to me to resolve this; "Test Levels" or "Feature Sandboxing". The idea is you stage game features, mechanics, models, etc. onto a unique scene. This way the main game scene can remain pristine until a final game feel pass and the conflicts are mostly limited to shared code.
+To solve this the team pointed out a concept to me to resolve this; "Test Levels" or "Feature Sandboxing". The idea is you stage game features, mechanics, models, etc. onto a unique scene. This way the conflicts are mostly limited to shared code and the main game scene can remain pristine until we start a final pass on the game.
 <br> 
 <br> 
 ### Game Vision
 
-Att's Assault was pitched to us by Spex as "Pokemon Mystery Dungeon", a pokemon themed roguelike. Most of us had at least a loose familarity with the game, so it was easy for each team member to make reasonable assumptions about how the look/feel of the game. Spex also added "let's focus on making a quality roguelike first", this directive also clarified a lot of priorities during the dev process. 
+Att's Assault was pitched to us by Spex as "Pokemon Mystery Dungeon", a pokemon themed roguelike. Most of us had at least a loose familarity with the game, so it was easy for each team member to make reasonable assumptions about how the look/feel of the game. Spex also added "let's focus on making a quality roguelike first", this served as a solid direction to take most early dev work. 
 <br> 
 <br> 
 ### Motivation and follow through
 
-When team members set aside time to work on the game, there was no need to external motivation; everyone was extremely excited to be present and working towards the game vision. Same thing for following through on the promise of a finished game. All members of the team were extremely professional and wanted nothing more than to work on the projec to the best of their abilities.
+When team members set aside time to work on the game, there was no need for external motivation; everyone was extremely excited to be present and working towards the game vision. Same thing for following through on the promise of a finished game. All members of the team were extremely professional and wanted nothing more than to work on the project to the best of their abilities.
 <br> 
 <br> 
 ## What could be improved
 ***Note***: I am just as guilty as doing these things as anybody else on the team.
-<br> 
-<br> 
 ### Learning during the jam 
 
-There were a number of times during our jam where team members with tasks needed direct help from other teammates. In ordinary dev time, this would be a fine learning experience. In a game jam sitatuation, asking another developer to drop what they are doing to assist in a learning task is lethal to productivity because it is a context switch. Not knowing how to do something isn't a moral failure. However, it is crucial to weigh how much help you need to do a task before you accept said task.
+There were a number of times during our jam where team members were blocked on their work until they got direct help from other teammates. In ordinary dev time, this would be a fine learning experience. In a game jam sitatuation, asking another developer to drop what they are doing to assist in a learning task is lethal to productivity; it is a context switch for the helping developer. Not knowing how to do something isn't a moral failure. However, it is crucial skill to weigh how much help you need to do a task before you accept said task.
 
-Game jams can be a great of source of learning. "Necessity is the mother of invention" they say! Though this is usually a coincidence, and not usually what people set out to do when they start a game jam. 
+Game jams can be a great of source of learning. "Necessity is the mother of invention" they say! Though this learning is not usually what people set out to do when they start a game jam. 
 
-Jams are where the metal meets the road. Your team should be mostly executing by the time work gets underway. Otherwise a finished product is in jeopardy and that would defeat the purpose of a jam. Less "figure it out as we get there", and more individual preparation/training beforehand. Obviously this can't be helped sometimes, even the most senior developers do not know how to do everything.
+Jams are where the metal meets the road. Your team should be mostly executing by the time work gets underway. Otherwise a finished product is in jeopardy and that would defeat the purpose of a jam. Less "figure it out as we get there", and more individual preparation/training beforehand. Obviously this can't be helped sometimes. Even the most senior developers do not know how to do everything.
 <br> 
 <br> 
 ###  Team members should implement their own work into the game
 
-There were a few times in the jam where members of the jam were integrating other members work. Whenever the work didn't exactly line up with how the game worked or there needed to be slight adjustments, things needed to get kicked back.
+There were a few times in the jam where members of the jam were integrating other members work. Whenever the contribution didn't exactly line up with how the game worked or there needed to be slight adjustments, things needed to get kicked back to the original author. A few back and forths plus wasted time context switching and you have a productivity killer on your hands.
 
 There's a tedency for team members to get "siloed" off from the rest of the game and do their own thing. "I'm an coder, I just do code things" or "I'm an artist, I just need to do some landing art".
 
@@ -73,15 +70,15 @@ This is one example of a workflow that worked fine for the jam but could be impr
 Game development is an exercise in iteration. The more loops you can make from design, to implementation, to testing, the more polished of an end product you will have. If there are any hiccups in that loop that need to get smoothed out, destroy them. Become a T-1000 of annihilating things that get in the way of iterating on your game. For example
 
 - If an art process isn't working, retool that process or throw it out and start simpler
-- If developers need the codebase to be worked on in a special way and stay that way, they should tag everyone that needs to know about that process and make sure they understand
+- If developers need the codebase to be worked on in a special way and stay that way, they should inform other developers
 - If a visual tool is not behaving properly and slowing down your design process, fix it to make sense for your needs before making more design changes 
 <br> 
 <br> 
 ### Get the game working first, iterate/expand on it later 
 
-In the [Pre-jam Setup](#pre-jam-setup) section, I mentioned that selecting work items that I knew we needed was a great idea. By that same token, we did run into some feature creep during the jam. We knew that we wanted roguelike elements, but we weren't sure which parts of roguelikes we wanted to implement. After implementing turn based combat we started churning on game mechanics. Some of the features would not be completely fleshed out as gameplay ready until a little later in the jam. Some features are still uncommunicated to the player in the end product. 
+In the [Pre-jam Setup](#pre-jam-setup) section, I mentioned that selecting work items that I knew we needed was a great idea. On the flip side, we did run into some feature creep during the jam. We knew that we needed roguelike elements for the jam, but we weren't sure which elements of roguelikes we wanted to implement for our game. After implementing turn based combat we started churning on game mechanics. Some of the features would not be completely fleshed out as finished gameplay mechanics until a later in the jam. Some features are still uncommunicated to the player in the end product. 
 
-It is difficult to make a judgement call in the middle of development of when to choose focusing on moving towards the end product vs iterating/expanding out features,mechanics and content for variety. I think ultimately this a case by case basis depending on the feature and the decision of the team. What is "absolutely necessary to the finished product" vs "wouldnt this be cool?" Make no mistake though, it is a decision that needs to be made and it does require getting everyone on the same page. 
+It is difficult to make a judgement call in the middle of development of when to choose focusing on moving towards the end product vs iterating/expanding out features,mechanics and content for variety. I think ultimately this a case by case basis depending on the feature and the decision of the team. "What is absolutely necessary to the finished product" vs "wouldn't this be cool?" Make no mistake though, it is a decision that needs to be made and it does require getting everyone on the same page. 
 
 Games are not a collection of mechanics and features; they are a single essential experience created by smaller impressions. To get the clearest picture of how your game works at any point in time, it is important that the game be as close to "deliverable" as possible. Meaning if development suddenly stopped at any point, the team could turn in the current scene and it would have the last slice of working features in it.
 <br> 
@@ -98,11 +95,11 @@ I think it's safe to say that even though most everyone on the team had a singul
 I took it upon myself to do a lot of the setup for this game jam because I thought I'd be the one doing the lion's share of the programming. I found out later that there were additional programmers that joined me in the codebase so they had to live with the early coding decisions I made for the rest of the jam. I think I did a decent job of setting up the architecture, but it was inconsiderate of me to not include any other developers in that decision making process. It would have also taken a lot of the guess work off of the developers plate's if I had communicated my decisions out at the start of the jam.
 
 Without knowing much the art creation process, I'd imagine the artists feel the same way.
+<br> 
+<br> 
 
 ## Things of note
 
-<br> 
-<br> 
 
 ### Stone soup
 
@@ -119,7 +116,7 @@ Eventually the soup was finished and everyone in the village ate despite the fam
 
 There are many morals to this story but the one most salient to the jam is this: as someone collaborating with other individuals, it is far easier to work with proactive people that add things to the stone soup (project) than it is to work with people that wait for instructions.
 
-Inevitably during the jam, there were moments where developers had to stop and ask out loud to the rest of the team "hey what am I doing? What am I supposed to be doing? What are the exact requirements of that? Can you help me do that?" Some of these questions are from legitimate confusion around what steps lead towards a finished product. Some questions are a mental defense to stall on starting work or as an ego defense against having work rejected or are an excuse to later say "see I told you I didn't have everything I needed". Do not do this to your team mates.
+Inevitably during the jam, there were moments where developers had to stop and ask out loud to the rest of the team "hey what am I doing? What am I supposed to be doing? What are the exact requirements of that? Can you help me do that?" Some of these questions are from a place of legitimate confusion around what steps lead towards the vision of a finished game. Some questions are an unconcious way to stall on starting work or as an ego defense against having work rejected or are an excuse to later say "see I told you I didn't have everything I needed". Do not do this to your team mates.
 
 Be self motivated, make best guesses towards what contributions add towards the finished project, and be patient when your contributions need extra rework because the first pass did not fit into the bigger picture. Every team member is ideally working towards the final product in good faith and you have to trust them as much as you expect to be trusted.
 
@@ -136,6 +133,8 @@ Consider the difference between two development styles: waterfall vs agile. Broa
 
 Waterfall expects all requirements to be defined up front before any development can be done. Agile merely starts a product vision and constantly iterates towards a finished product. Stale piece of paper asking for things vs. Iteration on a living piece of software. The difference is stark, no? 
 
+<br>
+<br>
 
 ## Final Thoughts
 
