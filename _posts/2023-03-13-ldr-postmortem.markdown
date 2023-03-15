@@ -54,16 +54,17 @@ Jams are where the metal meets the road. Your team should be mostly executing by
 
 There were a few times in the jam where members of the jam were integrating other members work. Whenever the contribution didn't exactly line up with how the game worked or there needed to be slight adjustments, things needed to get kicked back to the original author. A few back and forths plus wasted time context switching and you have a productivity killer on your hands.
 
-There's a tedency for team members to get "siloed" off from the rest of the game and do their own thing. "I'm an coder, I just do code things" or "I'm an artist, I just need to do some landing art".
+There's a tedency for team members to get "siloed" off from the rest of the game and do their own thing. "I'm a coder, I just do code things" or "I'm an artist, I just need to do some art for the landing page".
 
 All the work for a game must be put into the game by someone and it is far better for the original creator to integrate their work into the game than another team member. That way the original contributor can see their work as part of the total experience instead of throwing work over the fence. If there's adjustments that need to get made to the original work, who's a better team member to make those adjustments: the original creator or an integrator?
 
 By no means am I saying all team members must be a jack of all trades. Merely that the closer a team member can get to integrating/adjusting their own contributions in the context of the game, the more consistent the end product will be and the less friction there will be for other team members.
 <br> 
 <br> 
+
 ### Identify pain points as early as possible and fix them immediately
 
-Each level of of Att's Assault contained a list of all items and enemies with an associated weight. Anytime an entity needed to be added to the floor, a new entry needed to be added, and an integer weight needed to be chosen for the entity representing how often that item would appear. The unity scene selector was also broken so this meant each entity must be dragged into the list from a prefab file in the project. The list also did not account for duplicates entries, did not give any insight into the effective frequency of when an item could appear on a floor and could not be composed with other floor datas to reduce hand jamming values. We also did not have support for guarranteeing that an item could appear on a level, the work around was to have only one time in the table for particular floors.
+Each level of of Att's Assault contained a list of all items and enemies with an associated weight. Anytime a new thing needed to be added to a floor, a new entry needed to be added to the floor's list, and an integer weight needed to be chosen for the entity representing how often that thing would appear. The unity scene selector was also broken so this meant each entity must be dragged into the floor's list from a prefab file in the project (As opposed to a searchable list of compatible objects). The list also did not account for duplicates entries, did not give any insight into the effective frequency of when an item could appear on a floor and could not be composed with other floor data to reduce hand jamming the same values. We also did not have support for guarranteeing that an item could appear on a level, the work around was to have only one item in the table for particular floors.
 
 This is one example of a workflow that worked fine for the jam but could be improved in future jams. Perhaps an improved inspector gui, a purchased unity asset or a different code organization could have made the process of tuning levels a little easier.
 
@@ -74,6 +75,7 @@ Game development is an exercise in iteration. The more loops you can make from d
 - If a visual tool is not behaving properly and slowing down your design process, fix it to make sense for your needs before making more design changes 
 <br> 
 <br> 
+
 ### Get the game working first, iterate/expand on it later 
 
 In the [Pre-jam Setup](#pre-jam-setup) section, I mentioned that selecting work items that I knew we needed was a great idea. On the flip side, we did run into some feature creep during the jam. We knew that we needed roguelike elements for the jam, but we weren't sure which elements of roguelikes we wanted to implement for our game. After implementing turn based combat we started churning on game mechanics. Some of the features would not be completely fleshed out as finished gameplay mechanics until a later in the jam. Some features are still uncommunicated to the player in the end product. 
@@ -94,7 +96,7 @@ I think it's safe to say that even though most everyone on the team had a singul
 
 I took it upon myself to do a lot of the setup for this game jam because I thought I'd be the one doing the lion's share of the programming. I found out later that there were additional programmers that joined me in the codebase so they had to live with the early coding decisions I made for the rest of the jam. I think I did a decent job of setting up the architecture, but it was inconsiderate of me to not include any other developers in that decision making process. It would have also taken a lot of the guess work off of the developers plate's if I had communicated my decisions out at the start of the jam.
 
-Without knowing much the art creation process, I'd imagine the artists feel the same way.
+Without knowing much about the art creation process, I'd imagine the artists feel the same way.
 <br> 
 <br> 
 
@@ -122,24 +124,23 @@ Be self motivated, make best guesses towards what contributions add towards the 
 
 ### "Requirements"
 
-The phrase "requirements" were uttered a few times during the jam. Fundamentally there are no "requirements" in a game jam. The team is not a company with dedicated business analysists writing up papers to ask for things from developers in flowerly language.
-
-The closest thing to "requirements" in a game jam is a current product vision and the individuals best attempt at moving the game in that direction. If one developer identifies a work item for another developer, they will have a "conversation", a "communication", or a "direct message" around what needs to get done. The developer being asked to do things should ***not*** expect a binding contract written blood about how things must be done.  
-
 Consider the difference between two development styles: waterfall vs agile. Broadly speaking waterfall encourages a linear list of todo's that eventually become a finished product. Agile encourages iterating on a deliverable product at every stage.
 
 
-![Waterfall vs agile](/assets/img/7DRL/waterfallVsAgile.png)
+![Waterfall vs agile](/assets/img/7DRL/waterfallVsAgile.bmp)
 
-Waterfall expects all requirements to be defined up front before any development can be done. Agile merely starts a product vision and constantly iterates towards a finished product. Stale piece of paper asking for things vs. Iteration on a living piece of software. The difference is stark, no? 
+Waterfall expects all requirements to be defined up front before any development can be done. Agile merely starts with a product vision and constantly iterates towards a finished product. Static upfront requirements asking for things vs. Iteration on a living piece of software. The difference is stark, no? 
+
+The idea of having all decisions set in stone before any work done is stifling to how quickly things change in a jam environment.
+There are no "requirements" in a game jam. The closest thing to "requirements" in a game jam is a current product vision and the individuals best attempt at moving the game in that direction. If one developer identifies a work item for another developer, the receiving developer can expect a conversation, a communication, or a direct message around what needs to get done. The developer being asked to do things shouldn't expect a bundle of specifications about how things must be done.  
 
 <br>
 <br>
 
 ## Final Thoughts
 
-This is our team I think.
+This YouTube video is our team I think. (Click it)
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/zPW9wadnJpo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+[![2001: A Space Odyssey Orchestra](http://img.youtube.com/vi/zPW9wadnJpo/0.jpg)](https://youtu.be/zPW9wadnJpo "2001: A Space Odyssey Orchestra")
 
-What you may not immediately see in this orchestra is they have swapped instruments. It's besides the point that they sound terrible. At any point in time during the actual concert, one of these musicians could blink out of existence and his peer could take his place instantly and play about a 2001 a space odyssey. Funny though that video may be, those musicians are insanely talented. Our team exhibited this skill set during the jam; at any point in time if someone needed to leave we could pick up about where they left off without skipping a beat. You just do not see that level of skill and flexibility just anywhere. Only in Starcube ⭐
+What you may not immediately see in this orchestra is they have swapped instruments. It's besides the point that they sound terrible. At any point in time during the actual concert, one of these musicians could blink out of existence and his peer could take his place instantly and play very close to what sounds like a 2001 a space odyssey. Funny though that video may be, those musicians are insanely talented. Our team exhibited this skill set during the jam; at any point in time if someone needed to leave another team member could pick up about where they left off without skipping a beat. You just do not see that level of skill and flexibility just anywhere. Only in Starcube ⭐
