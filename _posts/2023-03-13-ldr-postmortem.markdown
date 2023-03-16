@@ -102,6 +102,20 @@ Without knowing much about the art creation process, I'd imagine the artists fee
 
 ## Things of note
 
+### "Requirements"
+
+Consider the difference between two development styles: waterfall vs agile. Broadly speaking waterfall encourages a linear list of todo's that eventually become a finished product. Agile encourages iterating on a deliverable product at every stage.
+
+
+![Waterfall vs agile](/assets/img/7DRL/waterfallVsAgile.bmp)
+
+Waterfall expects all requirements to be defined up front before any development can be done. Agile merely starts with a product vision and constantly iterates towards a finished product. Static upfront requirements asking for things vs. Iteration on a living piece of software. The difference is stark, no? 
+
+The idea of having all decisions set in stone before any work done is stifling to how quickly things change in a jam environment.
+There are no "requirements" in a game jam. The closest thing to "requirements" in a game jam is a current product vision and the individuals best attempt at moving the game in that direction. If one developer identifies a work item for another developer, the receiving developer can expect a conversation, a communication, or a direct message around what needs to get done. The developer being asked to do things shouldn't expect a bundle of specifications about how things must be done.  
+
+<br>
+<br>
 
 ### Stone soup
 
@@ -118,24 +132,9 @@ Eventually the soup was finished and everyone in the village ate despite the fam
 
 There are many morals to this story but the one most salient to the jam is this: as someone collaborating with other individuals, it is far easier to work with proactive people that add things to the stone soup (project) than it is to work with people that wait for instructions.
 
-Inevitably during the jam, there were moments where developers had to stop and ask out loud to the rest of the team "hey what am I doing? What am I supposed to be doing? What are the exact requirements of that? Can you help me do that?" Some of these questions are from a place of legitimate confusion around what steps lead towards the vision of a finished game. Some questions are an unconcious way to stall on starting work or as an ego defense against having work rejected or are an excuse to later say "see I told you I didn't have everything I needed". Do not do this to your team mates.
+Inevitably during the jam, there were moments where developers had to stop and ask out loud to the rest of the team "hey what am I doing? What am I supposed to be doing? What are the exact requirements of that? Can you help me do that?"
 
 Be self motivated, make best guesses towards what contributions add towards the finished project, and be patient when your contributions need extra rework because the first pass did not fit into the bigger picture. Every team member is ideally working towards the final product in good faith and you have to trust them as much as you expect to be trusted.
-
-### "Requirements"
-
-Consider the difference between two development styles: waterfall vs agile. Broadly speaking waterfall encourages a linear list of todo's that eventually become a finished product. Agile encourages iterating on a deliverable product at every stage.
-
-
-![Waterfall vs agile](/assets/img/7DRL/waterfallVsAgile.bmp)
-
-Waterfall expects all requirements to be defined up front before any development can be done. Agile merely starts with a product vision and constantly iterates towards a finished product. Static upfront requirements asking for things vs. Iteration on a living piece of software. The difference is stark, no? 
-
-The idea of having all decisions set in stone before any work done is stifling to how quickly things change in a jam environment.
-There are no "requirements" in a game jam. The closest thing to "requirements" in a game jam is a current product vision and the individuals best attempt at moving the game in that direction. If one developer identifies a work item for another developer, the receiving developer can expect a conversation, a communication, or a direct message around what needs to get done. The developer being asked to do things shouldn't expect a bundle of specifications about how things must be done.  
-
-<br>
-<br>
 
 ## Final Thoughts
 
