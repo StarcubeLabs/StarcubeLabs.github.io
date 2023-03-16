@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "Att's Assault: An 7DRL challenge retrospective"
-date:   2023-01-25 00:00:00
+title:  "Att's Assault: A 7DRL challenge retrospective"
+date:   2023-03-15 00:00:00
 img: 7DRL/attsAssault.png
 description: A retrospective 
 author: Clock
