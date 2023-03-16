@@ -119,14 +119,14 @@ There are no "requirements" in a game jam. The closest thing to "requirements" i
 
 ### Stone soup
 
-What is stone soup? It's a tale from the excellent book "The Pragmatic Programmer". The story basically goes a group of travelers makes camp for the night in a famine stricken village. They had't eaten all day long so they began knocking on everyone's doors begging for any food they might have. The villagers were suspicious of the strangers in their town and gave them no food. Undeterred they set up a cooking pot to make a stew. Instead of food they began casting stones into the boiling water. The townsfolk could not contain their curiousity anymore and approached the travelers to ask them what they are doing. 
+What is stone soup? It's a tale from the excellent book "The Pragmatic Programmer". The story basically goes a group of travelers makes camp for the night in a famine stricken village. They hadn't eaten all day long so they began knocking on everyone's doors begging for any food they might have. The villagers were suspicious of the strangers in their town and gave them no food. Undeterred they set up a cooking pot to make a stew. Instead of food they began casting stones into the boiling water. The townsfolk could not contain their curiousity anymore and approached the travelers to ask them what they are doing. 
 
-"We're making stone soup" - one traveler answered
-"Stone soup? What's that?" - asked a villager
-"It's a delicious soup made from water in stones. It would be much better with some carrots though" - another traveler answered
-"I have some carrots!" - said another villager
-"That's great. And potatoes would really help too" - added another traveler
-"I've got potatoes and some pork too!" - intoned another villager 
+"We're making stone soup" - one traveler answered <br/>
+"Stone soup? What's that?" - asked a villager <br/>
+"It's a delicious soup made from stones boiled in water. It would be much better with some carrots though" - another traveler answered <br/>
+"I have some carrots!" - said another villager <br/>
+"That's great. And potatoes would really help too" - added another traveler <br/>
+"I've got potatoes and some pork too!" - intoned another villager <br/>
 
 Eventually the soup was finished and everyone in the village ate despite the famine. 
 
@@ -142,4 +142,4 @@ This YouTube video is our team I think. (Click it)
 
 [![2001: A Space Odyssey Orchestra](http://img.youtube.com/vi/zPW9wadnJpo/0.jpg)](https://youtu.be/zPW9wadnJpo "2001: A Space Odyssey Orchestra")
 
-What you may not immediately see in this orchestra is they have swapped instruments. It's besides the point that they sound terrible. At any point in time during the actual concert, one of these musicians could blink out of existence and his peer could take his place instantly and play very close to what sounds like a 2001 a space odyssey. Funny though that video may be, those musicians are insanely talented. Our team exhibited this skill set during the jam; at any point in time if someone needed to leave another team member could pick up about where they left off without skipping a beat. You just do not see that level of skill and flexibility just anywhere. Only in Starcube ⭐
+What you may not immediately see in this orchestra is they have swapped instruments. It's besides the point that they sound terrible. At any point in time during the actual concert, one of these musicians could blink out of existence and his peer could take his place instantly and play very close to what sounds like the intro to "2001: a space odyssey". Funny though that video may be, consider how talented those musicians must be to play an instrument they aren't familiar with like that. Our team exhibited this skillset during the jam; at any point in time if someone needed to leave another team member could pick up about where they left off without skipping a beat. You just do not see that level of skill and flexibility just anywhere. Only in Starcube ⭐
