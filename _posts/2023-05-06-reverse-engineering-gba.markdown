@@ -193,7 +193,9 @@ movs r0,#0x0
 This statement assigns the number 0 (#0x0) to `r0`. `r0` is one of the CPU's registers. What are registers? Let's talk about that first.
 
 ### Registers
-A __register__ is a quickly accessible location in the CPU hardware that stores a value. CPUs have a handful of registers available to them; the GBA's CPU has 16 registers, and each can store up to 32 bits (4 bytes) of data for a total of 512 bits (64 bytes) of data. Registers are named with the format `rX`, where `X` is the 0-indexed register number. In the GBA's case, its registers go from `r0` to `r15`. When the CPU needs to store data for later, the registers are the fastest place to store and retrieve the data. Every assembly operation interacts with the registers in some way.
+A __register__ is a location in the CPU hardware that stores a value. When the CPU needs to store data for later, the registers are the fastest place to store and retrieve the data. Every assembly operation interacts with the registers in some way.
+
+CPUs have a handful of registers available. In ARM CPUs, registers are named with the format `rX`, where `X` is the 0-indexed register number. The GBA's CPU has 16 registers numbered from `r0` to `r15`, and each can store up to 32 bits (4 bytes) of data for a total of 512 bits (64 bytes) of data.
 
 Register capacity is limited, so if a program needs to store more data than the registers allow, the data goes to __main memory__, also known as __RAM__ (random-access memory) or simply __memory__. Storing and accessing memory is slower than using registers, but memory has a much larger capacity. The GBA has 288 kilobytes of RAM for regular code operations to use, and also has additional reserved RAM for special operations like I/O.
 
