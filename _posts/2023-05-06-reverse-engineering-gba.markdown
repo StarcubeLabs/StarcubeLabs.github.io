@@ -857,7 +857,7 @@ A breakpoint can be set using the `b` (`break`) command, with the format `b <add
 >![](/assets/img/reverse-engineering/debugger-add-breakpoint.png)<br>
 >Adding a breakpoint
 
-With the breakpoint added, try to move around in-game. This will execute `FUN_08044b28` and hit the breakpoint, pausing the game's execution.
+With the breakpoint added, try to move your character around in-game. This will execute `FUN_08044b28` and hit the breakpoint, pausing the game's execution.
 >![](/assets/img/reverse-engineering/debugger-hit-breakpoint.png)<br>
 >Hitting a breakpoint
 
@@ -908,7 +908,7 @@ The mGBA section of this tutorial discusses a couple of strategies using [memory
 ### Following a value backwards through assembly
 One way to find the location of a specific value is to trace related values backwards through the assembly to find where they came from. This might lead to the value you are looking for.
 
-To demonstrate, let's find the place in code that determines how much a certain healing item will heal. In-game, explore the dungeon floor until you find a blue berry, called an Oran Berry. You may not necessarily find one on the floor you're on; if you've explored the floor and found nothing, look for a staircase to proceed to the next floor and continue the search.
+To demonstrate, let's find the place in code that determines how many hitpoints (HP) a certain healing item will heal your character. In-game, explore the dungeon floor until you find a blue berry, called an Oran Berry. You may not necessarily find one on the floor you're on; if you've explored the floor and found nothing, look for a staircase to proceed to the next floor and continue the search.
 >![](/assets/img/reverse-engineering/oran-berry.png)<br>
 >An Oran Berry on the ground just to the top right of the player
 
@@ -935,7 +935,7 @@ Now let's look for where the value 0x64 was assigned to `r10`. Middle-click `r10
 >![](/assets/img/reverse-engineering/trace-oran-berry.png)<br>
 >Tracing the healing amount of the Oran Berry to the top of the function
 
-The 0x64 in `r10` came from `r2`, but there are no more references to `r2` between here and the start of the function. This means that `r2` is the third parameter of `FUN_08077c44`, and the 0x64 came from the code that called `FUN_08077c44`. The next step is to find the caller of this function.
+The 0x64 in `r10` came from `r2`, but there are no more references to `r2` between here and the start of the function. Remember that registers `r0`-`r3` are designated for passing arguments into a function. This means that `r2` is the third parameter of `FUN_08077c44`, and the 0x64 came from the code that called `FUN_08077c44`. The next step is to find the caller of this function.
 
 Scroll to the bottom of `FUN_08077cc44`, and you'll find the `bx` instruction at 0x8077dd6 marking the end of the function. Make a breakpoint in mGBA at 0x8077dd6, then continue program execution to hit the breakpoint. Note that before hitting the breakpoint, you'll hit the watchpoint for player HP again; this is where the player's HP is capped at their max HP.
 
@@ -963,11 +963,11 @@ With this address in mind, go back to mGBA and go to address 0x080F4FB6 in the m
 >![](/assets/img/reverse-engineering/oran-berry-found.png)<br>
 >The location of the Oran Berry's heal amount
 
-To test the address we found for the heal amount, reload your save state, change the 0x64 at address 0x080F4FB6 to 0x0A (10 in decimal) in the memory viewer, and eat the Oran Berry again to see how much it heals. You may wish to delete the watchpoint and breakpoint from earlier to avoid hitting them again now that we are finished with them.
+To test the address we found for the heal amount, reload your save state, change the 0x64 at address 0x080F4FB6 to 0x0A in the memory viewer (0x0A = 10 in decimal), and eat the Oran Berry again to see how much it heals. You may wish to delete the watchpoint and breakpoint from earlier to avoid hitting them again now that we are finished with them.
 >![](/assets/img/reverse-engineering/oran-berry-changed.png)<br>
 >The changed Oran Berry heal amount
 
-Success! We've found that the Oran Berry's heal amount is stored at 0x080F4FB6. Technically, if you edited the game binary and changed the value at byte 0xF4FB6, you'd create a minimal ROM hack that nerfs the Oran Berry's healing. Creating ROM hacks is out of the scope of this tutorial, but this demonstrates a piece of the process for creating these hacks.
+Success! We've found that the Oran Berry's heal amount is stored at 0x080F4FB6. Technically, if you edited the game binary and changed the value at byte 0xF4FB6, you'd create a minimal ROM hack that nerfs the Oran Berry's healing. Creating ROM hacks is out of the scope of this tutorial, but this demonstrates a piece of the process for creating these types of hacks.
 
 >Note that changed values in ROM in mGBA will not revert back if you load a save state. If you want to revert ROM values, you can either change them back manually or reload the ROM in the emulator.
 
@@ -1015,7 +1015,7 @@ Another number that is close by is the player's level (labeled "Lv" on the HUD),
   0x02004199
 </details>
 
-A related approach is to make actions in-game and watch as values in memory change. This includes moving around, attacking, etc. To demonstrate this approach, press the Start button to enter a mode where you can face a direction without moving. Turn around a couple of times while watching the memory viewer, and you'll see the value at address 0x020041D6 changing. No other visible value changes, which is a good indicator that 0x020041D6 contains the direction the player was facing (encoded as an enum).
+A related approach is to perform an action in-game and watch as values in memory change. This includes moving around, attacking, etc. To demonstrate this approach, press the Start button in the game to enter a mode where you can face a direction without moving. Turn around a couple of times while watching the memory viewer, and you'll see the value at address 0x020041D6 changing. No other visible value changes, which is a good indicator that 0x020041D6 contains the direction the player was facing (encoded as an enum).
 
 It's also possible to use a trial-and-error approach by simply going through memory addresses, changing them, and seeing if this affects anything in game. For example, if you go through this process, eventually you'll reach the address 0x02004238. Set this value to 1, and you'll see the player character fall asleep, indicating that this value is used for the sleep status condition.
 >![](/assets/img/reverse-engineering/memory-viewer-asleep.png)<br>
