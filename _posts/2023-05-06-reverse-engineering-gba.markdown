@@ -3,7 +3,7 @@ layout: post
 title: Reverse Engineering a GBA Game
 date: 2023-05-06 05:00:00
 img: reverse-engineering/debug-env.png
-description: "How to reverse engineer a GBA game, using Pokémon Mystery Dungeon: Red Rescue Team as an example."
+description: "How to reverse engineer a GBA game using _Pokémon Mystery Dungeon: Red Rescue Team_ as an example."
 author: Some Body
 ---
 
@@ -16,7 +16,7 @@ This tutorial will walk you through the following:
 * Setting up a reverse engineering environment.
 * A basic introduction to assembly code.
 * Using the reverse engineering tool Ghidra to analyze assembly code.
-* Exploring emulator debugging features to inspect a game's memory and debug the game while it is running.
+* Exploring debugging features of the mGBA emulator to inspect a game's memory and debug the game while it is running.
 * Reverse engineering strategies for finding game mechanics and data.
 
 <!-- If you are interested in reverse engineering a Nintendo DS game, this tutorial also has a [version for Nintendo DS games](../reverse-engineering-ds), which are somewhat more complicated and have additional frills compared to GBA games. -->
@@ -42,9 +42,10 @@ This tutorial will walk you through the following:
   - [Datamining future content](#datamining-future-content)
 - [Setting up a reverse engineering environment](#setting-up-a-reverse-engineering-environment)
   - [Setting up Ghidra](#setting-up-ghidra)
-  - [Setting up mGBA with Red Rescue Team](#setting-up-mgba-with-red-rescue-team)
+  - [Setting up mGBA with _Red Rescue Team_](#setting-up-mgba-with-red-rescue-team)
 - [Assembly primer](#assembly-primer)
   - [Registers](#registers)
+  - [Memory](#memory)
   - [ROM](#rom)
   - [Instructions](#instructions)
     - [Assignment](#assignment)
@@ -137,16 +138,16 @@ Launch Ghidra after it is installed, and you'll see this screen.
 >![](/assets/img/reverse-engineering/ghidra-start.png)<br>
 >Ghidra start screen
 
-Let's make a new project using the Red Rescue Team ROM.
+Let's make a new project using the _Red Rescue Team_ ROM.
 1. _File > New Project..._
 2. The project defaults to a "Non-Shared Project". Click _Next_.
 3. Choose a project name and a directory to save the project, then click _Finish_.
 4. _File > Import File..._
-5. Select the Red Rescue Team ROM on your file system.
+5. Select the _Red Rescue Team_ ROM on your file system.
 6. Select an instruction set architecture for Ghidra to use for analyzing the binary. The GBA uses the ARMv4T instruction set in little-endian format (__ARM:LE:32:v4t__), which you can find by searching for "v4t" in the language select, then selecting the option with "little" under the _Endian_ column.
     >![](/assets/img/reverse-engineering/armv4t.png)<br>
     >Selecting the ARMv4T language
-7. Click _Options..._ and set the Base Address to 0x8000000.
+7. Click _Options..._ and set the _Base Address_ to 0x8000000.
 7. Click _OK_ to make Ghidra inspect the binary.
 8. Once done, Ghidra will display a report with some details about the inspection. Click _OK_ to continue.
 9. Double-click the ROM in Ghidra to open Ghidra's code viewer.
@@ -161,11 +162,11 @@ How would you find that you should use the ARM:LE:32:v4t language if I didn't te
 
 As for [endianness](https://en.wikipedia.org/wiki/Endianness) (the order that bytes are stored for each [word](https://en.wikipedia.org/wiki/Word_(computer_architecture)) of data), most ARM CPUs are "bi-endian" and support both little and big endian, but in practice most ARM programs use little endian. If Ghidra spits out incomprehensible disassembled code when using a little endian language, try big endian and see if the output is any better. Note that some CPUs, such as those using the [PowerPC](https://en.wikipedia.org/wiki/PowerPC) instruction set (e.g., the Wii), are predominantly big endian instead.
 
-### Setting up mGBA with Red Rescue Team
+### Setting up mGBA with _Red Rescue Team_
 In addition to Ghidra, you'll need to set up a GBA emulator and progress the game past the opening sequence.
 1. Download the latest desktop version of mGBA for your OS from [mGBA's website](https://mgba.io/downloads.html).
 2. Install mGBA using the instructions in the download.
-3. Open mGBA and use _File > Load ROM_. Select the Red Rescue Team ROM in your file system.
+3. Open mGBA and use _File > Load ROM_. Select the _Red Rescue Team_ ROM in your file system.
 4. View and configure button mappings at _Preferences > Controllers_ if needed.
 5. Watch the intro cutscene for the game, then start a new game.
 6. The start of the game consists of a personality quiz that will decide your player character. Answer the questions, honestly or not, then the game will assign you a Pokémon.
@@ -173,7 +174,7 @@ In addition to Ghidra, you'll need to set up a GBA emulator and progress the gam
 8. After deciding your player and partner Pokémon, you will be taken to a cutscene. After the cutscene, you will enter the first dungeon of the game, Tiny Woods.
 9. Once you enter Tiny Woods, you are set up to reverse engineer the game.
 >![](/assets/img/reverse-engineering/mgba-setup.png)<br>
->Red Rescue Team after setting it up
+>_Red Rescue Team_ after setting it up
 
 With both Ghidra and the game set up, the next step is to open up the game and read the code. You'll need to know how to read assembly for this, which the next section will introduce.
 
@@ -182,7 +183,7 @@ An [assembly language](https://en.wikipedia.org/wiki/Assembly_language) (assembl
 
 >This tutorial presents a brief introduction of assembly to get you started. For brevity, I'll be skipping some of the finer details. If you're interested in a more thorough GBA assembly reference, check out Tonc's [Whirlwind Tour of ARM Assembly](https://www.coranac.com/tonc/text/asm.htm#sec-arm). Aside from the assembly guide, Tonc also has detailed documentation on all the inner workings of the GBA console.
 
-Different CPUs may use different assembly languages depending on which operations the CPU supports (the "instruction set" of the CPU). While all CPUs support the minimum set of instructions required for a computer to function, extra instructions act as shortcuts that allow a program to compile to fewer lines of assembly, resulting in faster program execution in exchange for more complicated CPU hardware to support the additional instructions, and possibly instructions taking more space to store. This tutorial will use the __THUMB__ instruction set, as this is the main instruction set used by Red Rescue Team's code. Future uses of the word "assembly" in this tutorial will be shorthand for "THUMB instruction set assembly language"; this is a common shorthand in the context of a specific game.
+Different CPUs may use different assembly languages depending on which operations the CPU supports (the "instruction set" of the CPU). While all CPUs support the minimum set of instructions required for a computer to function, extra instructions act as shortcuts that allow a program to compile to fewer lines of assembly, resulting in faster program execution in exchange for more complicated CPU hardware to support the additional instructions, and possibly instructions taking more space to store. This tutorial will use the __THUMB__ instruction set, as this is the main instruction set used by _Red Rescue Team_'s code. Future uses of the word "assembly" in this tutorial will be shorthand for "THUMB instruction set assembly language"; this is a common shorthand in the context of a specific game.
 
 >In addition to THUMB, the GBA's CPU supports another instruction set known simply as __ARM__, which includes more complicated instructions than THUMB, but allows code to be written in fewer instructions. The ARM instruction set is out of the scope of this tutorial, though most of the concepts in this tutorial can be applied to any assembly language.
 
@@ -197,18 +198,19 @@ A __register__ is a location in the CPU hardware that stores a value. When the C
 
 CPUs have a handful of registers available. In ARM CPUs, registers are named with the format `rX`, where `X` is the 0-indexed register number. The GBA's CPU has 16 registers numbered from `r0` to `r15`, and each can store up to 32 bits (4 bytes) of data for a total of 512 bits (64 bytes) of data.
 
-Register capacity is limited, so if a program needs to store more data than the registers allow, the data goes to __main memory__, also known as __RAM__ (random-access memory) or simply __memory__. Storing and accessing memory is slower than using registers, but memory has a much larger capacity. The GBA has 288 kilobytes of RAM for regular code operations to use, and also has additional reserved RAM for special operations like I/O.
-
 `r15` is a special register called the __program counter__ (__PC__ for short). This register holds the address to the instruction to be executed next, and is incremented by 2 automatically after an instruction is executed (most instructions are 2 bytes long). This causes assembly to be executed line-by-line. It is possible to set the PC's value, which will cause the CPU to jump to the new address and begin executing code there; this is used for constructs like conditional statements, loops, and function calls.
 
 Some of the other registers also have special names and purposes. We will get into those later.
 
+### Memory
+Register capacity is limited, so if a program needs to store more data than the registers allow, the data goes to __main memory__, also known as __RAM__ (random-access memory) or simply __memory__. Storing and accessing memory is slower than using registers, but memory has a much larger capacity. The GBA has 288 kilobytes of RAM for regular code operations to use, and also has additional reserved RAM for special operations like I/O.
+
 ### ROM
-The ROM (read-only memory) file used to load the game is effectively an array of bytes. These bytes encode assets like sprites and audio, data values used by the game's logic (e.g., the amount that a certain healing item will heal the player by), and code used to run the game.
+The __ROM__ (read-only memory) file used to load the game is effectively an array of bytes. These bytes encode assets like sprites and audio, data values used by the game's logic (e.g., the amount that a certain healing item will heal the player by), and code used to run the game.
 
 When talking about data in the ROM, it is typical to refer to a piece of data according to its 0-indexed __address__ (__offset__) from the start of the ROM. For example, the first byte in the ROM file is at address 0x0, and the 5th byte in the ROM file is at address 0x4. Addresses are almost always written in hexadecimal; the "0x" indicates that a value is expressed in hexadecimal format. Hexadecimal is also commonly used for other values in reverse engineering contexts.
 
-When the GBA loads the ROM, the ROM's data is loaded into an area of memory starting at address 0x8000000. This means that in-game, values in the ROM are accessed using their address plus 0x8000000. For example, the data at address 0x4 in the ROM is accessed in-game using address 0x8000004. In the context of ROM addresses, this address can be referred to as 0x4 or 0x8000004 interchangeably.
+When the GBA loads the ROM, the ROM's data is loaded into an area of memory from address 0x8000000-0x9FFFFFF. This area of memory is often called "ROM" despite technically being part of memory/RAM. In-game, values in the ROM are accessed using their address plus 0x8000000. For example, the data at address 0x4 in the ROM is accessed in-game using address 0x8000004. In the context of ROM addresses, this address can be referred to as 0x4 or 0x8000004 interchangeably.
 
 >During Ghidra setup earlier, you set the Base Address of the ROM to 0x8000000. This matches where the GBA loads the ROM in memory, and supplying this address to Ghidra helps it to better analyze the ROM.
 
@@ -258,7 +260,7 @@ Other available math operators include subtraction, multiplication, negation, bi
 >You may notice the lack of a division instruction. Division with arbitrary numbers is more complicated than the operations listed above, so it is implemented as a function rather than a single instruction. This means division is much slower than other math operations. Note that the right shift operator can divide numbers by powers of 2 to achieve certain divisions in a single instruction.
 
 #### Load/Store memory
-Registers can only store a handful of values, so memory is used to store the majority of a program's data.
+Registers can only store a handful of values, so memory is used to store the majority of a program's data. As a reminder, memory (also called main memory or RAM) is where most data is stored given that registers have limited storage capacity.
 
 Here is an instruction that stores to memory.
 ```
@@ -1052,9 +1054,9 @@ For example, if you are looking for a more abstract concept such as [how the AI 
 ### Using existing resources
 If the game you are reverse engineering is at least decently popular, chances are that there is existing research done by others. Reverse engineering documentation can include information such as addresses of known data and functions, struct layouts, and code architecture, which can save you the trouble of having to discover them yourself and can serve as a starting point to discover further information about the game.
 
-Note that hacking and reverse engineering resources for a game are typically fragmented and disorganized, with information often strewn across Google Docs/Sheets, GitHub repos, Discord servers, Reddit posts, forums, wikis, and more. A starting point for finding reverse engineering resources for a game is [Data Crystal](https://datacrystal.romhacking.net/wiki/Main_Page), which contains an decent assortment of reverse engineering docs across games, along with links to external resources. For example, [here](https://datacrystal.romhacking.net/wiki/Pok%C3%A9mon_Mystery_Dungeon:_Red_Rescue_Team) is the Data Crystal page for Red Rescue Team. Google (or your favorite alternative search engine) is another option, and searching for terms like "\<game name\> hacking" may yield results. Keep an eye out for any active hacking and reverse engineering communities, like a Discord server or subreddit.
+Note that hacking and reverse engineering resources for a game are typically fragmented and disorganized, with information often strewn across Google Docs/Sheets, GitHub repos, Discord servers, Reddit posts, forums, wikis, and more. A starting point for finding reverse engineering resources for a game is [Data Crystal](https://datacrystal.romhacking.net/wiki/Main_Page), which contains an decent assortment of reverse engineering docs across games, along with links to external resources. For example, [here](https://datacrystal.romhacking.net/wiki/Pok%C3%A9mon_Mystery_Dungeon:_Red_Rescue_Team) is the Data Crystal page for _Red Rescue Team_. Google (or your favorite alternative search engine) is another option, and searching for terms like "\<game name\> hacking" may yield results. Keep an eye out for any active hacking and reverse engineering communities, like a Discord server or subreddit.
 
-Some reverse engineering communities go a step further and maintain an in-progress or completed manual __decompilation__ (decomp) or __disassembly__ of a game, a project that uses source code or structured assembly code to build a game binary that matches the actual game's ROM file. As these projects require all of the game's code to build a matching binary, they often contain a large amount of labeled information about a game. For example, Red Rescue Team has an in-progress decompilation [here](https://github.com/pret/pmd-red). Manually decompiling is a highly technical sub-area of the reverse engineering space that is out of scope for this tutorial, though if one exists for the game you are reverse engineering, it's useful to keep on your radar.
+Some reverse engineering communities go a step further and maintain an in-progress or completed manual __decompilation__ (decomp) or __disassembly__ of a game, a project that uses source code or structured assembly code to build a game binary that matches the actual game's ROM file. As these projects require all of the game's code to build a matching binary, they often contain a large amount of labeled information about a game. For example, _Red Rescue Team_ has an in-progress decompilation [here](https://github.com/pret/pmd-red). Manually decompiling is a highly technical sub-area of the reverse engineering space that is out of scope for this tutorial, though if one exists for the game you are reverse engineering, it's useful to keep on your radar.
 
 ## Conclusion
 By now, you've set up a reverse engineering environment, learned the basics of assembly and some reverse engineering tools, and walked through some strategies to discover functionality in-game. From here, you are ready to dive into the code of your favorite GBA game and see what you can find. Mind you, the reverse engineering process is not always straightforward and requires plenty of ingenuity and patience, but it is a skill you can improve at with practice and persistence. Good luck!
