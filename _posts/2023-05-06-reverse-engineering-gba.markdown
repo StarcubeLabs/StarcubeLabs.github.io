@@ -738,7 +738,9 @@ Here is an example end-of-line comment added to address 0x80450f0.
 Liberal use of comments is highly recommended. There are no descriptive variable names in assembly, so it is easy to get lost if you don't leave notes for yourself.
 
 ### Label names
-Once you figure out what a function, branch label, stack value, or data value does, you can rename it by right-clicking the label and clicking _Edit label_. You can also edit variable names in the decompiler.
+Once you figure out what a function, branch label, stack value, or data value does, you can rename it by right-clicking the label and clicking _Edit label_ (hotkey 'L'). You can also edit variable names in the decompiler.
+>![](/assets/img/reverse-engineering/rename-label.png)<br>
+>Renaming a function's label
 
 Sometimes Ghidra's disassembler will automatically label registers as parameters. This is rarely helpful because registers are reused for many variables throughout the function. An example of this is `FUN_08043af4`.
 >![](/assets/img/reverse-engineering/register-labels.png)<br>
