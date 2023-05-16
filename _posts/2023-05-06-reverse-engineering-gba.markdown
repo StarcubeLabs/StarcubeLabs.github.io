@@ -3,7 +3,7 @@ layout: post
 title: Reverse Engineering a GBA Game
 date: 2023-05-06 05:00:00
 img: reverse-engineering/debug-env.png
-description: "How to reverse engineer a GBA game using _Pokémon Mystery Dungeon: Red Rescue Team_ as an example."
+description: "How to reverse engineer a GBA game, using Pokémon Mystery Dungeon: Red Rescue Team as an example."
 author: Some Body
 ---
 
@@ -19,7 +19,7 @@ This tutorial will walk you through the following:
 * Exploring debugging features of the mGBA emulator to inspect a game's memory and debug the game while it is running.
 * Reverse engineering strategies for finding game mechanics and data.
 
-<!-- If you are interested in reverse engineering a Nintendo DS game, this tutorial also has a [version for Nintendo DS games](../reverse-engineering-ds), which are somewhat more complicated and have additional frills compared to GBA games. -->
+If you are interested in reverse engineering a Nintendo DS game, this tutorial also has a [version for DS games](../reverse-engineering-ds), which have additional frills compared to GBA games.
 
 ### What skills do I need to follow this tutorial?
 * Programming knowledge (ideally C or C++), along with the following programming concepts:
@@ -117,18 +117,18 @@ In games with recurring content updates, developers sometimes add new assets int
 
 ## Setting up a reverse engineering environment
 
-For the purposes of this tutorial, you'll need the following applications:
+You'll need the following applications for this tutorial:
 * [Ghidra](https://ghidra-sre.org/) - a reverse engineering tool used for static code analysis.
-* [mGBA](https://mgba.io/) - a Game Boy Advance emulator with debugging and memory viewing capabilities.
+* [mGBA](https://mgba.io/) - a GBA emulator with debugging and memory viewing capabilities.
 * A ROM of _Pokémon Mystery Dungeon: Red Rescue Team_ - the game we'll reverse engineer. Make sure to use the USA/NTSC version of the game; other versions like the EU/PAL version have differences that change the locations of data and functions in memory.
 
 ### Setting up Ghidra
 >![](/assets/img/reverse-engineering/ghidra.png)<br>
->Analyzing a function in Ghidra.
+>Analyzing a function in Ghidra
 
-Ghidra is a free open-source reverse engineering tool developed by the U.S.'s National Security Agency (NSA). Ghidra can analyze binary data such as a game ROM to output assembly and even decompiled C, which we can read to reverse engineer a game. This kind of analysis occurs without the game running; this is known as __static code analysis__ (as opposed to __dynamic code analysis__ when debugging the game while it is running).
+Ghidra is a free open-source reverse engineering tool developed by the U.S. National Security Agency (NSA). Ghidra can analyze binary data such as a game ROM to output assembly and even decompiled C, which we can read to reverse engineer a game. This kind of analysis occurs without the game running; this is known as __static code analysis__ (as opposed to __dynamic code analysis__ when debugging the game while it is running).
 
->Note: Ghidra is an ideal code analysis and disassembly tool for hobbyists, costing nothing for a fully featured application. There are paid alternatives to Ghidra; the industry standard for professional reverse engineering is [IDA](https://hex-rays.com/ida-pro/). However, the full version of IDA costs thousands of dollars and is too costly for many hobbyists, while the free version doesn't have enough features for our purposes.
+>Ghidra is an ideal code analysis and disassembly tool for hobbyists, costing nothing for a fully featured application. There are paid alternatives to Ghidra; the industry standard for professional reverse engineering is [IDA](https://hex-rays.com/ida-pro/). However, the full version of IDA costs thousands of dollars and is too costly for many hobbyists, while the free version doesn't have enough features for our purposes.
 
 To install Ghidra, follow the instructions on [Ghidra's website](https://ghidra-sre.org/).
 
@@ -144,17 +144,17 @@ Let's make a new project using the _Red Rescue Team_ ROM.
 3. Choose a project name and a directory to save the project, then click _Finish_.
 4. _File > Import File..._
 5. Select the _Red Rescue Team_ ROM on your file system.
-6. Select an instruction set architecture for Ghidra to use for analyzing the binary. The GBA uses the ARMv4T instruction set in little-endian format (__ARM:LE:32:v4t__), which you can find by searching for "v4t" in the language select, then selecting the option with "little" under the _Endian_ column.
+6. Select an instruction set architecture (_Language_) for Ghidra to use for analyzing the binary. The GBA uses the ARMv4T instruction set in little-endian format (__ARM:LE:32:v4t__), which you can find by searching for "v4t" in the language select, then selecting the option with "little" under the _Endian_ column.
     >![](/assets/img/reverse-engineering/armv4t.png)<br>
     >Selecting the ARMv4T language
-7. Click _Options..._ and set the _Base Address_ to 0x8000000.
-7. Click _OK_ to make Ghidra inspect the binary.
-8. Once done, Ghidra will display a report with some details about the inspection. Click _OK_ to continue.
-9. Double-click the ROM in Ghidra to open Ghidra's code viewer.
-10. Ghidra will offer to analyze the binary. Click _Yes_.
-11. Use the default analysis settings and click _Analyze_.
-12. Wait for Ghidra to analyze the binary. This may take a couple minutes.
-13. When Ghidra's analysis finishes, it will present a screen like the image below. At this point, Ghidra is set up to start reverse engineering the game.
+7. Click _Options..._ and set the _Base Address_ to 08000000.
+8. Click _OK_ to make Ghidra inspect the binary.
+9. Once done, Ghidra will display a report with some details about the inspection. Click _OK_ to continue.
+10. Double-click the ROM in Ghidra to open Ghidra's code viewer.
+11. Ghidra will offer to analyze the binary. Click _Yes_.
+12. Use the default analysis settings and click _Analyze_.
+13. Wait for Ghidra to analyze the binary. This may take a couple minutes.
+14. When Ghidra's analysis finishes, it will present a screen like the image below. At this point, Ghidra is set up to start reverse engineering the game.
 >![](/assets/img/reverse-engineering/ghidra-setup.png)<br>
 >Ghidra after setting it up
 
@@ -212,7 +212,7 @@ When talking about data in the ROM, it is typical to refer to a piece of data ac
 
 When the GBA loads the ROM, the ROM's data is loaded into an area of memory from address 0x8000000-0x9FFFFFF. This area of memory is often called "ROM" despite technically being part of memory/RAM. In-game, values in the ROM are accessed using their address plus 0x8000000. For example, the data at address 0x4 in the ROM is accessed in-game using address 0x8000004. In the context of ROM addresses, this address can be referred to as 0x4 or 0x8000004 interchangeably.
 
->During Ghidra setup earlier, you set the Base Address of the ROM to 0x8000000. This matches where the GBA loads the ROM in memory, and supplying this address to Ghidra helps it to better analyze the ROM.
+>During Ghidra setup earlier, you set the _Base Address_ of the ROM to 0x8000000. This matches where the GBA loads the ROM in memory, and supplying this address to Ghidra helps it to better analyze the ROM.
 
 ### Instructions
 Instructions are used to manipulate data in registers or memory. The CPU executes instructions in sequence according to the value of the program counter.
@@ -307,16 +307,16 @@ Here is an unconditional branch instruction.
 ```
 b LAB_08090fde
 ```
-`LAB_08090fde` is known as a __label__. The label represents a certain instruction in memory; in this case, the label refers to the instruction at address 0x8090fde in the ROM.
+`LAB_08090fde` is known as a __label__. The label represents a certain instruction in memory; in this case, the label refers to the instruction at address 0x8090FDE in the ROM.
 
 Taking the previous example, if the branch instruction above is at address 0x8000002:
 1. Execute the instruction at address 0x8000000.
 2. Increment the program counter to 0x8000002.
 3. Execute instruction `b LAB_08090fde` at 0x8000002.
-4. The branch instruction sets the program counter to 0x8090fde.
-5. Execute the instruction at 0x8090fde.
-6. Increment the program counter to 0x8090fe0.
-7. Execute the instruction at 0x8090fe0.
+4. The branch instruction sets the program counter to 0x8090FDE.
+5. Execute the instruction at 0x8090FDE.
+6. Increment the program counter to 0x8090FE0.
+7. Execute the instruction at 0x8090FE0.
 
 And so on. After branching, the program counter resumes incrementing and executing instructions in order.
 
@@ -334,7 +334,7 @@ A conditional branch consists of two instructions. Here is an example.
 cmp r0,#0x1
 beq LAB_08090f14
 ```
-With this set of instructions, if the value of r0 is equal to 1, then the program branches to `LAB_08090f14`. If r0 is not equal to 1, then the program skips the branch and moves to the next instruction instead.
+With this set of instructions, if the value of `r0` is equal to 1, then the program branches to `LAB_08090f14`. If r0 is not equal to 1, then the program skips the branch and moves to the next instruction instead.
 * The `cmp` instruction is used to set up a conditional branch by comparing two values. The first value is always a register, and the second value can be either an immediate value or another register.
 * All conditional branch instructions start with the letter 'b' and end with a __mnemonic extension__ that specifies what kind of condition needs to be met. In this case, the extension `eq` signals that the branch will be taken if the compared values are equal.
 
@@ -350,7 +350,7 @@ Equality and non-equality have a single instruction each, while the other compar
 
 A higher-level language like C uses conditional keywords like `if`/`else if`/`else` and looping keywords like `while`/`do while`/`for`. These constructs typically translate to conditional branch statements when compiled to assembly.
 
->Internally, the `cmp` instruction sets four 1-bit __condition flags__ in the CPU, individually named C, N, V, and Z. Each conditional branch instruction checks specific condition flags to decide whether to branch. For example, the `beq` instruction will branch if the Z flag has a value of 1. Chances are that you won't need to interact directly with these condition flags; knowing the mnemonics of the branch instructions is sufficient.
+>Internally, the `cmp` instruction sets four 1-bit __condition flags__ in the CPU, individually named C, N, V, and Z. Each conditional branch instruction checks specific condition flags to decide whether to branch. For example, the `beq` instruction will branch if the Z flag has a value of 1. Chances are that you won't need to interact directly with these condition flags; knowing the mnemonic extensions is sufficient.
 
 ### Functions
 Conceptually, functions in assembly work similarly to functions in higher-level languages. A function can be invoked, which will cause the function to run before returning back to the code that called the function. Functions can also have parameters and return values. Let's look closer into how functions work in assembly.
@@ -369,7 +369,7 @@ ldr r0,[r0,#0x0]
 bx lr
 ```
 
-By default, Ghidra names functions according to the memory address where they start at. This function starts at memory address 0x80450f8, so the function is named `FUN_080450f8`.
+By default, Ghidra names functions according to the memory address where they start at. This function starts at memory address 0x80450F8, so the function is named `FUN_080450f8`.
 
 Most functions have three parts: a __prologue__, a __body__, and an __epilogue__. The prologue and epilogue consist of standard setup and cleanup for function execution, while the body is the main logic that the function will execute. In the function above:
 * The function is simple enough to have no prologue.
@@ -400,7 +400,7 @@ ldr r0,[r0,#0x0]
 #### Return values
 If a function needs to return a value, the return value will be stored in `r0` just before the function returns. The caller function can use the return value in `r0` as needed.
 
-In function `FUN_08083654`, the function body assigns a value to `r0` before returning with `bx`. 
+In function `FUN_080450f8`, the function body assigns a value to `r0` before returning with `bx`. 
 ```
 FUN_080450f8
 
@@ -424,7 +424,7 @@ Since a function can call another function, which can itself call another functi
 
 The __call stack__, often shortened to __stack__, is a special place in memory used to save register values when functions are called. It is also used to store local variables if there are too many for the registers to hold. As the name implies, it is a last-in first-out (LIFO) data structure.
 
-In most games, the stack is located in memory at addresses 0x3000000-0x3007FFF. The top of the stack starts at address 0x3007FFF at the beginning of program execution. As values are pushed onto the stack, the top of the stack moves down. The address at the top of the stack is tracked using `r13`, often called the __stack pointer__ (`sp`).
+In most GBA games, the stack is located in memory at addresses 0x3000000-0x3007FFF. The top of the stack starts at address 0x3007FFF at the beginning of program execution. As values are pushed onto the stack, the top of the stack moves down. The address at the top of the stack is tracked using `r13`, often called the __stack pointer__ (`sp`).
 
 One of the main purposes of the function prologue is to save register values to the stack. Register values are pushed onto the top of the stack (i.e., the address of `sp`) using the `push` instruction. The instruction also decrements `sp` to reflect the new top of the stack.
 
@@ -492,7 +492,7 @@ Like with stack local variables, the prologue subtracts from `sp` to allocate st
 
 Inside `FUN_08073b78`, the function access the stack argument via an offset from `sp`.
 ```
-FUN_00073b78
+FUN_08073b78
 
 ...
 ldr r0,[sp,#Stack[0x0]]
@@ -555,7 +555,7 @@ It is also possible to pass a range of registers to load into rather than listin
 ldmia r1!,{ r3-r5 }
 ```
 
->The "!" in the instruction indicates "write-back mode", which means the source register is incremented by the instruction. In some instruction sets, it is possible to omit the "!" to keep the source register unchanged, but ARM7TDMI only supports `ldmia` with write-back enabled.
+>The "!" in the instruction indicates "write-back mode", which means the source register is incremented by the instruction. In some instruction sets, it is possible to omit the "!" to keep the source register unchanged, but the ARM7TDMI only supports `ldmia` with write-back enabled.
 
 The `stmia` instruction (store multiple, increment after) works similarly to `ldmia`, except it stores the value in each of the bracketed registers into an address. Like `ldmia`, `stmia` can take a list of individual register or a register range.
 ```
@@ -670,7 +670,7 @@ Small switch statements often forgo a jump table and use a series of conditional
 ### Assembly primer wrap-up
 If you've made it this far, you now have the baseline knowledge to read GBA assembly code and identify some of the most common assembly patterns. While there are a number of less common assembly operations and patterns not covered in this tutorial, you should have enough context to fill in the gaps as needed with documentation such as the [official ARM docs](https://developer.arm.com/documentation/ddi0210/c/Introduction/Instruction-set-summary/Thumb-instruction-summary?lang=en), [Tonc](https://www.coranac.com/tonc/text/asm.htm#sec-arm), and your favorite search engine. Like most skills, practice is the best way to improve your assembly reading skills.
 
-The next step is to explore the tools that will help with reverse engineering a GBA game. We'll start with our main static code analyzer, Ghidra.
+The next step is to explore the tools that will help with reverse engineering a GBA game. We'll start with our static code analyzer, Ghidra.
 
 ## Using Ghidra
 Ghidra is a powerful reverse engineering tool with a rich set of features. This section will go over some basic Ghidra usage to get you started with reading assembly.
@@ -686,7 +686,7 @@ For this tutorial, the other windows can be closed to give more room to the list
 
 Right now, Ghidra is displaying the beginning of the ROM file, which doesn't contain anything interesting for us. Let's go to a different place in the ROM that contains disassembled code.
 
-For this demonstration, we'll use the function at address 0x80450e0. To navigate to this address, press 'g' and enter in "80450e0" to make Ghidra navigate to `FUN_080450e0`. Scroll down a bit to see the whole function, which looks like this:
+For this demonstration, we'll use the function at address 0x80450E0. To navigate to this address, press 'g' and enter in "80450E0". Scroll down a bit to see the whole function, which looks like this:
 >![](/assets/img/reverse-engineering/ghidra-example-function.png)<br>
 >FUN_080450e0 in Ghidra
 
@@ -695,16 +695,16 @@ Let's break down what is on the screen.
 
 * __Function name__ is self-explanatory.
 * It is possible to add comments to the assembly code. A __plate comment__ is a comment that takes up several lines. Ghidra automatically adds a plate comment to denote functions, and it is possible to add more yourself (we'll talk about that later).
-* The __references to function__ section lists all the places in the assembly code that call the current function. The list is in the format "function-name:instruction-address". In this case, Ghidra found 396 places that call `FUN_080450e0`, one of which is `FUN_0803edf0` with a `bl` instruction at address `0x803ee08`.
+* The __references to function__ section lists all the places in the assembly code that call the current function. The list is in the format "function-name:instruction-address". In this case, Ghidra found 396 places that call `FUN_080450e0`, one of which is `FUN_0803edf0` with a `bl` instruction at address 0x803EE08.
 * __Assembly instructions__` is where the actual assembly code is, along with labels to denote branch destinations and hard-coded data values.
 * __Hex data__ contains the raw hexadecimal values in the ROM file that correspond to the assembly instructions. The `push { lr }` instruction at the start of `FUN_080450e0` was derived from the hex value `00 b5` in the ROM.
-* The __addresses__ contain the addresses/offsets of each instruction from the start of the file. The `push { lr }` instruction at the start of `FUN_080450e0` is at address 0x80450e0 in the ROM.
+* The __addresses__ contain the addresses/offsets of each instruction from the start of the file. The `push { lr }` instruction at the start of `FUN_080450e0` is at address 0x80450E0 in the ROM.
 * The __branches__ section contains arrows that denote branches in the function; the start of the arrow is the branch instruction, and the end of the arrow is the instruction that the branch will set `pc` to.
-* __References to labels__ lists the places that branch to each label. Listed here is the address of each branch instruction to a given label. For example, `LAB_080450ea` is referenced by the `bne` instruction at address 0x450e4.
+* __References to labels__ lists the places that branch to each label. Listed here is the address of each branch instruction to a given label. For example, `LAB_080450ea` is referenced by the `bne` instruction at address 0x80450E4.
 * The __decompiled function code__ in the decompiler window contains decompiled C code for the function.
 
 ### Decompiler
-The decompiler is a tool that attempts to decompile assembly code into C code. Since C is a higher-level language than assembly, it is often faster to read C code than assembly code when figuring out how a function works.
+The decompiler is a tool that attempts to decompile assembly code into C code. Since C is a higher-level language than assembly, it is sometimes faster to read the decompiled C code than assembly code when figuring out how a function works.
 
 With the existence of a decompiler, you may be wondering: what's the point of learning to read assembly code if it can be decompiled to C?
 * Since the C code is generated instead of manually written, it is often harder to read than the raw assembly code.
@@ -731,7 +731,7 @@ Ghidra allows you to highlight certain corresponding elements, which are useful 
 ### Comments
 You can add comments to the assembly code by right-clicking an assembly instruction and going to _Comments_ in the context menu. There are options to position the comment in several places, including end-of-line (EOL), pre-line, post-line, and plate comments. The default keybind ';' will open the comment interface for EOL comments, and you can also assign key bindings to the other types of comments in _Edit > Tool Options > Key Bindings_.
 
-Here is an example end-of-line comment added to address 0x80450f0.
+Here is an example end-of-line comment.
 >![](/assets/img/reverse-engineering/eol-comment.png)<br>
 >End-of-line comment
 
@@ -774,7 +774,7 @@ Ghidra is great for analyzing code while the game is not running. While this can
 It is often useful to inspect the state of the game while it is running. This includes looking at memory values, stepping through assembly code execution and register changes, and viewing hardware-specific values like currently loaded sprites. This section will give a brief survey of some of the debugging capabilities that mGBA provides.
 
 ### Memory viewer
-The memory viewer allows viewing and editing values in main memory. The memory viewer can be accessed at _Tools > Game state views > View Memory..._, and will bring up a window that looks like below. Note that you can select _View Memory..._ multiple times to open multiple memory viewer windows.
+The memory viewer allows viewing and editing values in main memory. The memory viewer can be accessed at _Tools > Game state views > View Memory..._, and will bring up a window that looks like the image below. Note that you can select _View Memory..._ multiple times to open multiple memory viewer windows.
 >![](/assets/img/reverse-engineering/memory-viewer.png)<br>
 >Memory viewer window
 
@@ -788,20 +788,20 @@ Per the [GBA memory map](http://problemkaputt.de/gbatek-gba-memory-map.htm), the
 
 For a demonstration of the memory viewer's capabilities, jump to address 0x2017310, which contains data about the player and partner Pokémon. Certain values around this address constantly change, which represents values changing in-game. In this case, several of the rapidly changing values here control the animations of the Pokémon on screen. If you move around in-game, you'll notice additional variables changing, which represent values such as the position of the Pokémon on the screen and on the dungeon floor.
 
-Next, jump to address 0x200419E. This area contains more values related to the player and partner Pokémon. Change the value at 0x200419E to 8, and you'll notice that the player's health (HP) changes in-game to match the value you entered.
+Next, jump to address 0x200419E. This area contains more values related to the player and partner Pokémon. Change the value at 0x200419E to 08, and you'll notice that the player's health (HP) changes in-game to match the value you entered.
 >![](/assets/img/reverse-engineering/edit-memory.png)<br>
 >Editing memory values
 
 The memory viewer has other functionality such as saving/loading values in bulk, though I won't go over these in this tutorial. Feel free to explore this functionality on your own.
 
 ### Memory search
-The memory search view allows searching both RAM and ROM for specific values. It can be acccessed via _Tools > Game state views > Search memory..._, which will bring up the window below.
+The memory search view allows searching memory for specific values. It can be acccessed via _Tools > Game state views > Search memory..._, which will bring up the window below.
 >![](/assets/img/reverse-engineering/memory-search.png)<br>
->mGBA's Memory search window
+>Memory search window
 
-The memory search is a valuable tool for finding the addresses of relevant in-game values. For example, let's use the memory search to locate which address the player's HP is stored in.
+The memory search is a valuable tool for finding the addresses of relevant in-game values. As an example, let's use the memory search to locate which address the player's HP is stored in.
 
-To search for a value, enter the value to search for, configure the search using the available options, and press _New Search_. For example, let's search for the player's current HP.
+To search for a value, enter the value to search for, configure the search using the available options, and press _New Search_. Let's search for the player's current HP.
 >![](/assets/img/reverse-engineering/memory-search-new.png)<br>
 >Searching for a value
 
@@ -818,14 +818,14 @@ Now that the search is narrowed to a handful of values, you can try changing the
 ### Debugger
 In mGBA, the debugger is a console that exposes several useful debugging features, including setting breakpoints and watchpoints to pause game execution, stepping through assembly code as it runs, and viewing register values. The debugger is accessed via _Tools > Open Debugger Console..._, which will open the window below:
 >![](/assets/img/reverse-engineering/debugger.png)<br>
->mGBA's debugger window
+>Debugger window
 
 As stated in the console input box, you can use the `h` (`help`) command to view all available commands. This tutorial will go through a handful of the commands to introduce the debugging process.
 
 #### Navigating debug mode
 Let's start by stopping the game execution at whatever piece of code it is currently running. Hit the _Break_ button on the bottom right, which will pause the game and cause the debugger to output something like the following:
 >![](/assets/img/reverse-engineering/debugger-break.png)<br>
->mGBA's example debugger break
+>Example debugger break
 
 The image above displays a typical view of the current game state when the debugger pauses the game. At the top are the current values of all 16 registers, including the stack pointer (`r13`), link register (`r14`), and program counter (`r15`). At the bottom is the assembly instruction that will be executed next, along with the corresponding hex data for the instruction and the address where the instruction is stored.
 
@@ -853,9 +853,9 @@ Note that most debugger console commands will pause the game if it is not alread
 Writing values to memory uses the format `w/<size> <address> <write value>`. For instance, the command `w/1 0x200419E 20` will set the player's HP to 20. Like the address, the write value can be either decimal or hex. There is also a `w/r` command to write a value to a register instead of memory.
 
 #### Breakpoints
-Similar to debuggers in higher-level languages, a breakpoint pauses program execution if a specific line of code is reached. This has several uses, like figuring out whether a line of code is reached when performing an action in-game, or stopping program execution at a specific function to debug it.
+Similar to debuggers in higher-level languages, a __breakpoint__ pauses program execution if a specific line of code is reached. This has several uses, like figuring out whether a line of code is reached when performing an action in-game, or stopping program execution at a specific function to debug it.
 
-A breakpoint can be set using the `b` (`break`) command, with the format `b <address>`. As a demonstration, set a breakpoint at the beginning of the function `FUN_08044b28` using `b 0x08044b28`. This will pause game execution, so unpause the game with the `c` command.
+A breakpoint can be set using the `b` (`break`) command, with the format `b <address>`. As a demonstration, set a breakpoint at the beginning of the function `FUN_08044b28` using `b 0x8044B28`. This will pause game execution, so unpause the game with the `c` command.
 >![](/assets/img/reverse-engineering/debugger-add-breakpoint.png)<br>
 >Adding a breakpoint
 
@@ -870,7 +870,7 @@ To delete a breakpoint, use the `d <index>` (`delete`) command, where `<index>` 
 The `listb` command will list all breakpoints currently added, along with each breakpoint's index.
 
 #### Watchpoints
-A watchpoint pauses program execution if a specific address in memory is read from or written to. This is useful for finding which part of the code is used to manipulate a certain value in memory, and can also be used to track a memory value whose purpose hasn't been figured out yet.
+A __watchpoint__ pauses program execution if a specific address in memory is read from or written to. This is useful for finding which part of the code is used to manipulate a certain value in memory, and can also be used to track a memory value whose purpose hasn't been figured out yet.
 
 To set a watchpoint, use the command `watch <address>`. There are also variants of this command to watch only reads (`watch/r`), writes (`watch/w`), or changes (`watch/c`) to the address's value. Like with breakpoints, watchpoints can be deleted with the same `d <index>` command. Listing watchpoints uses the `listw` command.
 
@@ -892,7 +892,7 @@ Now that the watchpoint doesn't constantly trigger, you can move around until yo
 
 The watchpoint will output both the new and previous values of the address. In the screenshot above, the HP value changed from 8 to 9.
 
-Note that the instruction displayed by the watchpoint is the instruction _after_ the instruction that accessed the watched address, meaning that the instruction that wrote to the HP value is at 0x08074C28. By looking up address 0x8074C28 in Ghidra, you'll find the `strh` instruction used to set the HP value, within `FUN_08074b54`. This indicates that `FUN_08074b54` handles passive HP restoration.
+Note that the instruction displayed by the watchpoint is the instruction _after_ the instruction that accessed the watched address, meaning that the instruction that wrote to the HP value is at 0x8074C28. By looking up address 0x8074C28 in Ghidra, you'll find the `strh` instruction used to set the HP value, within `FUN_08074b54`. This indicates that `FUN_08074b54` handles passive HP restoration.
 
 ### Save states
 Save states are a standard part of most emulators, allowing the game's state to be saved and loaded at any time. In addition to their standard gaming uses, save states can also be used at a more granular level while debugging the program.
@@ -910,11 +910,11 @@ The mGBA section of this tutorial discusses a couple of strategies using [memory
 ### Following a value backwards through assembly
 One way to find the location of a specific value is to trace related values backwards through the assembly to find where they came from. This might lead to the value you are looking for.
 
-To demonstrate, let's find the place in code that determines how many hitpoints (HP) a certain healing item will heal your character. In-game, explore the dungeon floor until you find a blue berry, called an Oran Berry. You may not necessarily find one on the floor you're on; if you've explored the floor and found nothing, look for a staircase to proceed to the next floor and continue the search.
+To demonstrate, let's find the place in code that determines how many hitpoints (HP) a certain healing item will heal your character. In-game, explore the dungeon until you find a blue berry on the floor, called an Oran Berry. You might not find one on the floor you're on; if you've explored the floor and found nothing, look for a staircase to proceed to the next floor and continue the search.
 >![](/assets/img/reverse-engineering/oran-berry.png)<br>
->An Oran Berry on the ground just to the top right of the player
+>An Oran Berry on the ground to the top right of the player
 
-Once you find an Oran Berry, walk over it to pick it up. The berry heals 100 HP (up to your max HP), and our goal in this demonstration is to change the berry to heal only 10 HP. This requires knowing where the value of 100 is stored within the game's code.
+Once you find an Oran Berry, walk over it to pick it up. The berry heals 100 HP (up to your max HP), and our goal in this demonstration is to change the berry to heal only 10 HP. This requires knowing where the value 100 is stored within the game's code.
 
 You'll need to have low HP to observe how much the berry heals, so use the command `w/1 0x200419E 1` in the debugger console to set your HP to 1. Press B to open the menu, and go to Items to see the Oran Berry in your inventory. Make a save state so you can come back to this point, as you'll be repeatedly eating the berry to debug what happens in code when you eat it. Once you've made a save state, select the berry and eat it, which will heal all of the player's HP.
 >![](/assets/img/reverse-engineering/oran-berry-normal.png)<br>
@@ -933,18 +933,18 @@ add r0,r2,r3
 ```
 The 0x65 in `r0` was the sum of `r2` and `r3`, and looking at the current game state from the watchpoint, `r2` matches the player's HP of 1 while `r3` matches the Oran Berry's healing amount of 0x64 (100). Prior to the addition, we can see that the 0x64 in `r3` was copied from `r10`.
 
-Now let's look for where the value 0x64 was assigned to `r10`. Middle-click `r10` to highlight its usages, then scroll up in the function. There is another reference to `r10` at 0x77c8c with `mov r3,r10`, but this doesn't assign to `r10`, so we can ignore it. Near the top of the function is what we are looking for, address 0x77c54 with `mov r10,r2`.
+Now let's look for where the value 0x64 was assigned to `r10`. Middle-click `r10` to highlight its usages, then scroll up in the function. There is another reference to `r10` at 0x8077C8C with `mov r3,r10`, but this doesn't assign to `r10`, so we can ignore it. Near the top of the function is what we are looking for, address 0x8077C54 with `mov r10,r2`.
 >![](/assets/img/reverse-engineering/trace-oran-berry.png)<br>
 >Tracing the healing amount of the Oran Berry to the top of the function
 
 The 0x64 in `r10` came from `r2`, but there are no more references to `r2` between here and the start of the function. Remember that registers `r0`-`r3` are designated for passing arguments into a function. This means that `r2` is the third parameter of `FUN_08077c44`, and the 0x64 came from the code that called `FUN_08077c44`. The next step is to find the caller of this function.
 
-Scroll to the bottom of `FUN_08077cc44`, and you'll find the `bx` instruction at 0x8077dd6 marking the end of the function. Make a breakpoint in mGBA at 0x8077dd6, then continue program execution to hit the breakpoint. Note that before hitting the breakpoint, you'll hit the watchpoint for player HP again; this is where the player's HP is capped at their max HP.
+Scroll to the bottom of `FUN_08077cc44`, and you'll find the `bx` instruction at 0x8077DD6 marking the end of the function. Make a breakpoint in mGBA at 0x8077DD6, then continue program execution to hit the breakpoint. Note that before hitting the breakpoint, you'll hit the watchpoint for player HP again; this is where the player's HP is capped at their max HP.
 
 >![](/assets/img/reverse-engineering/oran-berry-end-function.png)<br>
 >Hitting the breakpoint at the end of `FUN_08077cc4`
 
-The breakpoint shows that `r0` is 0x0804838D. As the code is about to return from `FUN_08077cc4`, this is where the function will return to, and also where it was called. However, if you go to address 0x804838D in Ghidra, this section is not marked as assembly code.
+The breakpoint shows that `r0` is 0x804838D. As the code is about to return from `FUN_08077cc4`, this is where the function will return to, and also where it was called. However, if you go to address 0x804838D in Ghidra, this section is not marked as assembly code.
 >![](/assets/img/reverse-engineering/oran-berry-missing-assembly.png)<br>
 >Missing assembly code at 0x804838D
 
@@ -959,28 +959,28 @@ ldr r2,[DAT_08048394]
 mov r3,#0x0
 ldrsh r2,[r2,r3]
 ```
-This loads an address into `r2` from data value `DAT_08048394`, then loads the value at the address into `r2`. Look at address 0x48394 to find that the value of `DAT_08048394` is 0x080F4FB6. This is within ROM, which is promising; ROM cannot normally be written to, so chances are that this is the source of the value 0x64.
+This loads an address into `r2` from data value `DAT_08048394`, then loads the value at the address into `r2`. Look at address 0x8048394 to find that the value of `DAT_08048394` is 0x80F4FB6. This is within ROM, which is promising; ROM cannot normally be written to, so chances are that this is the source of the value 0x64.
 
-With this address in mind, go back to mGBA and go to address 0x080F4FB6 in the memory viewer. You will find the value 0x64 at the address, confirming that this is the location of the Oran Berry's HP heal amount.
+With this address in mind, go back to mGBA and go to address 0x80F4FB6 in the memory viewer. You will find the value 0x64 at the address, confirming that this is the location of the Oran Berry's HP heal amount.
 >![](/assets/img/reverse-engineering/oran-berry-found.png)<br>
 >The location of the Oran Berry's heal amount
 
-To test the address we found for the heal amount, reload your save state, change the 0x64 at address 0x080F4FB6 to 0x0A in the memory viewer (0x0A = 10 in decimal), and eat the Oran Berry again to see how much it heals. You may wish to delete the watchpoint and breakpoint from earlier to avoid hitting them again now that we are finished with them.
+To test the address we found for the heal amount, reload your save state, change the 0x64 at address 0x80F4FB6 to 0x0A in the memory viewer (0x0A = 10 in decimal), and eat the Oran Berry again to see how much it heals. Delete the watchpoint and breakpoint from earlier to avoid hitting them again now that we're finished with them.
 >![](/assets/img/reverse-engineering/oran-berry-changed.png)<br>
 >The changed Oran Berry heal amount
 
-Success! We've found that the Oran Berry's heal amount is stored at 0x080F4FB6. Technically, if you edited the game binary and changed the value at byte 0xF4FB6, you'd create a minimal ROM hack that nerfs the Oran Berry's healing. Creating ROM hacks is out of the scope of this tutorial, but this demonstrates a piece of the process for creating these types of hacks.
+Success! We've found that the Oran Berry's heal amount is stored at 0x80F4FB6. Technically, if you edited the game binary and changed the value at byte 0xF4FB6, you'd create a minimal ROM hack that nerfs the Oran Berry's healing. Creating ROM hacks is out of the scope of this tutorial, but this demonstrates a piece of the process for creating these types of hacks.
 
 >Note that changed values in ROM in mGBA will not revert back if you load a save state. If you want to revert ROM values, you can either change them back manually or reload the ROM in the emulator.
 
 ### Reading assembly forwards
 Perhaps obviously, reading assembly forward is a way to figure out how game logic works.
 
-Let's use the same functionality from the previous section. Go back to address 0x8077cd6 in Ghidra, where the player's HP is healed from a berry.
+Let's use the same functionality from the previous section. Go back to address 0x8077CD6 in Ghidra, where the player's HP is healed from a berry.
 >![](/assets/img/reverse-engineering/read-assembly-forwards.png)<br>
 >Assembly code for healing the player with a berry
 
-We saw that the instruction at 0x8077cd4, `strh r0,[r4,#0xe]`, sets the player's HP to the heal amount + the player's current HP. In the assembly, you can see a conditional `ble` statement that checks if `r0` (the calculated heal amount) is less than the value in `r1`. Alternatively, you can look at the decompilation to find this same conditional, where the calculated value is `iVar3` and the player's HP value is `*(short *)(iVar4 + 0xe)`. If the conditional is not met, then another value is stored in the player's HP.
+We saw that the instruction at 0x8077CD4, `strh r0,[r4,#0xe]`, sets the player's HP to the heal amount + the player's current HP. At address 0x8077CDC, you can see a conditional `ble` statement that checks if `r0` (the calculated heal amount) is less than `r1`. Alternatively, you can look at the decompilation to find this same conditional, where the calculated value is `iVar3` and the player's HP value is `*(short *)(iVar4 + 0xe)`. If the conditional is not met, then another value is stored in the player's HP (the `strh r0,[r4,#0xe]` at 0x8077CE0).
 
 >Since the player's HP is accessed using an offset, this is an indicator that the player's HP is within a struct, likely containing other values related to the player. The player's HP is at offset 0xe in this struct.
 
@@ -990,9 +990,9 @@ Although we could trace the values of `r1` and `r12` in the assembly, it might b
 
 `r1` and `r12` are both equal to the player's max HP. This means the code checks if the sum of the heal amount and the player's current HP is greater than the max HP, and caps the player's HP at its max HP if so. You can step through instructions with `n` to see this in action.
 
-For further confirmation we can change the `strh` instruction at `0x8077ce0` so that it doesn't cap the player's HP. In Ghidra, you can see that this instruction's hex value is `e0 81`. In mGBA, go to address `0x8077ce0` in the memory viewer, and you'll find the same `e0 81` there. Change both of these bytes to `00`, which will change the instruction to a no-op (an instruction that does nothing).
+For further confirmation we can change the `strh` instruction at 0x8077CE0 so that it doesn't cap the player's HP. In Ghidra, you can see that this instruction's hex value is `E0 81`. In mGBA, go to address 0x8077CE0 in the memory viewer, and you'll find the same `E0 81` there. Change both of these bytes to `00`, which will change the instruction to a no-op (an instruction that does nothing).
 >![](/assets/img/reverse-engineering/no-op-instruction.png)<br>
->Changing the instruction at 0x8077ce0 to a no-op
+>Changing the instruction at 0x8077CE0 to a no-op
 
 Now let's try eating a berry.
 >![](/assets/img/reverse-engineering/remove-hp-cap.png)<br>
@@ -1003,23 +1003,23 @@ The game now claims 100 HP was healed, and you may have noticed the HUD quickly 
 ### Inspecting values near a known value
 Once you've found the address of a value in memory, it's likely that nearby values in memory are also related, possibly as part of a struct or array of data. We can use the memory viewer to look at other RAM values in the vicinity of the known value, and possibly discover more values by visual inspection or attempting to change them. This approach doesn't have a specific goal in mind; instead, it is meant to discover a bunch of values quickly, laying groundwork to expedite searching for specific values later.
 
-For this demonstration, we'll use the address of the player's HP that we found earlier in this tutorial. Open the memory viewer and go to address 0x200419e. Since the player's HP is here, it's reasonable to guess that other values related to the player character are here.
+For this demonstration, we'll use the address of the player's HP that we found earlier in this tutorial. Open the memory viewer and go to address 0x200419E. Since the player's HP is here, it's reasonable to guess that other values related to the player character are here.
 >![](/assets/img/reverse-engineering/memory-viewer-nearby.png)<br>
 >Looking at values near the player's HP in memory
 
 A value directly related to your HP is your maximum HP. Look in the in-game HUD for your max HP (directly to the right of your current HP), then try to find it in the memory viewer.
 
-You won't have to look very far. Two bytes ahead of your current HP is a number that matches your max HP, address 0x020041A0. Try to change this value, and you will see that your max HP changes on the HUD, confirming that 0x020041A0 is the player's max HP.
+You won't have to look very far. Two bytes ahead of your current HP is a number that matches your max HP, address 0x20041A0. Try to change this value, and you will see that your max HP changes on the HUD, confirming that 0x20041A0 is the player's max HP.
 
 Another number that is close by is the player's level (labeled "Lv" on the HUD), which is 5 when you've just started the game. Look around the memory viewer for the value 5, and once you've found a possible value, try changing it to see if the player's level changes in the HUD. The correct address is in the spoiler below.
 <details>
   <summary>Address of the player's level</summary>
-  0x02004199
+  0x2004199
 </details>
 
-A related approach is to perform an action in-game and watch as values in memory change. This includes moving around, attacking, etc. To demonstrate this approach, press the Start button in the game to enter a mode where you can face a direction without moving. Turn around a couple of times while watching the memory viewer, and you'll see the value at address 0x020041D6 changing. No other visible value changes, which is a good indicator that 0x020041D6 contains the direction the player was facing (encoded as an enum).
+A related approach is to perform an action in-game and watch as values in memory change. This includes moving around, attacking, etc. To demonstrate this approach, press the Start button in the game to enter a mode where you can face a direction without moving. Turn around a couple of times while watching the memory viewer, and you'll see the value at address 0x20041D6 changing. No other visible value changes, which is a good indicator that 0x20041D6 contains the direction the player was facing (encoded as an enum).
 
-It's also possible to use a trial-and-error approach by simply going through memory addresses, changing them, and seeing if this affects anything in game. For example, if you go through this process, eventually you'll reach the address 0x02004238. Set this value to 1, and you'll see the player character fall asleep, indicating that this value is used for the sleep status condition.
+It's also possible to use a trial-and-error approach by simply going through memory addresses, changing them, and seeing if this affects anything in game. For example, if you go through this process, eventually you'll reach the address 0x2004238. Set this value to 1, and you'll see the player character fall asleep, indicating that this value is used for the sleep status condition.
 >![](/assets/img/reverse-engineering/memory-viewer-asleep.png)<br>
 >Discovering the address that controls whether the player is asleep
 
