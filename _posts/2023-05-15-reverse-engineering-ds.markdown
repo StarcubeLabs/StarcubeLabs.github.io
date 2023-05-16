@@ -91,6 +91,7 @@ This tutorial discusses several reverse engineering aspects unique to DS games. 
   - [Inspecting values near a known value](#inspecting-values-near-a-known-value)
   - [Chaining strategies](#chaining-strategies)
   - [Using existing resources](#using-existing-resources)
+    - [Explorers of Sky resources](#explorers-of-sky-resources)
 - [Conclusion](#conclusion)
 
 
@@ -122,11 +123,13 @@ In games with recurring content updates, developers sometimes add new assets int
 You'll need the following applications for this tutorial:
 * [Ghidra](https://ghidra-sre.org/) - a reverse engineering tool used for static code analysis.
 * [DeSmuME](http://desmume.org/) - a DS emulator with debugging and memory viewing capabilities.
-* A ROM of _Pokémon Mystery Dungeon: Explorers of Sky_ - the game we'll reverse engineer. Make sure to use the USA/NTSC version of the game; other versions like the EU/PAL version have differences that change the locations of data and functions in memory.
+* A ROM of _Pokémon Mystery Dungeon: Explorers of Sky_ - the game we'll reverse engineer. Make sure to use the USA/NTSC version of the game; other versions like the EU/PAL version have differences that change the locations of data and functions.
 
 >This tutorial uses DeSmuME as the DS emulator of choice, though it is worth mentioning another DS emulator commonly used for debugging, [No$GBA](https://www.nogba.com/). No$GBA has more advanced debugging features than DeSmuME, but is less stable and less user-friendly.
 
-Only the Windows version of DeSmuME has the proper debugging capabilities for reverse engineering. Unfortunately for macOS users, there are no DS emulators on macOS that support debugging, so you will need a Windows machine or VM. Alternatively, you can follow the [GBA version](../reverse-engineering-gba) of this tutorial, as there are macOS-compatible GBA emulators that support debugging. Ghidra is compatible with macOS, so you can opt for a setup with Ghidra on macOS and DeSmuME on Windows if you prefer.
+Only the Windows version of DeSmuME has the proper debugging capabilities for reverse engineering. Unfortunately for macOS/Linux users, the only option for debugging DS games on these OSes is DeSmuME's partially functioning [gdb](https://www.sourceware.org/gdb/) stub, which doesn't work very well even if you are familiar with gdb. Ghidra is compatible with all OSes, so you can opt for a setup with Ghidra on macOS/Linux and DeSmuME on Windows if you prefer. Alternatively, you can follow the [GBA version](../reverse-engineering-gba) of this tutorial, as there are GBA emulators for macOS/Linux that support debugging.
+
+> The following Ghidra setup is adapted from the excellent setup guide written by UsernameFodder as part of the [pmdsky-debug](https://github.com/UsernameFodder/pmdsky-debug/blob/master/docs/ghidra-setup.md) project.
 
 ### Unpacking the ROM
 To start analyzing a DS ROM, you'll need to unpack its contents to extract binary files containing the code for the game. To unpack a DS ROM, you can use [DSLazy](https://projectpokemon.org/home/files/file/2118-dslazy/) (Windows) or [ndstool](https://github.com/devkitPro/ndstool) (macOS/Linux).
@@ -157,7 +160,7 @@ Ghidra is a free open-source reverse engineering tool developed by the U.S. Nati
 
 To install Ghidra, follow the instructions on [Ghidra's website](https://ghidra-sre.org/).
 
-If you're on recent versions of macOS, you'll need to give Ghidra's decompiler permission to run before setting up a project. Inside Ghidra's folder, go to `Ghidra/Features/Decompiler/os/mac_x86_64`, right-click the `decompile` executable file, select __Open__, and confirm the __Open__ when macOS warns about not being able to verify the developer.
+If you're on a recent version of macOS, you'll need to give Ghidra's decompiler permission to run before setting up a project. Inside Ghidra's folder, go to `Ghidra/Features/Decompiler/os/mac_x86_64`, right-click the `decompile` executable file, select __Open__, and confirm the __Open__ when macOS warns about not being able to verify the developer.
 
 Launch Ghidra after it is installed, and you'll see this screen.
 >![](/assets/img/reverse-engineering/ghidra-start.png)<br>
@@ -170,7 +173,7 @@ Let's make a new project using the _Explorers of Sky_ ROM files that you unpacke
 3. Choose a project name and a directory to save the project, then click _Finish_.
 4. _File > Import File..._
 5. Choose the `arm9.bin` file from the unpacked _Explorers of Sky_ ROM files.
-6. Select an instruction set architecture (_Language_) for Ghidra to use for analyzing the binary. The DS uses the ARMv5T instruction set in little-endian format (__ARM:LE:32:v5t__), which you can find by searching for "v5t" in the language select, then selecting the option with "little" under the _Endian_ column.
+6. Select an instruction set architecture (_Language_) for Ghidra to use for analyzing the binary. The DS uses the ARMv5T (technically ARMv5TE) instruction set in little-endian format (__ARM:LE:32:v5t__), which you can find by searching for "v5t" in the language select, then selecting the option with "little" under the _Endian_ column.
     >![](/assets/img/reverse-engineering/armv5t.png)<br>
     >Selecting the ARMv5T language
 7. Click _Options..._ and set the _Base Address_ to 02000000.
@@ -179,19 +182,19 @@ Let's make a new project using the _Explorers of Sky_ ROM files that you unpacke
 10. Double-click the ROM in Ghidra to open Ghidra's code viewer.
 11. Ghidra will offer to analyze the binary. Click _No_ for now, as there some more setup to do first.
     > If you do run an analysis at this point, it won't cause any ill effects. Ghidra will simply run a partial analysis with what it has, and you can rerun the analysis later when everything is set up.
-12.  Click _File > Add To Program_, then look for the `overlays` folder in the unpacked ROM files. Choose `overlay_0029.bin` inside this folder.
-13.  Click _Options..._
-14.  Set the block name to "overlay_0029.bin".
+12. Click _File > Add To Program_, then look for the `overlays` folder in the unpacked ROM files. Choose `overlay_0029.bin` inside this folder.
+13. Click _Options..._
+14. Set the block name to "overlay_0029.bin".
     > The block name won't affect analysis and can technically be whatever you like. I recommend the same name as the overlay file to keep track of it.
-15.  Set the base address to 22DC240.
-16.  Click _OK_ to confirm the options you set, _OK_ to add the overlay, then _OK_ when Ghidra presents the results of adding the overlay.
-    > You may have noticed an _Overlay_ checkbox in the options, but this isn't helpful for our use case despite its name. Leave it unselected to avoid messing up Ghidra's analysis.
-17.  Repeat steps 12-16 with the overlay file `overlay_0010.bin`. Use 22BCA80 for the base address of this file.
-18.  Repeat steps 12-16 with the overlay file `overlay_0031.bin`. Use 2382820 for the base address of this file.
-19.  Run analysis by selecting _Analysis > Auto Analyze '\<project\>'..._, or use the hotkey 'a'.
-20.  Use the default analysis settings and click _Analyze_.
-21.  Wait for Ghidra to analyze the binaries. This may take a couple minutes.
-22.  When Ghidra's analysis finishes, it will present a screen like the image below. At this point, Ghidra is set up to start reverse engineering the game.
+15. Set the base address to 22DC240.
+16. Click _OK_ to confirm the options you set, _OK_ to add the overlay, then _OK_ when Ghidra presents the results of adding the overlay.
+    > You may have noticed an Overlay checkbox in the options, but this isn't helpful for our use case despite its name. Leave it unselected to avoid messing up Ghidra's analysis.
+17. Repeat steps 12-16 with the overlay file `overlay_0010.bin`. Use 22BCA80 for the base address of this file.
+18. Repeat steps 12-16 with the overlay file `overlay_0031.bin`. Use 2382820 for the base address of this file.
+19. Run analysis by selecting _Analysis > Auto Analyze '\<project\>'..._, or use the hotkey 'a'.
+20. Use the default analysis settings and click _Analyze_.
+21. Wait for Ghidra to analyze the binaries. This may take a couple minutes.
+22. When Ghidra's analysis finishes, it will present a screen like the image below. At this point, Ghidra is set up to start reverse engineering the game.
 
 To verify whether Ghidra was set up properly, press 'g', enter the value 22E0354, then press _OK_. You should see a screen like the following.
 >![](/assets/img/reverse-engineering/ghidra-setup-ds.png)<br>
@@ -201,13 +204,13 @@ How would you know to use the ARM:LE:32:v5t language if I didn't tell you? First
 
 As for [endianness](https://en.wikipedia.org/wiki/Endianness) (the order that bytes are stored for each [word](https://en.wikipedia.org/wiki/Word_(computer_architecture)) of data), most ARM CPUs are "bi-endian" and support both little and big endian. In practice, most ARM programs use little endian. If Ghidra spits out incomprehensible disassembled code while using a little endian language, try big endian and see if the output is any better. Note that some CPUs, such as those using the [PowerPC](https://en.wikipedia.org/wiki/PowerPC) instruction set (e.g., the Wii), are predominantly big endian instead.
 
-The project setup used some magic numbers when adding overlays. Overlays will be discussed [later in this tutorial](#overlays), including how to find these numbers by yourself.
+The project setup uses some magic numbers when adding overlays. Overlays will be discussed [later in this tutorial](#overlays), including how to find these numbers by yourself.
 
 ### Setting up DeSmuME with _Explorers of Sky_
 In addition to Ghidra, you'll need to set up a DS emulator and progress the game past the opening sequence.
 1. Download the latest stable release of DeSmuME from [DeSmuME's website](http://desmume.org/download/) and extract it to the folder of your choosing.
 2. Open DeSmuME and use _File > Open ROM..._. Select the _Explorers of Sky_ ROM in your file system. Make sure to use the original ROM file, not the files you unpacked from it.
-3. View and configure button mappings at _Config_ > Control Config_ if needed.
+3. View and configure button mappings at _Config > Control Config_ if needed.
 4. Watch the intro cutscene for the game, then start a new game.
 5. The start of the game consists of a personality quiz that will decide your player character. Answer the questions, honestly or not, then the game will assign you a Pokémon.
 6. Choose a name for yourself, a partner Pokémon, and a name for your partner.
@@ -223,7 +226,7 @@ An [assembly language](https://en.wikipedia.org/wiki/Assembly_language) (assembl
 
 >This tutorial presents a brief introduction of assembly to get you started. For brevity, I'll be skipping some of the finer details. If you're interested in a more thorough DS assembly reference, check out Tonc's [Whirlwind Tour of ARM Assembly](https://www.coranac.com/tonc/text/asm.htm#sec-arm).
 
-Different CPUs may use different assembly languages depending on which operations the CPU supports (the "instruction set" of the CPU). While all CPUs support the minimum set of instructions required for a computer to function, extra instructions act as shortcuts that allow a program to compile to fewer lines of assembly, resulting in faster program execution in exchange for more complicated CPU hardware to support the additional instructions, and possibly instructions taking more space to store. This tutorial will use the __ARM__ instruction set, as this is the main instruction set used by _Red Rescue Team_'s code. Future uses of the word "assembly" in this tutorial will be shorthand for "ARM instruction set assembly language"; this is a common shorthand in the context of a specific game.
+Different CPUs may use different assembly languages depending on which operations the CPU supports (the "instruction set" of the CPU). While all CPUs support the minimum set of instructions required for a computer to function, extra instructions act as shortcuts that allow a program to compile to fewer lines of assembly, resulting in faster program execution in exchange for more complicated CPU hardware to support the additional instructions, and possibly instructions taking more space to store. This tutorial will use the __ARM__ instruction set, as this is the main instruction set used by _Explorers of Sky_'s code. Future uses of the word "assembly" in this tutorial will be shorthand for "ARM instruction set assembly language"; this is a common shorthand in the context of a specific game.
 
 >In addition to ARM, the DS's CPU supports another instruction set known as __THUMB__, which has less complicated instructions than ARM, but requires more instructions to accomplish the same functionality as ARM. The THUMB instruction set is out of the scope of this tutorial, though most of the concepts in this tutorial can be applied to any assembly language.
 
@@ -238,7 +241,7 @@ A __register__ is a location in the CPU hardware that stores a value. When the C
 
 CPUs have a handful of registers available. In ARM CPUs, registers are named with the format `rX`, where `X` is the 0-indexed register number. The DS's CPU has 16 registers numbered from `r0` to `r15`, and each can store up to 32 bits (4 bytes) of data for a total of 512 bits (64 bytes) of data.
 
-`r15` is a special register called the __program counter__ (__PC__ for short). This register holds the address to the next instruction to be loaded, and is incremented by 2 automatically after an instruction is executed (instructions are 4 bytes long). This causes assembly to be executed line-by-line. It is possible to set the PC's value, which will cause the CPU to jump to the new address and begin executing code there; this is used for constructs like conditional statements, loops, and function calls. The CPU loads instruction slightly ahead of when it executes them, so the PC may be a few instructions ahead of the instruction currently being executed.
+`r15` is a special register called the __program counter__ (__PC__ for short). This register holds the address to the next instruction to be loaded, and is incremented by 4 automatically after an instruction is loaded (instructions are 4 bytes long). This causes assembly to be executed line-by-line. It is possible to set the PC's value, which will cause the CPU to jump to the new address and begin executing code there; this is used for constructs like conditional statements, loops, and function calls. The CPU loads instructions slightly ahead of when it executes them, so the PC may be a few instructions ahead of the instruction currently being executed.
 
 Some of the other registers also have special names and purposes. We will get into those later.
 
@@ -403,7 +406,7 @@ beq LAB_02090f14
 ```
 With this set of instructions, if the value of `r0` is equal to 1, then the program branches to `LAB_02090f14`. If r0 is not equal to 1, then the program skips the branch and moves to the next instruction instead.
 * The `cmp` instruction is used to set up a conditional branch by comparing two values. The first value is always a register, and the second value can be either an immediate value or another register.
-* All conditional branch instructions start with the letter 'b' and end with a __mnemonic extension__ that specifies what kind of condition needs to be met. In this case, the extension `eq` signals that the branch will be taken if the compared values are equal.
+* All conditional branch instructions start with the letter 'b' and end with a __mnemonic extension__, also known as a __conditional code__, that specifies what kind of condition needs to be met. In this case, the extension `eq` signals that the branch will be taken if the compared values are equal.
 
 All basic comparison operators are supported by conditional branch instructions:
 * Equal: `beq`
@@ -413,18 +416,18 @@ All basic comparison operators are supported by conditional branch instructions:
 * Less than: `blt`, `bcc`
 * Less than or equal: `ble`, `bls`
 
-Equality and non-equality have a single instruction each, while the other comparison operators have different versions to support unsigned integer, signed integer, and floating-point comparisons. A full list of the mnemonic extensions for each comparison operator can be found in [ARM's developer documentation](https://developer.arm.com/documentation/ddi0406/cb/Application-Level-Architecture/Instruction-Details/Conditional-execution?lang=en).
+Equality and non-equality have a single instruction each, while the other comparison operators have different versions to support unsigned integer, signed integer, and floating-point comparisons. A full list of the conditional codes for each comparison operator can be found in [ARM's developer documentation](https://developer.arm.com/documentation/ddi0406/cb/Application-Level-Architecture/Instruction-Details/Conditional-execution?lang=en).
 
-ARM also has a shortened form of conditional branching for singular instruction.
+ARM also has a shortened form of conditional branching for singular instructions.
 ```
 cmp r0,#0x1
 moveq r0,r1
 ```
-Like with normal conditional branches, a `cmp` instruction is used to set up the branch. After `cmp`, the next instruction is not a `b` instruction, but rather a different instruction followed by a mnemonic extension. In the above example, `r0` is assigned to `r1` only if `r0` is equal to 1.
+Like with normal conditional branches, a `cmp` instruction is used to set up the branch. After `cmp`, the next instruction is not a `b` instruction, but rather a different instruction followed by a conditional code. In the above example, `r0` is assigned to `r1` only if `r0` is equal to 1. All instructions allow conditional codes to be attached to them.
 
 A higher-level language like C uses conditional keywords like `if`/`else if`/`else` and looping keywords like `while`/`do while`/`for`. These constructs typically translate to conditional branch statements when compiled to assembly.
 
->Internally, the `cmp` instruction sets four 1-bit __condition flags__ in the CPU, individually named C, N, V, and Z. Each conditional branch instruction checks specific condition flags to decide whether to branch. For example, the `beq` instruction will branch if the Z flag has a value of 1. Chances are that you won't need to interact directly with these condition flags; knowing the mnemonic extensions is sufficient.
+>Internally, the `cmp` instruction sets four 1-bit __condition flags__ in the CPU, individually named C, N, V, and Z. Each conditional branch instruction checks specific condition flags to decide whether to branch. For example, the `beq` instruction will branch if the Z flag has a value of 1. Chances are that you won't need to interact directly with these condition flags; knowing the conditional codes is sufficient.
 
 ### Functions
 Conceptually, functions in assembly work similarly to functions in higher-level languages. A function can be invoked, which will cause the function to run before returning back to the code that called the function. Functions can also have parameters and return values. Let's look closer into how functions work in assembly.
@@ -565,7 +568,7 @@ The patterns above for passing arguments, returning values, saving registers, an
 ### Structs
 By analyzing the assembly code, it is possible to tell when a struct from a higher-level language like C is compiled down to assembly.
 
-In C, a struct definition may look like the following. For this tutorial, assume that `int` has a size of 2 bytes:
+In C, a struct definition may look like the following. For this tutorial, assume that `int` has a size of 4 bytes:
 ```
 struct Position
 {
@@ -574,7 +577,7 @@ struct Position
 }
 ```
 
-This struct has a size of 4 bytes. Since `x` is the first variable defined in the struct, it is located at the start of the struct (i.e., an offset of 0). `x` takes up 2 bytes, so the following variable, `y`, has an offset of 2 from the start of the struct.
+This struct has a size of 8 bytes. Since `x` is the first variable defined in the struct, it is located at the start of the struct (i.e., an offset of 0). `x` takes up 4 bytes, so the following variable, `y`, has an offset of 4 from the start of the struct.
 
 Typical assembly code maintains a pointer to the start of a struct, using offsets to access each of the struct's fields. The following code is an example of storing values into a struct.
 ```
@@ -582,7 +585,7 @@ ldr r0,[DAT_02073b70] // Load the address of a Position.
 mov r1,#0x6
 strh r1,[r0,#0x0] // position.x = 6;
 mov r1,#0x4
-strh r1,[r0,#0x2] // position.y = 4;
+strh r1,[r0,#0x4] // position.y = 4;
 ```
 
 Within reverse engineering communities, it is common to have a struct field whose purpose is not yet known. Unknown fields are often named by the community according to their offsets. For example, if the struct above was not yet identified as a struct that stores position data, it might use names like the following:
@@ -590,7 +593,7 @@ Within reverse engineering communities, it is common to have a struct field whos
 struct unkStruct
 {
     int unk0;
-    int unk2;
+    int unk4;
 }
 ```
 
@@ -822,7 +825,7 @@ To the right of the memory table is a string representation of the data. This ca
 
 You can click on a byte value in the table to select it. This will show signed/unsigned integers representations (in decimal rather than hexadecimal) of the value at the bottom of the window. When a value is selected, you can also change the value, which will immediately be reflected in-game. Note that some values may immediately revert to the previous value if the game's code sets the value every frame.
 
-You can jump to any address in memory by entering the address into "Inspect Address" at the top right. The window will remember recent addresses you jump to.
+You can jump to any address in memory by entering the address into _Address_ at the top, then pressing _Go_. The window will remember recent addresses you jump to.
 
 For a demonstration of the memory viewer's capabilities, jump to address 0x21CCB00, which contains data about the player and partner Pokémon. Certain values around this address constantly change, which represents values changing in-game. In this case, several of the rapidly changing values here control the animations of the Pokémon on screen. If you move around in-game, you'll notice additional variables changing, which represent values such as the position of the Pokémon on the screen and on the dungeon floor.
 
@@ -839,9 +842,9 @@ The RAM Search view allows searching memory for specific values. It can be accce
 >![](/assets/img/reverse-engineering/memory-search-ds.png)<br>
 >RAM Search window
 
-RAM Search is a valuable tool for finding the addresses of relevant in-game values. As an example, let's use the RAM search to locate which address the player's HP is stored in.
+RAM Search is a valuable tool for finding the addresses of relevant in-game values. As an example, let's use the RAM search to locate which address the player's HP is stored at.
 
-To search for a value, enter the value to search for, configure the search using the available options, and press _New Search_. Let's search for the player's current HP.
+To search for a value, enter the value to search for, configure the search using the available options, and press _Search_. Let's search for the player's current HP.
 >![](/assets/img/reverse-engineering/memory-search-new-ds.png)<br>
 >Searching for a value
 
@@ -856,7 +859,7 @@ Now that the search is narrowed to a handful of values, you can try changing the
 >Note that we changed the player's HP to 8 earlier because we already knew the address of the value. If you didn't already know the address, you could find an enemy in-game and let it attack you to lower your HP.
 
 ### Disassembler
-In DeSmuME, the disassembler is a tool that exposes several useful debugging features, including setting breakpoints to pause game execution, stepping through assembly code as it runs, and viewing register values. The disassembler is accessed via _Tools > Disassembler_, which will both an ARM9 and an ARM7 disassembler. Since the code we'll be looking at is for the ARM9 processor, use the ARM9 disassembler.
+In DeSmuME, the disassembler is a tool that exposes several useful debugging features, including setting breakpoints to pause game execution, stepping through assembly code as it runs, and viewing register values. The disassembler is accessed via _Tools > Disassembler_, which will open both an ARM9 and an ARM7 disassembler. Since the code we'll be looking at is for the ARM9 processor, use the ARM9 disassembler.
 >![](/assets/img/reverse-engineering/disassembler.png)<br>
 >Disassembler window
 
@@ -1033,7 +1036,7 @@ Another number that is close by is the player's level (labeled "Lv" on the HUD),
   0x21BA532
 </details>
 
-A related approach is to perform an action in-game and watch as values in memory change. This includes moving around, attacking, etc. To demonstrate this approach, hold the Start button in the game to enter a mode where you can face a direction without moving. Turn around a couple of times while watching the memory viewer, and you'll see the value at address 0x23BA574 changing. No other visible value changes, which is a good indicator that 0x23BA574 contains the direction the player was facing (encoded as an enum).
+A related approach is to perform an action in-game and watch as values in memory change. This includes moving around, attacking, etc. To demonstrate this approach, hold the Y (or Start) button in the game to enter a mode where you can face a direction without moving. Turn around a couple of times while watching the memory viewer, and you'll see the value at address 0x23BA574 changing. No other visible value changes, which is a good indicator that 0x23BA574 contains the direction the player was facing (encoded as an enum).
 
 It's also possible to use a trial-and-error approach by simply going through memory addresses, changing them, and seeing if this affects anything in game. For example, if you go through this process, eventually you'll reach the address 0x21BA5E5. Set this value to 1, and you'll see the player character fall asleep, indicating that this value is used for the sleep status condition.
 >![](/assets/img/reverse-engineering/memory-viewer-asleep-ds.png)<br>
@@ -1058,7 +1061,12 @@ Note that hacking and reverse engineering resources for a game are typically fra
 
 Some reverse engineering communities go a step further and maintain an in-progress or completed manual __decompilation__ (decomp) or __disassembly__ of a game, a project that uses source code or structured assembly code to build a game binary that matches the actual game's ROM file. As these projects require all of the game's code to build a matching binary, they often contain a large amount of labeled information about a game. _Explorers of Sky_ does not have a decompilation project currently, but the game's predecessor, _Red Rescue Team_, has an in-progress decompilation [here](https://github.com/pret/pmd-red). Manually decompiling is a highly technical sub-area of the reverse engineering space that is out of scope for this tutorial, though if one exists for the game you are reverse engineering, it's useful to keep on your radar.
 
-For _Explorers of Sky_ specifically, the game does not have a Data Crystal page. If you search around, likely the first thing you'll find is the ROM editing tool [SkyTemple](https://skytemple.org/), along with the [SkyTemple Discord](https://discord.gg/skytemple) where most hacking discussion for _Explorers of Sky_ takes place. Digging deeper, you'll find that the _Explorers of Sky_ hacking community has created a centralized repository known as [pmdsky-debug](https://github.com/UsernameFodder/pmdsky-debug) for documenting functions, structs, and other technical data, along with being able to import the documentation into Ghidra and other reverse engineering tools. 
+#### Explorers of Sky resources
+For _Explorers of Sky_ specifically, the first thing you'll likely find by searching around is the ROM editing tool [SkyTemple](https://skytemple.org/), along with the [SkyTemple Discord](https://discord.gg/skytemple) where most hacking discussion for _Explorers of Sky_ takes place.
+
+The _Explorers of Sky_ hacking community has created a centralized repository known as [pmdsky-debug](https://github.com/UsernameFodder/pmdsky-debug) for documenting functions, structs, and other technical data, along with being able to import the documentation into Ghidra and other reverse engineering tools.
+
+Assorted technical documentation can also be found on [Project Pokémon](https://projectpokemon.org/home/docs/mystery-dungeon-nds/pok%C3%A9mon-mystery-dungeon-explorers-r78/), such as file formats, compression algorithms, and a breakdown of all files in the unpacked ROM.
 
 ## Conclusion
 By now, you've set up a reverse engineering environment, learned the basics of assembly and some reverse engineering tools, and walked through some strategies to discover functionality in-game. From here, you are ready to dive into the code of your favorite DS game and see what you can find. Mind you, the reverse engineering process is not always straightforward and requires plenty of ingenuity and patience, but it is a skill you can improve at with practice and persistence. Good luck!

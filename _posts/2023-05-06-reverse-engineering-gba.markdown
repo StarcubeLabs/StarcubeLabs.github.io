@@ -120,7 +120,7 @@ In games with recurring content updates, developers sometimes add new assets int
 You'll need the following applications for this tutorial:
 * [Ghidra](https://ghidra-sre.org/) - a reverse engineering tool used for static code analysis.
 * [mGBA](https://mgba.io/) - a GBA emulator with debugging and memory viewing capabilities.
-* A ROM of _Pokémon Mystery Dungeon: Red Rescue Team_ - the game we'll reverse engineer. Make sure to use the USA/NTSC version of the game; other versions like the EU/PAL version have differences that change the locations of data and functions in memory.
+* A ROM of _Pokémon Mystery Dungeon: Red Rescue Team_ - the game we'll reverse engineer. Make sure to use the USA/NTSC version of the game; other versions like the EU/PAL version have differences that change the locations of data and functions.
 
 ### Setting up Ghidra
 >![](/assets/img/reverse-engineering/ghidra.png)<br>
@@ -132,7 +132,7 @@ Ghidra is a free open-source reverse engineering tool developed by the U.S. Nati
 
 To install Ghidra, follow the instructions on [Ghidra's website](https://ghidra-sre.org/).
 
-If you're on recent versions of macOS, you'll need to give Ghidra's decompiler permission to run before setting up a project. Inside Ghidra's folder, go to `Ghidra/Features/Decompiler/os/mac_x86_64`, right-click the `decompile` executable file, select __Open__, and confirm the __Open__ when macOS warns about not being able to verify the developer.
+If you're on a recent version of macOS, you'll need to give Ghidra's decompiler permission to run before setting up a project. Inside Ghidra's folder, go to `Ghidra/Features/Decompiler/os/mac_x86_64`, right-click the `decompile` executable file, select __Open__, and confirm the __Open__ when macOS warns about not being able to verify the developer.
 
 Launch Ghidra after it is installed, and you'll see this screen.
 >![](/assets/img/reverse-engineering/ghidra-start.png)<br>
@@ -336,7 +336,7 @@ beq LAB_08090f14
 ```
 With this set of instructions, if the value of `r0` is equal to 1, then the program branches to `LAB_08090f14`. If r0 is not equal to 1, then the program skips the branch and moves to the next instruction instead.
 * The `cmp` instruction is used to set up a conditional branch by comparing two values. The first value is always a register, and the second value can be either an immediate value or another register.
-* All conditional branch instructions start with the letter 'b' and end with a __mnemonic extension__ that specifies what kind of condition needs to be met. In this case, the extension `eq` signals that the branch will be taken if the compared values are equal.
+* All conditional branch instructions start with the letter 'b' and end with a __mnemonic extension__, also known as a __conditional code__, that specifies what kind of condition needs to be met. In this case, the extension `eq` signals that the branch will be taken if the compared values are equal.
 
 All basic comparison operators are supported by conditional branch instructions:
 * Equal: `beq`
@@ -346,11 +346,11 @@ All basic comparison operators are supported by conditional branch instructions:
 * Less than: `blt`, `bcc`
 * Less than or equal: `ble`, `bls`
 
-Equality and non-equality have a single instruction each, while the other comparison operators have different versions to support unsigned integer, signed integer, and floating-point comparisons. A full list of the mnemonic extensions for each comparison operator can be found in [ARM's developer documentation](https://developer.arm.com/documentation/ddi0406/cb/Application-Level-Architecture/Instruction-Details/Conditional-execution?lang=en).
+Equality and non-equality have a single instruction each, while the other comparison operators have different versions to support unsigned integer, signed integer, and floating-point comparisons. A full list of the conditional codes for each comparison operator can be found in [ARM's developer documentation](https://developer.arm.com/documentation/ddi0406/cb/Application-Level-Architecture/Instruction-Details/Conditional-execution?lang=en).
 
 A higher-level language like C uses conditional keywords like `if`/`else if`/`else` and looping keywords like `while`/`do while`/`for`. These constructs typically translate to conditional branch statements when compiled to assembly.
 
->Internally, the `cmp` instruction sets four 1-bit __condition flags__ in the CPU, individually named C, N, V, and Z. Each conditional branch instruction checks specific condition flags to decide whether to branch. For example, the `beq` instruction will branch if the Z flag has a value of 1. Chances are that you won't need to interact directly with these condition flags; knowing the mnemonic extensions is sufficient.
+>Internally, the `cmp` instruction sets four 1-bit __condition flags__ in the CPU, individually named C, N, V, and Z. Each conditional branch instruction checks specific condition flags to decide whether to branch. For example, the `beq` instruction will branch if the Z flag has a value of 1. Chances are that you won't need to interact directly with these condition flags; knowing the conditional codes is sufficient.
 
 ### Functions
 Conceptually, functions in assembly work similarly to functions in higher-level languages. A function can be invoked, which will cause the function to run before returning back to the code that called the function. Functions can also have parameters and return values. Let's look closer into how functions work in assembly.
@@ -504,7 +504,7 @@ The patterns above for passing arguments, returning values, saving registers, an
 ### Structs
 By analyzing the assembly code, it is possible to tell when a struct from a higher-level language like C is compiled down to assembly.
 
-In C, a struct definition may look like the following. For this tutorial, assume that `int` has a size of 2 bytes:
+In C, a struct definition may look like the following. For this tutorial, assume that `int` has a size of 4 bytes:
 ```
 struct Position
 {
@@ -513,7 +513,7 @@ struct Position
 }
 ```
 
-This struct has a size of 4 bytes. Since `x` is the first variable defined in the struct, it is located at the start of the struct (i.e., an offset of 0). `x` takes up 2 bytes, so the following variable, `y`, has an offset of 2 from the start of the struct.
+This struct has a size of 8 bytes. Since `x` is the first variable defined in the struct, it is located at the start of the struct (i.e., an offset of 0). `x` takes up 4 bytes, so the following variable, `y`, has an offset of 4 from the start of the struct.
 
 Typical assembly code maintains a pointer to the start of a struct, using offsets to access each of the struct's fields. The following code is an example of storing values into a struct.
 ```
@@ -521,7 +521,7 @@ ldr r0,[DAT_08073b70] // Load the address of a Position.
 movs r1,#0x6
 strh r1,[r0,#0x0] // position.x = 6;
 movs r1,#0x4
-strh r1,[r0,#0x2] // position.y = 4;
+strh r1,[r0,#0x4] // position.y = 4;
 ```
 
 Within reverse engineering communities, it is common to have a struct field whose purpose is not yet known. Unknown fields are often named by the community according to their offsets. For example, if the struct above was not yet identified as a struct that stores position data, it might use names like the following:
@@ -529,7 +529,7 @@ Within reverse engineering communities, it is common to have a struct field whos
 struct unkStruct
 {
     int unk0;
-    int unk2;
+    int unk4;
 }
 ```
 
@@ -784,7 +784,7 @@ To the right of the memory table is a string representation of the data. This ca
 
 You can click on a byte value in the table to select it. This will show signed/unsigned integers representations (in decimal rather than hexadecimal) of the value at the bottom of the window. When a value is selected, you can also change the value, which will immediately be reflected in-game. Note that some values may immediately revert to the previous value if the game's code sets the value every frame.
 
-Per the [GBA memory map](http://problemkaputt.de/gbatek-gba-memory-map.htm), the addresses around 0x0 are internal BIOS values used by the GBA's core systems, so they aren't particularly interesting for our purposes. You can jump to any address in memory by entering the address into "Inspect Address" at the top right.
+Per the [GBA memory map](http://problemkaputt.de/gbatek-gba-memory-map.htm), the addresses around 0x0 are internal BIOS values used by the GBA's core systems, so they aren't particularly interesting for our purposes. You can jump to any address in memory by entering the address into _Inspect Address_ at the top right.
 
 For a demonstration of the memory viewer's capabilities, jump to address 0x2017310, which contains data about the player and partner Pokémon. Certain values around this address constantly change, which represents values changing in-game. In this case, several of the rapidly changing values here control the animations of the Pokémon on screen. If you move around in-game, you'll notice additional variables changing, which represent values such as the position of the Pokémon on the screen and on the dungeon floor.
 
@@ -799,7 +799,7 @@ The memory search view allows searching memory for specific values. It can be ac
 >![](/assets/img/reverse-engineering/memory-search.png)<br>
 >Memory search window
 
-The memory search is a valuable tool for finding the addresses of relevant in-game values. As an example, let's use the memory search to locate which address the player's HP is stored in.
+The memory search is a valuable tool for finding the addresses of relevant in-game values. As an example, let's use the memory search to locate which address the player's HP is stored at.
 
 To search for a value, enter the value to search for, configure the search using the available options, and press _New Search_. Let's search for the player's current HP.
 >![](/assets/img/reverse-engineering/memory-search-new.png)<br>
