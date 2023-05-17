@@ -19,7 +19,7 @@ This tutorial will walk you through the following:
 * Exploring debugging features of the mGBA emulator to inspect a game's memory and debug the game while it is running.
 * Reverse engineering strategies for finding game mechanics and data.
 
-If you are interested in reverse engineering a Nintendo DS game, this tutorial also has a [version for DS games](../reverse-engineering-ds), which have additional frills compared to GBA games.
+If you are interested in reverse engineering a Nintendo DS game, this tutorial also has a [version for DS games](../reverse-engineering-ds), which have additional frills compared to GBA games. If you are looking for a general overview of reverse engineering, I recommend sticking with this GBA version of the tutorial.
 
 ### What skills do I need to follow this tutorial?
 * Programming knowledge (ideally C or C++), along with the following programming concepts:
@@ -132,7 +132,7 @@ Ghidra is a free open-source reverse engineering tool developed by the U.S. Nati
 
 To install Ghidra, follow the instructions on [Ghidra's website](https://ghidra-sre.org/).
 
-If you're on a recent version of macOS, you'll need to give Ghidra's decompiler permission to run before setting up a project. Inside Ghidra's folder, go to `Ghidra/Features/Decompiler/os/mac_x86_64`, right-click the `decompile` executable file, select __Open__, and confirm the __Open__ when macOS warns about not being able to verify the developer.
+If you're on a recent version of macOS, you'll need to give Ghidra's decompiler permission to run before setting up a project. Inside Ghidra's folder, go to `Ghidra/Features/Decompiler/os/mac_x86_64`, right-click the `decompile` executable file, select _Open_, and confirm the _Open_ when macOS warns about not being able to verify the developer.
 
 Launch Ghidra after it is installed, and you'll see this screen.
 >![](/assets/img/reverse-engineering/ghidra-start.png)<br>
@@ -154,11 +154,11 @@ Let's make a new project using the _Red Rescue Team_ ROM.
 11. Ghidra will offer to analyze the binary. Click _Yes_.
 12. Use the default analysis settings and click _Analyze_.
 13. Wait for Ghidra to analyze the binary. This may take a couple minutes.
-14. When Ghidra's analysis finishes, it will present a screen like the image below. At this point, Ghidra is set up to start reverse engineering the game.
->![](/assets/img/reverse-engineering/ghidra-setup.png)<br>
+14. When Ghidra's analysis finishes, verify whether Ghidra was set up properly. Press 'g', enter the value "80450DC", then press _OK_. You should see a screen like image below. At this point, Ghidra is set up to start reverse engineering the game.
+>![](/assets/img/reverse-engineering/ghidra-example-function.png)<br>
 >Ghidra after setting it up
 
-How would you know to use the ARM:LE:32:v4t language if I didn't tell you? First search for which CPU the GBA uses; you'll find that it uses the ARM7TDMI processor (e.g., from [Wikipedia](https://en.wikipedia.org/wiki/Game_Boy_Advance)). Knowing the CPU, you can look for which language/architecture the CPU uses; [ARM's documentation](https://developer.arm.com/documentation/ddi0210/c/Introduction/Architecture) states that the ARM7TDMI uses the ARMv4T architecture.
+How would you know to use the ARM:LE:32:v4t language if I didn't tell you? First search for which CPU the GBA uses; you'll find that it uses the ARM7TDMI CPU (e.g., from [Wikipedia](https://en.wikipedia.org/wiki/Game_Boy_Advance)). Knowing the CPU, you can look for which language/architecture the CPU uses; [ARM's documentation](https://developer.arm.com/documentation/ddi0210/c/Introduction/Architecture) states that the ARM7TDMI uses the ARMv4T architecture.
 
 As for [endianness](https://en.wikipedia.org/wiki/Endianness) (the order that bytes are stored for each [word](https://en.wikipedia.org/wiki/Word_(computer_architecture)) of data), most ARM CPUs are "bi-endian" and support both little and big endian. In practice, most ARM programs use little endian. If Ghidra spits out incomprehensible disassembled code while using a little endian language, try big endian and see if the output is any better. Note that some CPUs, such as those using the [PowerPC](https://en.wikipedia.org/wiki/PowerPC) instruction set (e.g., the Wii), are predominantly big endian instead.
 
@@ -166,7 +166,7 @@ As for [endianness](https://en.wikipedia.org/wiki/Endianness) (the order that by
 In addition to Ghidra, you'll need to set up a GBA emulator and progress the game past the opening sequence.
 1. Download the latest desktop version of mGBA for your OS from [mGBA's website](https://mgba.io/downloads.html).
 2. Install mGBA using the instructions in the download.
-3. Open mGBA and use _File > Load ROM_. Select the _Red Rescue Team_ ROM in your file system.
+3. Open mGBA and go to _File > Load ROM_. Select the _Red Rescue Team_ ROM in your file system.
 4. View and configure button mappings at _Preferences > Controllers_ if needed.
 5. Watch the intro cutscene for the game, then start a new game.
 6. The start of the game consists of a personality quiz that will decide your player character. Answer the questions, honestly or not, then the game will assign you a Pokémon.
@@ -183,7 +183,7 @@ An [assembly language](https://en.wikipedia.org/wiki/Assembly_language) (assembl
 
 >This tutorial presents a brief introduction of assembly to get you started. For brevity, I'll be skipping some of the finer details. If you're interested in a more thorough GBA assembly reference, check out Tonc's [Whirlwind Tour of ARM Assembly](https://www.coranac.com/tonc/text/asm.htm#sec-arm). Aside from the assembly guide, Tonc also has detailed documentation on all the inner workings of the GBA console.
 
-Different CPUs may use different assembly languages depending on which operations the CPU supports (the "instruction set" of the CPU). While all CPUs support the minimum set of instructions required for a computer to function, extra instructions act as shortcuts that allow a program to compile to fewer lines of assembly, resulting in faster program execution in exchange for more complicated CPU hardware to support the additional instructions, and possibly instructions taking more space to store. This tutorial will use the __THUMB__ instruction set, as this is the main instruction set used by _Red Rescue Team_'s code. Future uses of the word "assembly" in this tutorial will be shorthand for "THUMB instruction set assembly language"; this is a common shorthand in the context of a specific game.
+Different CPUs may use different assembly languages depending on which operations the CPU supports (the __instruction set__ of the CPU). While all CPUs support the minimum set of instructions required for a computer to function, extra instructions act as shortcuts that allow a program to compile to fewer lines of assembly, resulting in faster program execution in exchange for more complicated CPU hardware to support the additional instructions, and possibly instructions taking more space to store. This tutorial will use the __THUMB__ instruction set, as this is the main instruction set used by _Red Rescue Team_'s code. Future uses of the word "assembly" in this tutorial will be shorthand for "THUMB instruction set assembly language"; this is a common shorthand in the context of a specific game.
 
 >In addition to THUMB, the GBA's CPU supports another instruction set known simply as __ARM__, which includes more complicated instructions than THUMB, but allows code to be written in fewer instructions. The ARM instruction set is out of the scope of this tutorial, though most of the concepts in this tutorial can be applied to any assembly language.
 
@@ -196,7 +196,7 @@ This statement assigns the number 0 (#0x0) to `r0`. `r0` is one of the CPU's reg
 ### Registers
 A __register__ is a location in the CPU hardware that stores a value. When the CPU needs to store data for later, the registers are the fastest place to store and retrieve the data. Every assembly operation interacts with the registers in some way.
 
-CPUs have a handful of registers available. In ARM CPUs, registers are named with the format `rX`, where `X` is the 0-indexed register number. The GBA's CPU has 16 registers numbered from `r0` to `r15`, and each can store up to 32 bits (4 bytes) of data for a total of 512 bits (64 bytes) of data.
+CPUs have a handful of registers available. In ARM CPUs, registers are named with the format `rX`, where "X" is the 0-indexed register number. The GBA's CPU has 16 registers numbered from `r0` to `r15`, and each can store up to 32 bits (4 bytes) of data for a total of 512 bits (64 bytes) of data.
 
 `r15` is a special register called the __program counter__ (__PC__ for short). This register holds the address to the instruction to be executed next, and is incremented by 2 automatically after an instruction is executed (most instructions are 2 bytes long). This causes assembly to be executed line-by-line. It is possible to set the PC's value, which will cause the CPU to jump to the new address and begin executing code there; this is used for constructs like conditional statements, loops, and function calls.
 
@@ -324,7 +324,7 @@ And so on. After branching, the program counter resumes incrementing and executi
 
 In addition to the `b` instruction, there are other unconditional branch instructions for certain cases:
 * `bl`: Branch instruction used to call functions, which will be discussed later.
-* `bx`: Branches to an address value stored in a register.
+* `bx`: Branch to an address stored in a register.
 
 #### Conditional branches
 It is possible to have branch instructions that only execute if a condition is satisfied. If the condition is not satisfied, the conditional branch instruction is skipped, and the program counter increments and continues to the next instruction.
@@ -350,10 +350,10 @@ Equality and non-equality have a single instruction each, while the other compar
 
 A higher-level language like C uses conditional keywords like `if`/`else if`/`else` and looping keywords like `while`/`do while`/`for`. These constructs typically translate to conditional branch statements when compiled to assembly.
 
->Internally, the `cmp` instruction sets four 1-bit __condition flags__ in the CPU, individually named C, N, V, and Z. Each conditional branch instruction checks specific condition flags to decide whether to branch. For example, the `beq` instruction will branch if the Z flag has a value of 1. Chances are that you won't need to interact directly with these condition flags; knowing the conditional codes is sufficient.
+>Internally, the `cmp` instruction sets four 1-bit __condition flags__ in the CPU, named C, N, V, and Z. Each conditional branch instruction checks specific condition flags to decide whether to branch. For example, the `beq` instruction will branch if the Z flag has a value of 1. Chances are that you won't need to interact directly with these condition flags; knowing the conditional codes is sufficient.
 
 ### Functions
-Conceptually, functions in assembly work similarly to functions in higher-level languages. A function can be invoked, which will cause the function to run before returning back to the code that called the function. Functions can also have parameters and return values. Let's look closer into how functions work in assembly.
+Conceptually, functions in assembly work similarly to functions in higher-level languages. A function can be invoked/called, which will cause the function to run before returning back to the code that called the function. Functions can also have parameters and return values. Let's look closer into how functions work in assembly.
 
 A function can be called as follows:
 ```
@@ -490,7 +490,7 @@ add sp,#0x4
 ```
 Like with stack local variables, the prologue subtracts from `sp` to allocate stack space for passing a function argument on the stack. When the function `FUN_08073b78` is called, `r0`-`r3` are used for four of the arguments, and the stack is used for the last argument (set with `str r2,[sp,#0x0]`). The epilogue adds to `sp` clean up the stack space.
 
-Inside `FUN_08073b78`, the function access the stack argument via an offset from `sp`.
+Inside `FUN_08073b78`, the function accesses the stack argument via an offset from `sp`.
 ```
 FUN_08073b78
 
@@ -519,9 +519,9 @@ Typical assembly code maintains a pointer to the start of a struct, using offset
 ```
 ldr r0,[DAT_08073b70] // Load the address of a Position.
 movs r1,#0x6
-strh r1,[r0,#0x0] // position.x = 6;
+str r1,[r0,#0x0] // position.x = 6;
 movs r1,#0x4
-strh r1,[r0,#0x4] // position.y = 4;
+str r1,[r0,#0x4] // position.y = 4;
 ```
 
 Within reverse engineering communities, it is common to have a struct field whose purpose is not yet known. Unknown fields are often named by the community according to their offsets. For example, if the struct above was not yet identified as a struct that stores position data, it might use names like the following:
@@ -668,23 +668,21 @@ addr LAB_08049296
 Small switch statements often forgo a jump table and use a series of conditional branches instead.
 
 ### Assembly primer wrap-up
-If you've made it this far, you now have the baseline knowledge to read GBA assembly code and identify some of the most common assembly patterns. While there are a number of less common assembly operations and patterns not covered in this tutorial, you should have enough context to fill in the gaps as needed with documentation such as the [official ARM docs](https://developer.arm.com/documentation/ddi0210/c/Introduction/Instruction-set-summary/Thumb-instruction-summary?lang=en), [Tonc](https://www.coranac.com/tonc/text/asm.htm#sec-arm), and your favorite search engine. Like most skills, practice is the best way to improve your assembly reading skills.
+If you've made it this far, you now have the baseline knowledge to read the GBA's THUMB assembly code and identify some of the most common assembly patterns. While there are a number of less common assembly operations and patterns not covered in this tutorial, you should have enough context to fill in the gaps as needed with documentation such as the [official ARM docs](https://developer.arm.com/documentation/ddi0210/c/Introduction/Instruction-set-summary/Thumb-instruction-summary?lang=en), [Tonc](https://www.coranac.com/tonc/text/asm.htm#sec-arm), and your favorite search engine. Like most skills, practice is the best way to improve your assembly reading skills.
 
 The next step is to explore the tools that will help with reverse engineering a GBA game. We'll start with our static code analyzer, Ghidra.
 
 ## Using Ghidra
 Ghidra is a powerful reverse engineering tool with a rich set of features. This section will go over some basic Ghidra usage to get you started with reading assembly.
 
-If you followed the Ghidra setup steps from earlier, Ghidra will look like this:
->![](/assets/img/reverse-engineering/ghidra-setup.png)<br>
->Ghidra after setting it up
+The Ghidra interface looks like this:
+>![](/assets/img/reverse-engineering/ghidra.png)<br>
 
 There are two main areas of the Ghidra workspace that we will be using.
 * The center window is the __listing__. This is where assembly code is displayed.
 * The window on the right is the __decompiler__, which analyzes the assembly code for the currently selected function and decompiles it to C.
-For this tutorial, the other windows can be closed to give more room to the listing window. Any further screenshots of Ghidra will show only the listing or decompiler windows.
 
-Right now, Ghidra is displaying the beginning of the ROM file, which doesn't contain anything interesting for us. Let's go to a different place in the ROM that contains disassembled code.
+There are other windows in the Ghidra interface, but this tutorial will not go into them. You can close them to give more room to the listing window.
 
 For this demonstration, we'll use the function at address 0x80450E0. To navigate to this address, press 'g' and enter in "80450E0". Scroll down a bit to see the whole function, which looks like this:
 >![](/assets/img/reverse-engineering/ghidra-example-function.png)<br>
@@ -696,8 +694,8 @@ Let's break down what is on the screen.
 * __Function name__ is self-explanatory.
 * It is possible to add comments to the assembly code. A __plate comment__ is a comment that takes up several lines. Ghidra automatically adds a plate comment to denote functions, and it is possible to add more yourself (we'll talk about that later).
 * The __references to function__ section lists all the places in the assembly code that call the current function. The list is in the format "function-name:instruction-address". In this case, Ghidra found 396 places that call `FUN_080450e0`, one of which is `FUN_0803edf0` with a `bl` instruction at address 0x803EE08.
-* __Assembly instructions__` is where the actual assembly code is, along with labels to denote branch destinations and hard-coded data values.
-* __Hex data__ contains the raw hexadecimal values in the ROM file that correspond to the assembly instructions. The `push { lr }` instruction at the start of `FUN_080450e0` was derived from the hex value `00 b5` in the ROM.
+* __Assembly instructions__ is where the actual assembly code is, along with __labels__ to denote branch destinations and hard-coded data values.
+* __Hex data__ contains the raw hexadecimal values in the ROM file that correspond to the assembly instructions. The `push { lr }` instruction at the start of `FUN_080450e0` is derived from the hex value `00 b5` in the ROM.
 * The __addresses__ contain the addresses/offsets of each instruction from the start of the file. The `push { lr }` instruction at the start of `FUN_080450e0` is at address 0x80450E0 in the ROM.
 * The __branches__ section contains arrows that denote branches in the function; the start of the arrow is the branch instruction, and the end of the arrow is the instruction that the branch will set `pc` to.
 * __References to labels__ lists the places that branch to each label. Listed here is the address of each branch instruction to a given label. For example, `LAB_080450ea` is referenced by the `bne` instruction at address 0x80450E4.
@@ -768,10 +766,10 @@ When a line of code is manually disassembled, Ghidra disassembles other lines of
 ### Ghidra wrap-up
 By now, we've explored enough of Ghidra's functionality to get started on reading the assembly code for a game. Ghidra has a ton of other useful features for reverse engineering, so you may wish to explore on your own and discover which features strike your fancy.
 
-Ghidra is great for analyzing code while the game is not running. While this can often go far on its own, it is frequently useful to supplement this by analyzing code in action while the game is running. The next section will focus on the debugging capabilities of mGBA.
+Ghidra is great for analyzing code while the game is not running. While this can go far on its own, it is useful to supplement this by analyzing code in action while the game is running. The next section will focus on the debugging capabilities of mGBA.
 
 ## Debugging with mGBA
-It is often useful to inspect the state of the game while it is running. This includes looking at memory values, stepping through assembly code execution and register changes, and viewing hardware-specific values like currently loaded sprites. This section will give a brief survey of some of the debugging capabilities that mGBA provides.
+When reverse engineering, it is often useful to inspect the state of the game while it is running, a process known as __dynamic code analysis__. This includes looking at memory values, stepping through assembly code execution, and inspecting registers. This section will give a brief survey of some of the debugging capabilities that mGBA provides.
 
 ### Memory viewer
 The memory viewer allows viewing and editing values in main memory. The memory viewer can be accessed at _Tools > Game state views > View Memory..._, and will bring up a window that looks like the image below. Note that you can select _View Memory..._ multiple times to open multiple memory viewer windows.
@@ -782,7 +780,7 @@ In the above image, the memory viewer shows the memory values from addresses 0x0
 
 To the right of the memory table is a string representation of the data. This can be useful when browsing portions of memory that are intended to represent in-game text, or to quickly browse for patterns in the data.
 
-You can click on a byte value in the table to select it. This will show signed/unsigned integers representations (in decimal rather than hexadecimal) of the value at the bottom of the window. When a value is selected, you can also change the value, which will immediately be reflected in-game. Note that some values may immediately revert to the previous value if the game's code sets the value every frame.
+You can click on a byte value in the table to select it. When a value is selected, you can also change the value, which will immediately be reflected in-game. Note that some values may immediately revert to the previous value if the game's code sets the value every frame.
 
 Per the [GBA memory map](http://problemkaputt.de/gbatek-gba-memory-map.htm), the addresses around 0x0 are internal BIOS values used by the GBA's core systems, so they aren't particularly interesting for our purposes. You can jump to any address in memory by entering the address into _Inspect Address_ at the top right.
 
@@ -801,19 +799,19 @@ The memory search view allows searching memory for specific values. It can be ac
 
 The memory search is a valuable tool for finding the addresses of relevant in-game values. As an example, let's use the memory search to locate which address the player's HP is stored at.
 
-To search for a value, enter the value to search for, configure the search using the available options, and press _New Search_. Let's search for the player's current HP.
+To search for a value, enter the value to search for, configure the search using the available options, and press _New Search_. Let's search for the player's current HP, which we set to 8 earlier.
 >![](/assets/img/reverse-engineering/memory-search-new.png)<br>
 >Searching for a value
 
 8 is a small value, so it commonly occurs throughout memory. We could scroll through each address in the search and try each of them to see which one represents the player's HP, but there's a better way.
 
-Without closing the memory search, go back to the game and walk around for a bit until your HP regenerates to 9. Next, change the search type to _Changed by value_, change the search value to 1, and click _Search Within_. This will limit the search to the memory addresses found in the previous search, and look for any values that have increased by 1 from the previous search. Since the previous search was for the value 8, this will search for any values that changed from 8 to 9 between the two searches.
+Without closing the memory search, go back to the game and walk around for a bit until your HP regenerates to 9. Next, change the search type to _Changed by value_, change the search value to 1, and click _Search Within_. This will limit the search to the memory addresses found in the previous search, and look for any values that have increased by 1 from before. Since the previous search was for the value 8, this will search for any values that changed from 8 to 9 between the two searches.
 >![](/assets/img/reverse-engineering/memory-search-changed.png)<br>
 >Searching for changed values
 
 Now that the search is narrowed to a handful of values, you can try changing the values at each of these addresses to find which one controls the player's HP. Note that you can select a search result and use _Open in Memory Viewer_ to open the memory viewer at the selected address. You'll find that the correct address is 0x200419E.
 
->Note that we changed the player's HP to 8 earlier because we already knew the address of the value. If you didn't already know the address, you could find an enemy in-game and let it attack you to lower your HP.
+>To set up the above example, we manually changed the player's HP to 8, which requires knowing the address of the player's HP ahead of time. If you didn't already know the address, you could lower your HP through in-game means, such as finding an enemy and letting it attack you.
 
 ### Debugger
 In mGBA, the debugger is a console that exposes several useful debugging features, including setting breakpoints and watchpoints to pause game execution, stepping through assembly code as it runs, and viewing register values. The debugger is accessed via _Tools > Open Debugger Console..._, which will open the window below:
@@ -976,7 +974,7 @@ Success! We've found that the Oran Berry's heal amount is stored at 0x80F4FB6. T
 ### Reading assembly forwards
 Perhaps obviously, reading assembly forward is a way to figure out how game logic works.
 
-Let's use the same functionality from the previous section. Go back to address 0x8077CD6 in Ghidra, where the player's HP is healed from a berry.
+Let's explore the same functionality from the previous section (where the player's HP is healed from a berry) and look for the code that caps the player's HP at their max HP. Go back to address 0x8077CD6 in Ghidra.
 >![](/assets/img/reverse-engineering/read-assembly-forwards.png)<br>
 >Assembly code for healing the player with a berry
 
@@ -990,7 +988,7 @@ Although we could trace the values of `r1` and `r12` in the assembly, it might b
 
 `r1` and `r12` are both equal to the player's max HP. This means the code checks if the sum of the heal amount and the player's current HP is greater than the max HP, and caps the player's HP at its max HP if so. You can step through instructions with `n` to see this in action.
 
-For further confirmation we can change the `strh` instruction at 0x8077CE0 so that it doesn't cap the player's HP. In Ghidra, you can see that this instruction's hex value is `E0 81`. In mGBA, go to address 0x8077CE0 in the memory viewer, and you'll find the same `E0 81` there. Change both of these bytes to `00`, which will change the instruction to a no-op (an instruction that does nothing).
+For further confirmation, we can change the `strh` instruction at 0x8077CE0 so that it doesn't cap the player's HP. In Ghidra, you can see that this instruction's hex value is `E0 81`. In mGBA, go to address 0x8077CE0 in the memory viewer, and you'll find the same `E0 81` there. Change both of these bytes to `00`, which will change the instruction to a no-op (an instruction that does nothing).
 >![](/assets/img/reverse-engineering/no-op-instruction.png)<br>
 >Changing the instruction at 0x8077CE0 to a no-op
 
@@ -1056,7 +1054,7 @@ For example, if you are looking for a more abstract concept such as [how the AI 
 ### Using existing resources
 If the game you are reverse engineering is at least decently popular, chances are that there is existing research done by others. Reverse engineering documentation can include information such as addresses of known data and functions, struct layouts, and code architecture, which can save you the trouble of having to discover them yourself and can serve as a starting point to discover further information about the game.
 
-Note that hacking and reverse engineering resources for a game are typically fragmented and disorganized, with information often strewn across Google Docs/Sheets, GitHub repos, Discord servers, Reddit posts, forums, wikis, and more. A starting point for finding reverse engineering resources for a game is [Data Crystal](https://datacrystal.romhacking.net/wiki/Main_Page), which contains an decent assortment of reverse engineering docs across games, along with links to external resources. For example, [here](https://datacrystal.romhacking.net/wiki/Pok%C3%A9mon_Mystery_Dungeon:_Red_Rescue_Team) is the Data Crystal page for _Red Rescue Team_. Google (or your favorite alternative search engine) is another option, and searching for terms like "\<game name\> hacking" may yield results. Keep an eye out for any active hacking and reverse engineering communities, like a Discord server or subreddit.
+Note that hacking and reverse engineering resources for a game are typically fragmented and disorganized, with information strewn across Google Docs/Sheets, GitHub repos, Discord servers, Reddit posts, forums, wikis, and more. A starting point for finding reverse engineering resources for a game is [Data Crystal](https://datacrystal.romhacking.net/wiki/Main_Page), which contains an decent assortment of reverse engineering docs across games, along with links to external resources. For example, [here](https://datacrystal.romhacking.net/wiki/Pok%C3%A9mon_Mystery_Dungeon:_Red_Rescue_Team) is the Data Crystal page for _Red Rescue Team_. Google (or your favorite alternative search engine) is another option, and searching for terms like "\<game name\> hacking" may yield results. Keep an eye out for any active hacking and reverse engineering communities, like a Discord server or subreddit.
 
 Some reverse engineering communities go a step further and maintain an in-progress or completed manual __decompilation__ (decomp) or __disassembly__ of a game, a project that uses source code or structured assembly code to build a game binary that matches the actual game's ROM file. As these projects require all of the game's code to build a matching binary, they often contain a large amount of labeled information about a game. For example, _Red Rescue Team_ has an in-progress decompilation [here](https://github.com/pret/pmd-red). Manually decompiling is a highly technical sub-area of the reverse engineering space that is out of scope for this tutorial, though if one exists for the game you are reverse engineering, it's useful to keep on your radar.
 
