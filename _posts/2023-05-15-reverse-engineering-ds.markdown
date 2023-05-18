@@ -194,7 +194,7 @@ Let's make a new project using the _Explorers of Sky_ ROM files that you unpacke
 19. Run analysis by selecting _Analysis > Auto Analyze '\<project\>'..._, or use the hotkey 'a'.
 20. Use the default analysis settings and click _Analyze_.
 21. Wait for Ghidra to analyze the binaries. This may take a couple minutes.
-22. When Ghidra's analysis finishes, verify whether Ghidra was set up properly. Press 'g', enter the value "22E0354", then press _OK_. You should see a screen like image below. At this point, Ghidra is set up to start reverse engineering the game.
+22. When Ghidra's analysis finishes, verify whether Ghidra was set up properly. Press 'g', enter the value "22E0354", then press _OK_. You should see a screen like the image below. At this point, Ghidra is set up to start reverse engineering the game.
 >![](/assets/img/reverse-engineering/ghidra-setup-ds.png)<br>
 >Ghidra's auto-analysis of a function after setup
 
@@ -492,13 +492,13 @@ cmp r0,#0x1
 #### Call stack
 When a function is called, the caller is likely already using the registers to store values. There are only a handful of registers, and the function may also need those registers to do its work. Before the function can use the registers, it should save the existing values of registers it plans to use. When the function is finished, it should restore the saved values back to the registers so the caller doesn't lose its current state when it resumes execution.
 
-Registers `r0`-`r3` are designated as __scratch registers__, which are not saved by a function that uses them. Register `r4`-`r11` are __preserved registers__ whose values are saved and restored by the function. `lr` is also saved if the function calls other functions.
+Registers `r0`-`r3` and `r12` are designated as __scratch registers__, which are not saved by a function that uses them. Registers `r4`-`r11` are __preserved registers__ (or __variable registers__) whose values are saved and restored by the function. `lr` is also saved if the function calls other functions.
 
 Since a function can call another function, which can itself call another function and so on, every function must store and restore the register values at the proper times. This is accomplished using a place in memory called the call stack.
 
 The __call stack__, often shortened to __stack__, is a special place in memory used to save register values when functions are called. It is also used to store local variables if there are too many for the registers to hold. As the name implies, it is a last-in first-out (LIFO) data structure. The address at the top of the stack is tracked using `r13`, often called the __stack pointer__ (`sp`).
 
-One of the main purposes of the function prologue is to save register values to the stack. Register values are pushed onto the top of the stack (i.e., the address of `sp`) using the `stmdb` ("store multiple, decrement before") instruction. This instruction is used to store multiple register values at consecutive addresses, and it achieves this by decrementing the stack pointer, storing the first value, decrementing the stack pointer again, and so on.
+One of the main purposes of the function prologue is to save register values to the stack. Register values are pushed onto the top of the stack (i.e., the address of `sp`) using the `stmdb` ("store multiple, decrement before") instruction, also known as `push`. This instruction is used to store multiple register values at consecutive addresses, and it achieves this by decrementing the stack pointer, storing the first value, decrementing the stack pointer again, and so on.
 
 Here is an example prologue that saves register values.
 ```
@@ -506,13 +506,11 @@ stmdb sp!,{r4 lr}
 ```
 This prologue is taken from a function that uses `r4` in its calculations. The function also calls another function with `bl`, which will overwrite the existing value in `lr`. Therefore, the function must save the current values of `r4` and `lr` in the stack.
 
-In the function epilogue, saved register values are restored to their saved values by using the `ldmia` ("load multiple, increment after") instruction. This is the corresponding epilogue to the prologue above.
+In the function epilogue, saved register values are restored to their saved values by using the `ldmia` ("load multiple, increment after") instruction, also known as `pop`. This is the corresponding epilogue to the prologue above.
 ```
 ldmia sp!,{r4 pc}
 ```
-`ldmia` will remove the values at the top of the stack and assign them to the specified registers. `ldmia` also increments `sp` to move the top of the stack past the items that were popped off.
-
-When the value of `lr` is pushed onto the stack, it can be popped directly onto `pc` to make the program jump back to the caller function.
+`ldmia` will remove the values at the top of the stack and assign them to the specified registers. `ldmia` also increments `sp` to move the top of the stack past the items that were popped off. In the example above, `r4` is assigned back to its original value. The `pc` is assigned to the value originally stored from `lr`, a shortcut to make the program jump back to the caller function.
 
 In addition to saving and restoring register values, the stack is used for a couple other purposes.
 

@@ -154,8 +154,8 @@ Let's make a new project using the _Red Rescue Team_ ROM.
 11. Ghidra will offer to analyze the binary. Click _Yes_.
 12. Use the default analysis settings and click _Analyze_.
 13. Wait for Ghidra to analyze the binary. This may take a couple minutes.
-14. When Ghidra's analysis finishes, verify whether Ghidra was set up properly. Press 'g', enter the value "80450DC", then press _OK_. You should see a screen like image below. At this point, Ghidra is set up to start reverse engineering the game.
->![](/assets/img/reverse-engineering/ghidra-example-function.png)<br>
+14. When Ghidra's analysis finishes, verify whether Ghidra was set up properly. Press 'g', enter the value "80450E0", then press _OK_. You should see a screen like the image below. At this point, Ghidra is set up to start reverse engineering the game.
+>![](/assets/img/reverse-engineering/ghidra-setup.png)<br>
 >Ghidra after setting it up
 
 How would you know to use the ARM:LE:32:v4t language if I didn't tell you? First search for which CPU the GBA uses; you'll find that it uses the ARM7TDMI CPU (e.g., from [Wikipedia](https://en.wikipedia.org/wiki/Game_Boy_Advance)). Knowing the CPU, you can look for which language/architecture the CPU uses; [ARM's documentation](https://developer.arm.com/documentation/ddi0210/c/Introduction/Architecture) states that the ARM7TDMI uses the ARMv4T architecture.
@@ -418,7 +418,7 @@ cmp r0,#0x1
 #### Call stack
 When a function is called, the caller is likely already using the registers to store values. There are only a handful of registers, and the function may also need those registers to do its work. Before the function can use the registers, it should save the existing values of registers it plans to use. When the function is finished, it should restore the saved values back to the registers so the caller doesn't lose its current state when it resumes execution.
 
-Registers `r0`-`r3` are designated as __scratch registers__, which are not saved by a function that uses them. Register `r4`-`r11` are __preserved registers__ whose values are saved and restored by the function. `lr` is also saved if the function calls other functions.
+Registers `r0`-`r3` and `r12` are designated as __scratch registers__, which are not saved by a function that uses them. Registers `r4`-`r11` are __preserved registers__ (or __variable registers__) whose values are saved and restored by the function. `lr` is also saved if the function calls other functions.
 
 Since a function can call another function, which can itself call another function and so on, every function must store and restore the register values at the proper times. This is accomplished using a place in memory called the call stack.
 
