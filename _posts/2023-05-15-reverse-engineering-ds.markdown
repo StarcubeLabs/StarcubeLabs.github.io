@@ -46,6 +46,7 @@ This tutorial discusses several reverse engineering aspects unique to DS games. 
     - [Using ndstool](#using-ndstool)
   - [Setting up Ghidra](#setting-up-ghidra)
   - [Creating a Ghidra project](#creating-a-ghidra-project)
+    - [Setup considerations](#setup-considerations)
   - [Setting up DeSmuME with _Explorers of Sky_](#setting-up-desmume-with-explorers-of-sky)
 - [Assembly primer](#assembly-primer)
   - [Registers](#registers)
@@ -198,11 +199,14 @@ Let's make a new project using the _Explorers of Sky_ ROM files that you unpacke
 >![](/assets/img/reverse-engineering/ghidra-setup-ds.png)<br>
 >Ghidra's auto-analysis of a function after setup
 
+#### Setup considerations
 How would you know to use the ARM:LE:32:v5t language if I didn't tell you? First search for which CPU the DS uses; you'll find that it uses the ARM946E-S and ARM7TDMI CPUs (e.g., from [Wikipedia](https://en.wikipedia.org/wiki/Nintendo_DS)). From the [tech specs](https://en.wikipedia.org/wiki/Nintendo_DS#Technical_specifications) of the DS, you'll find that the ARM9 CPU is the CPU used for gameplay mechanics. Knowing the CPU, you can look for which language/architecture the CPU uses; [ARM's documentation](https://developer.arm.com/documentation/ddi0201/d/introduction/about-the-arm946e-s-processor) states that the ARM946E-S uses the ARMv5TE architecture. This means the ARMv5T architecture is what we're looking for. The "E" in "ARMv5TE" is a suffix that indicates support for additional signal processing instructions, though you won't need to worry about those here.
 
 As for [endianness](https://en.wikipedia.org/wiki/Endianness) (the order that bytes are stored for each [word](https://en.wikipedia.org/wiki/Word_(computer_architecture)) of data), most ARM CPUs are "bi-endian" and support both little and big endian. In practice, most ARM programs use little endian. If Ghidra spits out incomprehensible disassembled code while using a little endian language, try big endian and see if the output is any better. Note that some CPUs, such as those using the [PowerPC](https://en.wikipedia.org/wiki/PowerPC) instruction set (e.g., the Wii), are predominantly big endian instead.
 
 The project setup uses some magic numbers when adding overlays. Overlays will be discussed [later in this tutorial](#overlays), including how to find these numbers by yourself.
+
+Some games use a DS-specific compression algorithm called BLZ for `arm9.bin` and overlay files. You can check if game files are compressed by seeing if the size of `arm9.bin` differs from the value at address 0x54 in `header.bin` ([source](https://problemkaputt.de/gbatek.htm#dscartridgeheader)), which contains the uncompressed size of the file. If the game uses BLZ compression, you can use [this compression tool](https://www.romhacking.net/utilities/826/) to uncompress `arm9.bin` and the overlays before loading them into Ghidra. In _Explorers of Sky_'s case, the assembly files are not compressed, so you don't need to worry about uncompressing them.
 
 ### Setting up DeSmuME with _Explorers of Sky_
 In addition to Ghidra, you'll need to set up a DS emulator and progress the game past the opening sequence.
@@ -226,7 +230,7 @@ An [assembly language](https://en.wikipedia.org/wiki/Assembly_language) (assembl
 
 Different CPUs may use different assembly languages depending on which operations the CPU supports (the __instruction set__ of the CPU). While all CPUs support the minimum set of instructions required for a computer to function, extra instructions act as shortcuts that allow a program to compile to fewer lines of assembly, resulting in faster program execution in exchange for more complicated CPU hardware to support the additional instructions, and possibly instructions taking more space to store. This tutorial will use the __ARM__ instruction set, as this is the main instruction set used by _Explorers of Sky_'s code. Future uses of the word "assembly" in this tutorial will be shorthand for "ARM instruction set assembly language"; this is a common shorthand in the context of a specific game.
 
->In addition to ARM, the DS's CPU supports another instruction set known as __THUMB__, which has less complicated instructions than ARM, but requires more instructions to accomplish the same functionality as ARM. The THUMB instruction set is out of the scope of this tutorial, though most of the concepts in this tutorial can be applied to any assembly language.
+>In addition to ARM, the DS's CPU supports another instruction set known as __THUMB__, which has less complicated instructions than ARM, but requires more instructions to accomplish the same functionality as ARM. Many DS games, like _Explorers of Sky_, use mainly ARM code, though some DS games make heavy use of THUMB. While the THUMB instruction set is out of the scope of this tutorial, it is fairly easy to learn once you know the ARM instruction set.
 
 Here is a simple assignment instruction in assembly.
 ```
@@ -276,6 +280,8 @@ Inside `y9.bin`, each overlay is listed in order, starting with the overlay numb
 >The overlay table for _Explorers of Sky_, with overlay 10 (0xA) highlighted. Overlay 10's address is 80CA2B02 (0x022BCA80).
 
 Once you know the address of an overlay, you can run the game, look at the overlay's address in memory, and compare this with the start of the overlay file to see if the bytes match up. If they do, then that overlay is currently loaded in memory.
+
+Most games have a place in memory that lists which overlays are currently loaded. For example, _Explorers of Sky_'s loaded overlays list is at address 0x20AF230. However, the location of this list is not standardized between games. Finding the list is non-trivial and outside the scope of this tutorial, though if a game's reverse engineering community has already found it, it can simplify the task of finding which overlays are of interest to you.
 
 ### Instructions
 Instructions are used to manipulate data in registers or memory. The CPU executes instructions in sequence according to the value of the program counter.
