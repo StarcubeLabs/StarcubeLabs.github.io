@@ -206,7 +206,7 @@ As for [endianness](https://en.wikipedia.org/wiki/Endianness) (the order that by
 
 The project setup uses some magic numbers when adding overlays. Overlays will be discussed [later in this tutorial](#overlays), including how to find these numbers by yourself.
 
-Some games use a DS-specific compression algorithm called BLZ for `arm9.bin` and overlay files. You can check if game files are compressed by seeing if the size of `arm9.bin` differs from the value at address 0x54 in `header.bin` ([source](https://problemkaputt.de/gbatek.htm#dscartridgeheader)), which contains the uncompressed size of the file. If the game uses BLZ compression, you can use [this compression tool](https://www.romhacking.net/utilities/826/) to uncompress `arm9.bin` and the overlays before loading them into Ghidra. In _Explorers of Sky_'s case, the assembly files are not compressed, so you don't need to worry about uncompressing them.
+Some games compress `arm9.bin` and overlay files, which can be uncompressed using [this compression tool](https://www.romhacking.net/utilities/826/). In _Explorers of Sky_'s case, the assembly files are not compressed, so you don't need to worry about uncompressing them.
 
 ### Setting up DeSmuME with _Explorers of Sky_
 In addition to Ghidra, you'll need to set up a DS emulator and progress the game past the opening sequence.
