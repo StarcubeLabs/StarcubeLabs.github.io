@@ -613,7 +613,7 @@ For example, if `r1` initially contains the address 0x2000000, the `ldmia` instr
 * Load the value at address 0x2000004 to `r4`.
 * Increment `r1` to 0x2000008.
 * Load the value at address 0x2000008 to `r5`.
-* Increment `r1` to 0x2000012.
+* Increment `r1` to 0x200000C.
 
 It is also possible to pass a range of registers to load into rather than listing each individual register.
 ```
@@ -632,7 +632,7 @@ If `r2` initially contains the address 0x2000000, the `stmia` instruction will d
 * Store the value in `r4` to address 0x2000004.
 * Increment `r2` to 0x2000008.
 * Store the value in `r5` to address 0x2000008.
-* Increment `r2` to 0x2000012.
+* Increment `r2` to 0x200000C.
 
 With both `ldmia` and `stmia`, the incremented register's address ends up at the address immediately after the last value loaded/stored. This makes it possible to chain `ldmia`/`stmia` to copy data of any size. A chain of these instructions may look like the following:
 ```
