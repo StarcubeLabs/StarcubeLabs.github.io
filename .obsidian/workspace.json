@@ -77,7 +77,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 447.5
   },
   "right": {
     "id": "e657be96dc117767",
@@ -200,6 +200,8 @@
   },
   "active": "c27c4fc9997b314b",
   "lastOpenFiles": [
+    "Gemfile.md",
+    "_posts/2024-11-16-lowpoly-textured-faces.markdown",
     "assets/img/facerig/Compressed/HoodieEyes.png.tmp",
     "assets/img/facerig/Compressed/uvtabview.png.tmp",
     "assets/img/facerig/Compressed/hoodieexample.png.tmp",
@@ -216,8 +218,6 @@
     "assets/img/facerig/Compressed/uvmapoverlay.png",
     "assets/img/facerig/Compressed/shadingtabview.png.tmp",
     "assets/img/facerig/Compressed/scaleto0.png",
-    "assets/img/facerig/Compressed/shownodes2.png.tmp",
-    "assets/img/facerig/Compressed/baseUV2overlay.png.tmp",
     "assets/img/facerig/Compressed/hoodeyeUVs.png",
     "assets/img/facerig/Compressed/shadingtabview.png",
     "assets/img/facerig/Compressed/baseUV2overlay.png",

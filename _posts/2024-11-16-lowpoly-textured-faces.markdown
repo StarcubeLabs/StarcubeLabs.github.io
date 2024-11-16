@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Lowpoly Textured Faces & Blender Part 1: Overlaying Expressions on Models"
-date: 2020-03-24 00:00:00
+date: 2024-11-16 00:00:00
 img: facerig/HoodieHeader.png
 description: Making facial controls for Atlased 2D expressions in Blender
 author: Spex130
