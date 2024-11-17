@@ -78,7 +78,7 @@ Try playing with the Combine XYZ node by itself on your own to understand how sc
 
   
 
-![Basic expression change! With Scrolling!](/assets/img/facerig/facescrolling.gif)
+![Basic expression change! With Scrolling!](/assets/img/facerig/FaceScrolling.gif)
 
   
 
@@ -254,6 +254,6 @@ Press Tab to exit the Group view, then with the Group node selected, Press F2 to
 
 Now, you can dynamically scroll through each column as well!
 
-![Now things actually work!](/assets/img/facerig/facescrolling2.gif)
+![Now things actually work!](/assets/img/facerig/FaceScrolling2.gif)
 
 Next up, we'll be configuring how to control this using Custom Attributes and allowing them to be keyed by the Action Editor!
