@@ -207,6 +207,9 @@ Because of that, the only two numbers we care about getting are 0 or 1. Let’s 
 <br><br>
 - So 3 % 2 = 1
 <br><br><br>
+</blockquote>
+<h4>Fifth Step</h4>
+<blockquote>
 - When ColumnIndex is 4
 <br><br><br>
 - 4 is exactly divisible by 2.
