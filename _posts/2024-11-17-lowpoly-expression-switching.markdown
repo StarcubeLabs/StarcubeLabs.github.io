@@ -116,101 +116,112 @@ We then plug this value into a Floor Math Node, before plugging THAT into a Trun
 
   
 <details>
-<Summary> Note: If you’d like to learn why this works, click here! Otherwise, skip ahead!</summary>
-
-  
-
+<summary> Note: If you’d like to learn why this works, click here! Otherwise, skip ahead!</summary>
+  <hr>
+  <p>
 Let’s take a short detour to explain that. Because that was a confusing series of sentences. Math is better with examples.
-
-  
-
+<br>
+</p><h3>Example 1</h3>
+<br>
 - Let’s say A = 8, and B = 3, and we’re taking A % B.
     
-
+<blockquote>
 - A is 8. The closest whole multiple of 3 to 8, is 6.
-    
-
+<br>
+<br>
 - The next multiple is 9, that’s too big. So we use 6.
-    
-
+<br>
+<br>
 - 8 - 6 = 2.
-    
+<br>    
 - So 8 % 3 = 2.
-    
-
+  </blockquote>
+<br>
+This means 8 mod 3 is 2!
+<br>
+<p></p><hr>
+<br>
+<h3>Example 2</h3>
 - Okay, what if A = 11 and B = 5?
-    
-
-- The closest whole multiple of 5 to 11 is 10. 
-    
-
+<br>
+<br>
+  <blockquote>
+- The closest whole multiple of 5 to 11 is 10.&nbsp;    
+<br>
+<br>
 - The next multiple is 15, which is too big. So we use 10.
-    
-
+<br>
+<br>
 - 11 - 10 = 1
-    
+<br>
+<br>
 - So 11 % 5 = 1
-    
-
-  
-
-Okay, now that I’ve given you the tiniest math primer of all time, let’s look at what we’re actually doing.
-
-The two X values we can have in our test image are Column 1 (which is X index 0) or Column 2 (which is X Index 1). That’s because X * 0 doesn’t move our UVs, and X * 1 moves our UVs over one column. Once we do X * 2, we’ve looped and we’re back where we started, because our X Increment size is 50% and (50% * 2) is 100%.
-
+  </blockquote>
+<br>
+<br>
+That means 11 mod 5 is 1!
+<br>
+<br>
+<hr>
+Okay, now that I’ve given you the tiniest math primer of all time, let’s look at what we’re actually doing:
+<br>
+<br>
+The two X values we can have in our test image are Column 1 (which is X index 0) or Column 2 (which is X Index 1).
+<br>
+<br>
+That’s because X * 0 doesn’t move our UVs, and X * 1 moves our UVs over one column. Once we do X * 2, we’ve looped and we’re back where we started, because our X Increment size is 50% and (50% * 2) is 100%.
+<br><br><br>
 Because of that, the only two numbers we care about getting are 0 or 1. Let’s go through our Modulo process by hand to see what happens here.
-  
-
+<br><br><br>
+  <h4>First Step</h4>
+<blockquote>
 - ColumnIndex is A, and A = 0. Here, we haven’t done anything yet, so ColumnCount is B, and B = 2.
-    
-
+<br><br><br>
 - 0 is a special case, because 0 divided by anything is 0.
-    
+<br><br> 
 - So 0 % 2 is 0.
-    
+<br><br><br>
 
-- When ColumnIndex is 1
-    
-
+</blockquote><h4>Second Step</h4><blockquote>
+- When ColumnIndex is 1:
+<br><br><br>
 - 1 is smaller than 1, so we return A.
-    
+<br><br>   
 - 1 % 2 = 1.
-    
+<br><br><br>
 
+</blockquote><h4>Third Step</h4><blockquote>
 - When ColumnIndex is 2
-    
-
+<br><br><br>
 - 2 is exactly divisible by 2, so there is no remainder.
-    
+<br><br>
 - 2 % 2 = 0
-    
+<br><br><br>
 
+</blockquote><h4>Fourth Step</h4><blockquote>
 - When ColumnIndex is 3
-    
-
+<br><br><br>
 - 3’s closest multiple of 2 is….2.
-    
+<br><br>
 - 3 - 2 is 1.
-    
+<br><br>
 - So 3 % 2 = 1
-    
-
+<br><br><br>
 - When ColumnIndex is 4
-    
-
+<br><br><br>
 - 4 is exactly divisible by 2.
-    
+<br><br>
 - So, no remainder.
-    
+<br><br>
 - 4 % 2 is 0.
-    
-
+  </blockquote>
+<br><br>
+...and so on.    
   
-
+<br><br>
 So if we look at this, as we increment the final horizontal result is either 0 or 1 every 3 rows we increment over. Which gives us EXACTLY the movement we need!
-
-  
-
+<br><br><br>
+<p>So now that we've gone over that, let's get back to our actual tutorial.</p>
 </details>
 
 Use a Math Node to Multiply that output from the Modulo by the X Increment, and then plug that into the final result.
