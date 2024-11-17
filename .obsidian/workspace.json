@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "_posts/2024-11-16-lowpoly-textured-faces.markdown",
-                "mode": "preview",
-                "source": true
+                "file": "_posts/2024-11-17-lowpoly-expression-switching.markdown",
+                "mode": "source",
+                "source": false
               },
               "icon": "lucide-file",
-              "title": "2024-11-16-lowpoly-textured-faces"
+              "title": "2024-11-17-lowpoly-expression-switching"
             }
           }
         ]
@@ -200,8 +200,21 @@
   },
   "active": "c27c4fc9997b314b",
   "lastOpenFiles": [
-    "Gemfile.md",
     "_posts/2024-11-16-lowpoly-textured-faces.markdown",
+    "_posts/2024-11-17-lowpoly-expression-switching.markdown",
+    "assets/img/facerig/FaceScrolling2.gif",
+    "assets/img/facerig/completegroupnode.png",
+    "assets/img/facerig/groupsockets.png",
+    "assets/img/facerig/groupview.png",
+    "assets/img/facerig/ungroupednodes.png",
+    "assets/img/facerig/multxincrement.png",
+    "assets/img/facerig/floormod.png",
+    "assets/img/facerig/dividecolumncount.png",
+    "assets/img/facerig/yincrementmult.png",
+    "assets/img/facerig/HoodieMouths.png",
+    "assets/img/facerig/hoodieheader2.png~",
+    "_posts/2024-11-17-lowpoly-expression-switching.md",
+    "Gemfile.md",
     "assets/img/facerig/Compressed/HoodieEyes.png.tmp",
     "assets/img/facerig/Compressed/uvtabview.png.tmp",
     "assets/img/facerig/Compressed/hoodieexample.png.tmp",
@@ -209,18 +222,6 @@
     "assets/img/facerig/Compressed/shownodes1.png.tmp",
     "assets/img/facerig/Compressed/uvmapoverlay.png.tmp",
     "assets/img/facerig/Compressed/scaleto0.png.tmp",
-    "assets/img/facerig/Compressed/hoodeyeUVs.png.tmp",
-    "assets/img/facerig/Compressed/HoodieEyes.png",
-    "assets/img/facerig/Compressed/shownodes1.png",
-    "assets/img/facerig/Compressed/uvtabview.png",
-    "assets/img/facerig/Compressed/HoodieHeader.png",
-    "assets/img/facerig/Compressed/hoodieexample.png",
-    "assets/img/facerig/Compressed/uvmapoverlay.png",
-    "assets/img/facerig/Compressed/shadingtabview.png.tmp",
-    "assets/img/facerig/Compressed/scaleto0.png",
-    "assets/img/facerig/Compressed/hoodeyeUVs.png",
-    "assets/img/facerig/Compressed/shadingtabview.png",
-    "assets/img/facerig/Compressed/baseUV2overlay.png",
     "assets/img/facerig/Pasted.md",
     "_posts/2024-11-16-lowpoly-textured-faces.markdown.md",
     "Untitled.canvas"
