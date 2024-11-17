@@ -137,4 +137,7 @@ Add a UV Map node, and select your 2nd UV map from the dropdown. Plug it into th
 ![Image Overlay with UV Map 2](/assets/img/facerig/uvmapoverlay.png)
   
 Perfect! Now our atlas is overlaying correctly on the model. If all you needed was a game-ready asset, this is now something that can be exported and set up using shaders in a game engine! 
-Next up - Changing expressions, and making them keyable!
+
+Next up - [Changing expressions, and making them keyable!][part-2]
+
+[part-2]: /lowpoly-expression-switching/
