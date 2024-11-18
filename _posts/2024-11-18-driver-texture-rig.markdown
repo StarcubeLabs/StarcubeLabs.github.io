@@ -2,7 +2,7 @@
 layout: post
 title: "Lowpoly Textured Faces & Blender Part 3: Texture Animation Rigging using Drivers & Bones"
 date: 2024-11-18 00:00:00
-img: facerig/hoodieheader3.png
+img: facerig/hoodieHeader3img.png
 description: Animating Textured Expressions using Bones, Custom Properties, & Drivers
 author: Spex130
 tags:
