@@ -256,4 +256,6 @@ Now, you can dynamically scroll through each column as well!
 
 ![Now things actually work!](/assets/img/facerig/FaceScrolling2.gif)
 
-Next up, we'll be configuring how to control this using Custom Attributes and allowing them to be keyed by the Action Editor!
+Next up, we'll be configuring how to control this using Custom Attributes and allowing them to be keyed by the Action Editor! See that article [here!][drivers-rig]
+
+[drivers-rig]:/driver-texture-rig/
