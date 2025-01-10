@@ -44,3 +44,8 @@ This setup allows you to, for example, map the beginning and end of an animation
 
 ![Dynamic 360 Degree Remap](/assets/img/current-frame-attributes/nodeexample.png)
 > A setup that allows you to get a seamless 360 degree rotation from any arbitrary length animation.
+
+
+Hope that this is useful!
+
+- Spex130
