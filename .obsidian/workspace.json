@@ -13,12 +13,26 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "_drafts/2024-12-01-blender-secrets-current-frame.markdown",
+                "file": "_posts/2024-12-01-blender-secrets-current-frame.markdown",
+                "mode": "preview",
+                "source": true
+              },
+              "icon": "lucide-file",
+              "title": "2024-12-01-blender-secrets-current-frame"
+            }
+          },
+          {
+            "id": "7d575af0b128d195",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "_posts/2024-11-18-driver-texture-rig.markdown",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "2024-12-01-blender-secrets-current-frame"
+              "title": "2024-11-18-driver-texture-rig"
             }
           }
         ]
@@ -158,13 +172,20 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "930b84627bc60a80",
+  "active": "0f5ead6d108033a3",
   "lastOpenFiles": [
+    "_drafts/2017-03-30-an-old-house.markdown",
+    "assets/img/current-frame-attributes/frame_att_header.png",
+    "assets/img/current-frame-attributes/nodeexample.png",
+    "_posts/2024-11-18-driver-texture-rig.markdown",
+    "_posts/2024-12-01-blender-secrets-current-frame.markdown",
+    "assets/img/current-frame-attributes/nodeview.png",
+    "assets/img/current-frame-attributes/Pasted.md",
+    "Pasted.md",
+    "assets/img/current-frame-attributes",
+    "_posts/2024-11-16-lowpoly-textured-faces.markdown",
     "_posts/2024-11-17-lowpoly-expression-switching.markdown",
     "_posts/2024-12-01-blender-secrets-current-frame.md",
-    "_drafts/2024-12-01-blender-secrets-current-frame.markdown",
-    "_posts/2024-11-18-driver-texture-rig.markdown",
-    "_posts/2024-11-16-lowpoly-textured-faces.markdown",
     "assets/img/facerig/HoodieHeader3img.png",
     "assets/img/facerig/hoodieHeader3.png",
     "assets/img/facerig/keypropanim.gif",
@@ -172,16 +193,11 @@
     "assets/img/facerig/purpledriver.png",
     "assets/img/facerig/pastedriver.png",
     "assets/img/facerig/drivercopy.png",
-    "assets/img/facerig/propsettings.png",
-    "assets/img/facerig/newprop.png",
-    "assets/img/facerig/customshape.png",
     "_posts/2024-11-18-driver-texture-rig.md",
-    "_drafts/2017-03-30-an-old-house.markdown",
     "_drafts/2017-03-29-zagreb-city.markdown",
     "_drafts/2017-03-29-the-white-house.markdown",
     "_drafts/2017-03-29-example.markdown",
     "_drafts/2017-03-29-china-tiger-leaping-gorge.markdown",
-    "_drafts/2017-03-25-welcome-to-jekyll.markdown",
     "_posts/2024-11-17-lowpoly-expression-switching.md",
     "Gemfile.md",
     "assets/img/facerig/Pasted.md",

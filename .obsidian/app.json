@@ -1,5 +1,6 @@
 {
   "showUnsupportedFiles": true,
   "newLinkFormat": "shortest",
-  "attachmentFolderPath": "assets/img/facerig"
+  "attachmentFolderPath": "assets/img/current-frame-attributes",
+  "alwaysUpdateLinks": true
 }
