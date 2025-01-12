@@ -1,8 +1,8 @@
 ---
 layout: post
 title: "Blender Quickguide: Inverse Kinematics for Characters"
-date: 2025-1-09 00:00:00
-img: current-frame-attributes/frame_att_header.png
+date: 2025-1-10 00:00:00
+img: ikguide/ikguideheader.png
 description: Powering 2D and 3D animations in Blender using the secret Frame attributes
 author: Spex130
 tags:
