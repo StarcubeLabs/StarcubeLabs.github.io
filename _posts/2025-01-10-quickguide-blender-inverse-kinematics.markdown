@@ -61,6 +61,7 @@ In the same way what we're going to do is extrude the Pole Target Handle from th
 Make sure to Uncheck Connected and then reset the Handle's parent when you create it! This is an IK Handle, so it too should be childed to a a bone that is higher in the hierarchy than the IK Bone Chain's parent. In our case we could also parent this bone to `Origin`, but as a shortcut in my case I usually child it to the Base IK Handle since it makes coordinating rotation a bit easier. It does introduce other problems, but like with anything there are pros and cons. Feel free to child your Pole Target Handle to either.
 
 In my example, I set mine's parent to FootIKHandle
+
 ![Extruding the Pole Target Handle!](/assets/img/ikguide/KneeExtrude.gif)
 
 And with that, we're done setting up the basic handles you'd need for IKs. Now we actually set up those IKs.
@@ -68,7 +69,7 @@ And with that, we're done setting up the basic handles you'd need for IKs. Now w
 
 Select your Skeleton and set it to pose mode, then select the *end of your IK Bone Chain*. In our example, that would be `Shin`. Go to the Constraints tab on the right and add an Inverse Kinematics constraint
 
-![The IK constraint location](assets/img/ikguide/ikconstraint.png)
+![The IK constraint location](/assets/img/ikguide/ikconstraint.png)
 
 Here's a properly set up Inverse Kinematic constraint. Take a look first, and then I'll explain what's going on here.
 
@@ -118,23 +119,23 @@ So, let's set this up.
 
 Click on your Foot Bone in edit more and use `Shift+D` (or use the Search `F3`) to Duplicate the bone. **Don't move it!** Just press Enter without moving the mouse.
 
-![The Duplicate Option](assets/img/ikguide/footduplicate.png)
+![The Duplicate Option](/assets/img/ikguide/footduplicate.png)
 Leave it where it is and rename it to something nice using `F2`, like Foot Bone Clone. We're going to turn Connection off in the Bone Panel and Child it to the Base IK Handle `FootIKHandle`.
 
 ![A basic moving IK setup!](/assets/img/ikguide/footclonereparent.gif)
 
 You can recolor it or make it unselectable or otherwise change it cosmetically to make it easier to understand which bone is the original and which bone is the clone. I used [Bone Widget](https://github.com/waylow/boneWidget) in Pose Mode to create a new Shape for it so that while it occupies the same space, it's easy to tell which is which.
 
-![Bone Widget View](assets/img/ikguide/bonewidget.png)
+![Bone Widget View](/assets/img/ikguide/bonewidget.png)
 
 While in Pose Mode, click on your original Foot Bone and head to the Constraints tab.
 
-![Adding the Rotation Constraint](assets/img/ikguide/addrotconstraint.png)
+![Adding the Rotation Constraint](/assets/img/ikguide/addrotconstraint.png)
 
 
 After that, we just set up the Constraint like we've set up the rest.
 
-![The complete rotation constraint](assets/img/ikguide/finishedrotconstraint.png)
+![The complete rotation constraint](/assets/img/ikguide/finishedrotconstraint.png)
 
 1. The Target Armature is our basic armature that we've been working in.
 2. The bone we're aiming at is the Foot Bone Clone.
@@ -159,7 +160,7 @@ Here's a tip for that though:
 
 If you select your Hand IK _and then the bone you'd like to rotate in the IK Chain_ and change your Transform Pivot Point to `Active Element`, you technically can get FK rotations with an IK chain. 
 
-![Forward Kinematic setup for rotation](assets/img/ikguide/FKtyperotation.png)
+![Forward Kinematic setup for rotation](/assets/img/ikguide/FKtyperotation.png)
 
 It's not the best workflow, but it IS a stopgap.
 
