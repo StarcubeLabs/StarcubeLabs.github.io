@@ -73,7 +73,7 @@ Select your Skeleton and set it to pose mode, then select the *end of your IK Bo
 
 Here's a properly set up Inverse Kinematic constraint. Take a look first, and then I'll explain what's going on here.
 
-![The IK constraint setup](ikconstraintsetup.png)
+![The IK constraint setup](/assets/img/ikguide/ikconstraintsetup.png)
 > Before we start, Note that Target and Pole Target will extend to show Bone selection after you select your Armature. Without anything selected, numbers 2 and 4 will not exist. 
 
 1. Target: Surprisingly, this is not a bone but a Skeleton. The Armature you select here doesn't even technically have to be _this armature_, you can have it set to a completely different skeleton. However, since we are planning on building all of this with our own skeleton, select the skeleton your IK Bone Chain is attached to.
