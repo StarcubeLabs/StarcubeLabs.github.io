@@ -14,7 +14,7 @@
               "type": "markdown",
               "state": {
                 "file": "_posts/2024-11-17-lowpoly-expression-switching.markdown",
-                "mode": "source",
+                "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
@@ -158,8 +158,11 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "930b84627bc60a80",
+  "active": "32249472cf2a986b",
   "lastOpenFiles": [
+    "_posts/2024-11-16-lowpoly-textured-faces.markdown",
+    "_posts/2024-11-17-lowpoly-expression-switching.markdown",
+    "assets/img/ikguide/ikguideheader.png",
     "assets/img/ikguide/compressed/propersetup1.gif.tmp",
     "assets/img/ikguide/compressed/KneeExtrude.gif.tmp",
     "assets/img/ikguide/compressed/handlesetupgif.gif.tmp",
@@ -178,9 +181,6 @@
     "assets/img/ikguide/compressed/extrudefoothandle.gif",
     "assets/img/ikguide/compressed/basicskelgif.gif",
     "assets/img/ikguide/compressed/propersetup1.gif",
-    "assets/img/ikguide/compressed",
-    "assets/img/ikguide/New folder",
-    "assets/img/ikguide/Compressed/propersetup1.gif",
     "_posts/2025-01-10-quickguide-blender-inverse-kinematics.md",
     "assets/img/current-frame-attributes/Pasted.md",
     "Pasted.md",

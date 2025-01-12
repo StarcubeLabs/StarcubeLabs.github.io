@@ -2,7 +2,7 @@
 layout: post
 title: "Lowpoly Textured Faces & Blender Part 2: Changing Expressions with Shifting UVs"
 date: 2024-11-17 00:00:00
-img: facerig/hoodieheader2.png
+img: ikguide/ikguideheader.png
 description: Moving UVs using Mapping Nodes
 author: Spex130
 tags:
