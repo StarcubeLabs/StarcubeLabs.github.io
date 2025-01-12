@@ -1,16 +1,16 @@
 ---
 layout: post
 title: "Blender Secrets: Using the Frames as input for Materials and Drivers"
-date: 2025-1-09 00:00:00
+date: 2024-12-01 00:00:00
 img: current-frame-attributes/frame_att_header.png
-description: Powering 2D and 3D animations in Blender using the secret "Frame" attributes
+description: Powering 2D and 3D animations in Blender using the secret Frame attributes
 author: Spex130
 tags:
   - Blender
   - Animation
   - Materials
   - Drivers
-  - Short
+  - Quickguide
 ---
 # Secret Attributes
 

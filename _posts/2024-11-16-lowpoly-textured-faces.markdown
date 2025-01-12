@@ -10,6 +10,7 @@ tags:
   - Rigging
   - Animation
   - Materials
+  - Tutorial
 ---
 # Part 1: Overlaying Textures using Transparency & Extra UV Maps
 

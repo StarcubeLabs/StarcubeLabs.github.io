@@ -5,6 +5,11 @@ date: 2023-05-06 05:00:00
 img: reverse-engineering/debug-env.png
 description: "How to reverse engineer a GBA game, using Pokémon Mystery Dungeon: Red Rescue Team as an example."
 author: Some Body
+tags:
+  - ReverseEngineering
+  - GameBoyAdvance
+  - Assembly
+  - Tutorial
 ---
 
 ## Intro

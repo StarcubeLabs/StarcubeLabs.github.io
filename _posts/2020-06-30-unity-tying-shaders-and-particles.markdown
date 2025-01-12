@@ -1,11 +1,16 @@
 ---
 layout: post
-title:  "Unity: Tying Shaders and Particles"
-date:   2020-06-30 00:00:00
+title: "Unity: Tying Shaders and Particles"
+date: 2020-06-30 00:00:00
 img: tying-particles/header.png
 description: Powering up your particles with code instead of art
 author: Spex130
-tags: [Unity, Breakdown, Shaders, Particles]
+tags:
+  - Unity
+  - Breakdown
+  - Shaders
+  - Particles
+  - Tutorial
 ---
 
 ## Part 0: The Problem

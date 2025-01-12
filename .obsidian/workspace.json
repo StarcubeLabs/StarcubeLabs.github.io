@@ -8,17 +8,17 @@
         "type": "tabs",
         "children": [
           {
-            "id": "7d575af0b128d195",
+            "id": "32249472cf2a986b",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "_posts/2024-11-18-driver-texture-rig.markdown",
+                "file": "_posts/2024-11-17-lowpoly-expression-switching.markdown",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "2024-11-18-driver-texture-rig"
+              "title": "2024-11-17-lowpoly-expression-switching"
             }
           }
         ]
@@ -158,32 +158,34 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "7d575af0b128d195",
+  "active": "930b84627bc60a80",
   "lastOpenFiles": [
-    "_posts/2024-12-01-blender-secrets-current-frame.markdown",
-    "_drafts/2017-03-30-an-old-house.markdown",
-    "assets/img/current-frame-attributes/frame_att_header.png",
-    "assets/img/current-frame-attributes/nodeexample.png",
-    "_posts/2024-11-18-driver-texture-rig.markdown",
-    "assets/img/current-frame-attributes/nodeview.png",
+    "assets/img/ikguide/compressed/propersetup1.gif.tmp",
+    "assets/img/ikguide/compressed/KneeExtrude.gif.tmp",
+    "assets/img/ikguide/compressed/handlesetupgif.gif.tmp",
+    "assets/img/ikguide/compressed/footrotexample.gif.tmp",
+    "assets/img/ikguide/compressed/footrotatebad.gif.tmp",
+    "assets/img/ikguide/compressed/footclonereparent.gif.tmp",
+    "assets/img/ikguide/compressed/finishedresult.gif.tmp",
+    "assets/img/ikguide/compressed/extrudefoothandle.gif.tmp",
+    "assets/img/ikguide/compressed/basicskelgif.gif.tmp",
+    "assets/img/ikguide/compressed/KneeExtrude.gif",
+    "assets/img/ikguide/compressed/handlesetupgif.gif",
+    "assets/img/ikguide/compressed/footrotexample.gif",
+    "assets/img/ikguide/compressed/footrotatebad.gif",
+    "assets/img/ikguide/compressed/footclonereparent.gif",
+    "assets/img/ikguide/compressed/finishedresult.gif",
+    "assets/img/ikguide/compressed/extrudefoothandle.gif",
+    "assets/img/ikguide/compressed/basicskelgif.gif",
+    "assets/img/ikguide/compressed/propersetup1.gif",
+    "assets/img/ikguide/compressed",
+    "assets/img/ikguide/New folder",
+    "assets/img/ikguide/Compressed/propersetup1.gif",
+    "_posts/2025-01-10-quickguide-blender-inverse-kinematics.md",
     "assets/img/current-frame-attributes/Pasted.md",
     "Pasted.md",
-    "assets/img/current-frame-attributes",
-    "_posts/2024-11-16-lowpoly-textured-faces.markdown",
-    "_posts/2024-11-17-lowpoly-expression-switching.markdown",
     "_posts/2024-12-01-blender-secrets-current-frame.md",
-    "assets/img/facerig/HoodieHeader3img.png",
-    "assets/img/facerig/hoodieHeader3.png",
-    "assets/img/facerig/keypropanim.gif",
-    "assets/img/facerig/sidepanelprops.gif",
-    "assets/img/facerig/purpledriver.png",
-    "assets/img/facerig/pastedriver.png",
-    "assets/img/facerig/drivercopy.png",
     "_posts/2024-11-18-driver-texture-rig.md",
-    "_drafts/2017-03-29-zagreb-city.markdown",
-    "_drafts/2017-03-29-the-white-house.markdown",
-    "_drafts/2017-03-29-example.markdown",
-    "_drafts/2017-03-29-china-tiger-leaping-gorge.markdown",
     "_posts/2024-11-17-lowpoly-expression-switching.md",
     "Gemfile.md",
     "assets/img/facerig/Pasted.md",

@@ -5,6 +5,11 @@ date: 2023-05-15 05:00:00
 img: reverse-engineering/debug-env-ds.png
 description: "How to reverse engineer a DS game, using Pokémon Mystery Dungeon: Explorers of Sky as an example."
 author: Some Body
+tags:
+  - ReverseEngineering
+  - NintendoDS
+  - Assembly
+  - Tutorial
 ---
 
 ## Intro

@@ -10,6 +10,7 @@ tags:
   - Rigging
   - Animation
   - Materials
+  - Tutorial
 ---
 #### Part 2 - Step 1: Starting with setting up shifting UVs
 
