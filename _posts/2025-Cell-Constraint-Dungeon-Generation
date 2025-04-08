@@ -155,6 +155,309 @@ You can add a lot of variety by creating multiple different room layouts for eac
 
 One very important thing to note though is the rotation directions\! In Godot, 2D images rotate clockwise with positive rotations. In 3D, if you use X and Z as your ground plane, positive Y rotations result in **counter-clockwise rotations**. You have to pick one in your layout generator and then compensate when reading the data back, or your rooms won’t connect properly\!
 
+---
+
+# The Code
+
+<details>
+<summary> Note: To see the full Godot Implementation of this technique, click here!</summary>
+
+```
+@tool
+extends Node
+class_name DungeonLayoutGenerator
+
+signal generation_complete(grid: Dictionary[Vector2i, RefCounted], extents: Rect2i);
+
+enum Direction { NORTH, EAST, SOUTH, WEST };
+
+func get_opposite_direction(direction: Direction) -> Direction:
+	match direction:
+		Direction.NORTH: return Direction.SOUTH;
+		Direction.SOUTH: return Direction.NORTH;
+		Direction.EAST:  return Direction.WEST;
+		Direction.WEST:  return Direction.EAST;
+	return direction;
+
+# TODO: This could probably be done a lot better.
+func rotate_direction(direction: Direction, rotation_degrees: int) -> Direction:
+	# rotation_degrees should be 0, 90, 180, or 270.
+	# We rotate clockwise in 90° steps.
+	var rotations: int = rotation_degrees / 90;
+	var new_direction: Direction = direction;
+	for i in range(rotations):
+		match new_direction:
+			Direction.NORTH: new_direction = Direction.WEST;
+			Direction.EAST:  new_direction = Direction.NORTH;
+			Direction.SOUTH: new_direction = Direction.EAST;
+			Direction.WEST:  new_direction = Direction.SOUTH;
+	return new_direction;
+
+func direction_to_vector(direction: Direction) -> Vector2i:
+	match direction:
+		Direction.NORTH: return Vector2i(0, -1);
+		Direction.EAST:  return Vector2i(1, 0);
+		Direction.SOUTH: return Vector2i(0, 1);
+		Direction.WEST:  return Vector2i(-1, 0);
+	return Vector2i.ZERO;
+
+# A simple room "template" that has a name and a set of door directions in its base orientation.
+class RoomTemplate:
+	var name: String = "";
+	var doors: Array[Direction] = [];  # each door is one of the Direction enum values
+	
+	func _init(_name: String, _doors: Array[Direction]) -> void:
+		name = _name;
+		doors = _doors;
+
+# A placed room stores which template was chosen and the rotation (in degrees) applied.
+# These will be returned to the generate dungeon caller.
+class PlacedRoom:
+	var template: RoomTemplate;
+	var rotation: int = 0;
+	
+	func _init(_template: RoomTemplate, _rotation: int) -> void:
+		template = _template;
+		rotation = _rotation;
+
+# Constraints for a grid cell. 'required' is a list of door directions that must be present
+# in the room placed here (because an adjacent room is connecting), while 'blocked' lists directions that must not be present.
+class CellConstraint:
+	var required: Array[Direction] = [];
+	var blocked: Array[Direction] = [];
+	
+	func _init() -> void:
+		required = [];
+		blocked = [];
+
+# Dictionary mapping grid cell positions (Vector2i) to a placed room.
+# This allows for sparse mapping of dungeon rooms - there are no empty rooms in this structure
+# as the dictionary only contains placed rooms. Consumers can get the keys to get the positions
+# of the rooms in layout-space.
+# e.g. grid[Vector2i(2,1)] = PlacedRoom
+var grid: Dictionary[Vector2i, PlacedRoom] = {};
+
+# Dictionary mapping grid cell positions (Vector2) to constraints. Again, sparse structure mapping
+# a position in layout-space to a set of cell constraints. While we're laying out, we don't know the height and
+# width of the dungeon, and don't want to constrain to imaginary edges.
+# e.g. constraints[Vector2(2,2)] = CellConstraint
+var constraints: Dictionary[Vector2i, CellConstraint] = {};
+
+# Since we keep the layout separate from any rendering, we only have 5 possible room templates.
+var room_templates: Array[RoomTemplate] = [
+	RoomTemplate.new("1Door", [Direction.NORTH]),
+	RoomTemplate.new("2Door_NS", [Direction.NORTH, Direction.SOUTH]),
+	RoomTemplate.new("2Door_NE", [Direction.NORTH, Direction.EAST]),
+	RoomTemplate.new("3Door_NES", [Direction.NORTH, Direction.EAST, Direction.SOUTH]),
+	RoomTemplate.new("4Door", [Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST])
+];
+
+# We'll visit these one a a time to place new rooms.
+var necessary_cells: Array[Vector2i] = [];
+
+# Parameters
+var soft_max_rooms := 4;
+var hard_max_rooms := 15;
+var hard_min_rooms := 6;
+
+# Tracking
+var num_rooms := 0;
+
+func generate_layout(start_type: String, soft_max: int, hard_max: int, hard_min: int):
+	var success := false;
+	var attempts := 0;
+	while !success && attempts < 20:
+		print("Generating level. Attempt: ", attempts);
+		necessary_cells = [];
+		grid = {};
+		constraints = {};
+		soft_max_rooms = soft_max;
+		hard_max_rooms = hard_max;
+		hard_min_rooms = hard_min;
+		num_rooms = 0;
+		
+		# Start by placing an initial room at (0, 0).
+		var start_room: RoomTemplate;
+		match(start_type):
+			"Start_N":
+				start_room = RoomTemplate.new("Start_N", [Direction.NORTH]);
+			"Start_NE":
+				start_room = RoomTemplate.new("Start_NE", [Direction.NORTH, Direction.EAST]);
+			"Start_NS":
+				start_room = RoomTemplate.new("Start_NS", [Direction.NORTH, Direction.SOUTH]);
+			"Start_NES":
+				start_room = RoomTemplate.new("Start_NES", [Direction.NORTH, Direction.EAST, Direction.SOUTH]);
+			"Start_NESW":
+				start_room = RoomTemplate.new("Start_NESW", [Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST]);
+		place_room(Vector2i(0, 0), start_room, 0);
+		update_constraints_for_room(Vector2i(0, 0));
+		
+		success = generate_dungeon();
+		attempts += 1;
+	
+	# For debugging, print out the final grid.
+	print("Generated a layout with: ", num_rooms, " rooms.");
+	# Very helpful to know the rectangular extents of the final dungeon.
+	var extents := Rect2i();
+	var min: = Vector2i(0,0);
+	var max: = Vector2i(0,0);
+	for key in (grid.keys() as Array[Vector2i]):
+		var room: PlacedRoom = grid[key];
+		if(key.x < min.x):
+			min.x = key.x;
+		if(key.y < min.y):
+			min.y = key.y;
+		
+		if(key.x > max.x):
+			max.x = key.x;
+		if(key.y > max.y):
+			max.y = key.y;
+
+		print("Room at ", key, ": ", room.template.name, " rotated: ", room.rotation);
+	extents = Rect2i(min, max - min);
+	
+	# Include the edges
+	extents.size.x += 1;
+	extents.size.y += 1;
+	
+	print("Emitting complete signal...");
+	generation_complete.emit(grid, extents);
+
+func _ready():
+	randomize();
+
+func generate_dungeon() -> bool:
+	# While there are cells with constraints that are not filled, try to fill them.
+	while necessary_cells.size() > 0:
+		var cell: Vector2i = necessary_cells.pop_front() as Vector2i;
+		
+		# Skip cells that already have a room. This should never happen.
+		if grid.has(cell):
+			continue;
+		
+		var cell_constraint: CellConstraint = constraints[cell];
+		# Choose a candidate room template based on a random roll.
+		var candidate_templates: Array[RoomTemplate] = [];
+		for rt in room_templates:
+			# Grow mode, pick rooms bigger than the required number of doors
+			if(num_rooms < soft_max_rooms && (rt.doors.size() > cell_constraint.required.size() || rt.doors.size() == 4)):
+				candidate_templates.append(rt)
+			# Finish up mode, pick rooms that perfectly satisfy
+			# TODO: Consider special rooms here, like stairs, treasure rooms, boss chambers
+			elif num_rooms >= soft_max_rooms && rt.doors.size() == cell_constraint.required.size():
+				candidate_templates.append(rt)
+		if candidate_templates.size() == 0:
+			# No candidate can satisfy the constraint; cell will remain empty.
+			continue;
+		
+		# TODO: Add parameterized weight for more or less doors, or certain room types here.
+		var chosen_template := candidate_templates[randi() % candidate_templates.size()];
+		
+		while(candidate_templates.size() > 0):
+			# Try to place the room with one of the 90° rotations.
+			if try_place_room(cell, chosen_template, cell_constraint):
+				# If placement succeeds, update neighbor cell constraints from this new room.
+				update_constraints_for_room(cell);
+				break;
+			else:
+				candidate_templates.erase(chosen_template);
+				
+				if(candidate_templates.size() == 0):
+					print("ALL OPTIONS EXHAUSTED AT: ", cell);
+					print("WILL TRY AGAIN LATER...");
+					necessary_cells.push_back(cell);
+				else:
+					chosen_template = candidate_templates[randi() % candidate_templates.size()];
+		
+		# Dungeon generation failed - too big. Throw it out and start over.
+		if num_rooms > hard_max_rooms:
+			return false;
+			
+	# TODO: If there are any important rooms left unplaced - fail.
+	
+	# Dungeon generation failed - too small. Throw it out and start over.
+	if num_rooms < hard_min_rooms:
+		return false;
+	
+	# Everything finished up - dungeon generation success!
+	return true;
+
+func try_place_room(cell: Vector2i, room_template: RoomTemplate, cell_constraint: CellConstraint) -> bool:
+	# Try each rotation: 0, 90, 180, and 270 degrees.
+	var rotations: Array[int] = [0, 90, 180, 270];
+	if( randi() % 2 == 0 ):
+		rotations.reverse();
+	for rotation in rotations:
+		var rotated_doors: Array[Direction] = [];
+		for door in room_template.doors:
+			rotated_doors.append( rotate_direction(door, rotation) )
+		
+		# Check that every required door is present in the rotated configuration.
+		var valid := true;
+		for req in cell_constraint.required:
+			if(!rotated_doors.has(req)):
+				valid = false;
+				break;
+		
+		# Also, ensure that none of the blocked directions are present.
+		for block in cell_constraint.blocked:
+			if(rotated_doors.has(block)):
+				valid = false;
+				break;
+		
+		if valid:
+			place_room(cell, room_template, rotation);
+			return true;
+	return false;
+
+func place_room(cell: Vector2i, room_template: RoomTemplate, rotation: int) -> void:
+	# Place the room into the grid.
+	grid[cell] = PlacedRoom.new(room_template, rotation);
+	# Once a room is placed, remove any constraints for that cell.
+	constraints.erase(cell);
+	num_rooms += 1;
+
+func update_constraints_for_room(cell: Vector2i) -> void:
+	# For the room at 'cell', update the constraints on its four neighboring cells.
+	if !(grid.has(cell)):
+		return;
+	
+	var placed: PlacedRoom = grid[cell];
+	# Determine the rotated door configuration.
+	var rotated_doors: Array[Direction] = [];
+	for door in placed.template.doors:
+		rotated_doors.append( rotate_direction(door, placed.rotation) );
+	
+	# For each of the four directions:
+	var directions: Array[Direction] = [Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST];
+	for direction in directions:
+		var neighbor: Vector2i = cell + direction_to_vector(direction);
+		var opp: Direction = get_opposite_direction(direction);
+		# Get or create a CellConstraint for the neighbor.
+		var cell_constraint: CellConstraint;
+		if constraints.has(neighbor):
+			cell_constraint = constraints[neighbor];
+		else:
+			cell_constraint = CellConstraint.new();
+			constraints[neighbor] = cell_constraint;
+		# If this room has a door in the direction, then the neighbor MUST eventually have a door facing 'opp'.
+		if(rotated_doors.has(direction)):
+			if(!cell_constraint.required.has(opp)):
+				cell_constraint.required.append(opp);
+				if(!necessary_cells.has(neighbor)):
+					if( randi() % 4 <= 2 ):
+						necessary_cells.push_front(neighbor);
+					else:
+						necessary_cells.push_back(neighbor);
+		else:
+			# If there is no door here, we add a "blocked" constraint so that a later room cannot have a door on that side.
+			if(!cell_constraint.blocked.has(opp)):
+				cell_constraint.blocked.append(opp);
+
+```
+
+</details>
+
 [image1]: <data:image/png;base64,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>
 
 [image2]: <data:image/png;base64,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>
