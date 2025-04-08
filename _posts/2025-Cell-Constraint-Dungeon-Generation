@@ -155,6 +155,8 @@ You can add a lot of variety by creating multiple different room layouts for eac
 
 One very important thing to note though is the rotation directions\! In Godot, 2D images rotate clockwise with positive rotations. In 3D, if you use X and Z as your ground plane, positive Y rotations result in **counter-clockwise rotations**. You have to pick one in your layout generator and then compensate when reading the data back, or your rooms won’t connect properly\!
 
+- TestSubject06
+
 ---
 
 # The Code
