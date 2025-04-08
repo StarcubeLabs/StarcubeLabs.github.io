@@ -381,7 +381,7 @@ By default, Ghidra names functions according to the memory address where they st
 Most functions have three parts: a __prologue__, a __body__, and an __epilogue__. The prologue and epilogue consist of standard setup and cleanup for function execution, while the body is the main logic that the function will execute. In the function above:
 * The function is simple enough to have no prologue.
 * The body consists of the instruction `ldr r0,[r0,#0x0]`.
-* The epilogue contains the instruction `bx lr`. This will set the `pc` to the value in `lr`, which causes the program to return to the place that called the function. 
+* The epilogue contains the instruction `bx lr`. This will set the `pc` to the value in `lr`, which causes the program to return to the place that called the function.
 
 Once the function returns from the epilogue to the caller function, the `pc` is incremented as usual, causing the program to continue at the instruction directly after the function call.
 
@@ -407,7 +407,7 @@ ldr r0,[r0,#0x0]
 #### Return values
 If a function needs to return a value, the return value will be stored in `r0` just before the function returns. The caller function can use the return value in `r0` as needed.
 
-In function `FUN_080450f8`, the function body assigns a value to `r0` before returning with `bx`. 
+In function `FUN_080450f8`, the function body assigns a value to `r0` before returning with `bx`.
 ```
 FUN_080450f8
 
@@ -482,7 +482,7 @@ There are four registers allotted for passing arguments into a function. If the 
 Below is an example of passing five arguments into a function.
 ```
 // Prologue
-sub sp,#0x4 
+sub sp,#0x4
 ...
 // Body
 str r2,[sp,#0x0]
@@ -700,7 +700,7 @@ Let's break down what is on the screen.
 
 * __Function name__ is self-explanatory.
 * It is possible to add comments to the assembly code. A __plate comment__ is a comment that takes up several lines. Ghidra automatically adds a plate comment to denote functions, and it is possible to add more yourself (we'll talk about that later).
-* The __references to function__ section lists all the places in the assembly code that call the current function. The list is in the format "function-name:instruction-address". In this case, Ghidra found 396 places that call `FUN_080450e0`, one of which is `FUN_0803edf0` with a `bl` instruction at address 0x803EE08.
+* The __references to function__ section lists all the places in the assembly code that call the current function. The list is in the format "function-name:instruction-address". In this case, Ghidra found 380 places that call `FUN_080450e0`, one of which is `FUN_0803edf0` with a `bl` instruction at address 0x803EE08.
 * __Assembly instructions__ is where the actual assembly code is, along with __labels__ to denote branch destinations and hard-coded data values.
 * __Hex data__ contains the raw hexadecimal values in the ROM file that correspond to the assembly instructions. The `push { lr }` instruction at the start of `FUN_080450e0` is derived from the hex value `00 b5` in the ROM.
 * The __addresses__ contain the addresses/offsets of each instruction from the start of the file. The `push { lr }` instruction at the start of `FUN_080450e0` is at address 0x80450E0 in the ROM.
@@ -783,7 +783,7 @@ The memory viewer allows viewing and editing values in main memory. The memory v
 >![](/assets/img/reverse-engineering/memory-viewer.png)<br>
 >Memory viewer window
 
-In the above image, the memory viewer shows the memory values from addresses 0x0 to 0x2DF. Byte data is displayed in a tabular format, with the first digit of the address as the column and multiples of 0x10 as the rows. For example, row 0x10 contains the values from addresses 0x10 to 0x1F, and the address 0x14 contains the value 0x66. Single bytes are shown by default, and it is possible to change this view to halfwords (2 bytes) or words (4 bytes) to help display larger values such as 4-byte pointers.
+In the above image, the memory viewer shows the memory values from addresses 0x0 to 0x2CF. Byte data is displayed in a tabular format, with the first digit of the address as the column and multiples of 0x10 as the rows. For example, row 0x10 contains the values from addresses 0x10 to 0x1F, and the address 0x14 contains the value 0x66. Single bytes are shown by default, and it is possible to change this view to halfwords (2 bytes) or words (4 bytes) to help display larger values such as 4-byte pointers.
 
 To the right of the memory table is a string representation of the data. This can be useful when browsing portions of memory that are intended to represent in-game text, or to quickly browse for patterns in the data.
 
