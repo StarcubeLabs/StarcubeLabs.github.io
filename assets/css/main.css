@@ -776,6 +776,11 @@ blockquote {
   padding: 0.1rem 0.5rem;
 }
 
+/* For highlighted languages, leave the color alone */
+.highlighter-rouge:not(.language-plaintext) {
+  color: rgb(81,81,81);
+}
+
 pre {
   padding: 1rem 2rem;
   overflow-x: auto;
