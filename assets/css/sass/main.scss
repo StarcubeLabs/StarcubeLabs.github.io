@@ -65,7 +65,7 @@ blockquote {
 }
 
 // For highlighted languages, leave the color alone
-.language-gdscript.highlighter-rouge {
+.highlighter-rouge:not(.language-plaintext) {
   color: rgb(81,81,81);
 }
 
