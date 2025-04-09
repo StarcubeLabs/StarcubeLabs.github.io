@@ -2,7 +2,7 @@
   margin-right: auto;" src="assets/img/logos/StarcubeLabsLogo.png"></center>
 
 
-[# The Starcube Labs Blog](https://www.starcubelabs.com/)
+# [The Starcube Labs Blog](https://www.starcubelabs.com/)
 
 =============================
 
