@@ -64,6 +64,11 @@ blockquote {
   padding: 0.1rem 0.5rem;
 }
 
+// For highlighted languages, leave the color alone
+.language-gdscript.highlighter-rouge {
+  color: rgb(81,81,81);
+}
+
 pre {
     padding: 1rem 2rem;
     overflow-x: auto;
