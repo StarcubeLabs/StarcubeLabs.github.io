@@ -93,8 +93,9 @@ How we choose which rooms to add to the candidacy list depends on where we are i
   * We may only drop a small number of rooms during the finish-up phase, or we could have quite a few rooms left to place to finish up. There’s a lot of variance during this phase.  
   * During this wrap up phase, we also add the special rooms into the mix, so that they more likely show up at the edges of the dungeon
 
-* For each candidate room:  
-	* For each orientation:  
+Once we have that list of candidate rooms, we can perform the following:
+* For each candidate room
+	* For each orientation  
 		* If it works, place the room  
 	* If no orientation works, discard the room and get a new one from the list  
 * If there are no rooms left, put this particular cell back into the ***back*** of the queue and we’ll get to it later. *This can happen for large dungeons if the generator is still in growth mode, but the cell requires an exact placement*.
