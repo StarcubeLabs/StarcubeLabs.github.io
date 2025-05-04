@@ -592,7 +592,7 @@ In assembly, there are several ways that array access can be implemented.
 
 In several ways, arrays are similar to structs. If accessing a hard-coded array index (i.e., outside of a loop), offsets are used to access the data, similar to structs. Copying array data is also similar to copying structs, often using the same `ldmia`/`stmia` instruction chains.
 
-If an array is accessed in a loop, it is still possible to use offsets, though the offset must be incremented or recalculated for each array element. The following example iterates through a size-5 array of 4-byte values (e.g., pointers).
+If an array is accessed in a loop, it is still possible to use offsets, though the offset must be incremented or recalculated for each array element. The following example iterates through a size-6 array of 4-byte values (e.g., pointers).
 ```
 ldr r2,[DAT_08073b70] // Load pointer to start of array.
 movs r6,#0x0 // Initialize array index.
