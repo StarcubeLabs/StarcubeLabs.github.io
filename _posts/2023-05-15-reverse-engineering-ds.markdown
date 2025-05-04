@@ -188,7 +188,7 @@ Let's make a new project using the _Explorers of Sky_ ROM files that you unpacke
 10. Double-click the ROM in Ghidra to open Ghidra's code viewer.
 11. Ghidra will offer to analyze the binary. Click _No_ for now, as there some more setup to do first.
     > If you do run an analysis at this point, it won't cause any ill effects. Ghidra will simply run a partial analysis with what it has, and you can rerun the analysis later when everything is set up.
-12. Click _File > Add To Program_, then look for the `overlays` folder in the unpacked ROM files. Choose `overlay_0029.bin` inside this folder.
+12. Click _File > Add To Program_, then look for the `overlay` folder in the unpacked ROM files. Choose `overlay_0029.bin` inside this folder.
 13. Click _Options..._
 14. Set the block name to "overlay_0029.bin".
     > The block name won't affect analysis and can technically be whatever you like. I recommend the same name as the overlay file to keep track of it.
@@ -459,7 +459,7 @@ By default, Ghidra names functions according to the memory address where they st
 Most functions have three parts: a __prologue__, a __body__, and an __epilogue__. The prologue and epilogue consist of standard setup and cleanup for function execution, while the body is the main logic that the function will execute. In the function above:
 * The function is simple enough to have no prologue.
 * The body consists of the instruction `ldr r0,[r0,#0x0]`.
-* The epilogue contains the instruction `bx lr`. This will set the `pc` to the value in `lr`, which causes the program to return to the place that called the function. 
+* The epilogue contains the instruction `bx lr`. This will set the `pc` to the value in `lr`, which causes the program to return to the place that called the function.
 
 Once the function returns from the epilogue to the caller function, the `pc` is incremented as usual, causing the program to continue at the instruction directly after the function call.
 
@@ -485,7 +485,7 @@ ldr r0,[r0,#0x0]
 #### Return values
 If a function needs to return a value, the return value will be stored in `r0` just before the function returns. The caller function can use the return value in `r0` as needed.
 
-In function `FUN_022de288`, the function body assigns a value to `r0` before returning with `bx`. 
+In function `FUN_022de288`, the function body assigns a value to `r0` before returning with `bx`.
 ```
 FUN_022de288
 
@@ -545,7 +545,7 @@ There are four registers allotted for passing arguments into a function. If the 
 Below is an example of passing five arguments into a function.
 ```
 // Prologue
-sub sp,#0x4 
+sub sp,#0x4
 ...
 // Body
 str r2,[sp,#0x0]
@@ -655,7 +655,7 @@ In assembly, there are several ways that array access can be implemented.
 
 In several ways, arrays are similar to structs. If accessing a hard-coded array index (i.e., outside of a loop), offsets are used to access the data, similar to structs. Copying array data is also similar to copying structs, often using the same `ldmia`/`stmia` instruction chains.
 
-If an array is accessed in a loop, it is still possible to use offsets, though the offset must be incremented or recalculated for each array element. The following example iterates through a size-5 array of 4-byte values (e.g., pointers).
+If an array is accessed in a loop, it is still possible to use offsets, though the offset must be incremented or recalculated for each array element. The following example iterates through a size-6 array of 4-byte values (e.g., pointers).
 ```
 ldr r2,[DAT_02073b70] // Load pointer to start of array.
 mov r6,#0x0 // Initialize array index.
@@ -714,7 +714,7 @@ The switch statement above may look like the following in assembly:
 // Logic to assign r0 (type variable).
 ...
   cmp r0,#0x5
-  addls pc,pc,r1, lsl #0x2 // Multiply type by 4 to get jump table offset to branch instruction.
+  addls pc,pc,r0, lsl #0x2 // Multiply type by 4 to get jump table offset to branch instruction.
   b switchD_02334050::caseD_6 // Go to end of function and do nothing if value is out of range.
 
 switchD_02334050::caseD_0
@@ -750,21 +750,22 @@ There are two main areas of the Ghidra workspace that we will be using.
 
 There are other windows in the Ghidra interface, but this tutorial will not go into them. You can close them to give more room to the listing window.
 
-For this demonstration, we'll use the function at address 0x22E0354. To navigate to this address, press 'g' and enter in "22E0354". Scroll down a bit to see the whole function, which looks like this:
+For this demonstration, we'll use the function at address 0x22E0928. To navigate to this address, press 'g' and enter in "22E0928". Scroll down a bit to see the whole function, which looks like this:
 >![](/assets/img/reverse-engineering/ghidra-example-function-ds.png)<br>
->FUN_022e0354 in Ghidra
+>FUN_022e0928 in Ghidra
 
 Let's break down what is on the screen.
 >![](/assets/img/reverse-engineering/ghidra-example-function-labeled-ds.png)
 
 * __Function name__ is self-explanatory.
 * It is possible to add comments to the assembly code. A __plate comment__ is a comment that takes up several lines. Ghidra automatically add a plate comment to denote functions, and it is possible to add more yourself (we'll talk about that later).
-* The __references to function__ section lists all the places in the assembly code that call the current function. The list is in the format "function-name:instruction-address". In this case, Ghidra found 4 places that call `FUN_022e0354`, one of which is `FUN_022f7910` with a `bl` instruction at address 0x22F798C.
+* The __references to function__ section lists all the places in the assembly code that call the current function. The list is in the format "function-name:instruction-address". In this case, Ghidra found 4 places that call `FUN_022e0928`, one of which is `FUN_022f7910` with a `bl` instruction at address 0x22F798C.
 * __Assembly instructions__ is where the actual assembly code is, along with __labels__ to denote branch destinations and hard-coded data values.
-* __Hex data__ contains the raw hexadecimal values in the ROM file that correspond to the assembly instructions. The `ldr r0,[PTR_DAT_022e0958]` instruction at the start of `FUN_022e0354` is derived from the hex value `28 00 9f e5` in the ROM.
-* The __addresses__ contain the addresses/offsets of each instruction from the start of the file. The `ldr r0,[PTR_DAT_022e0958]` instruction at the start of `FUN_022e0354` is at address 0x22E0928 in the ROM.
+* __Hex data__ contains the raw hexadecimal values in the ROM file that correspond to the assembly instructions. The `ldr r0,[PTR_DAT_022e0958]` instruction at the start of `FUN_022e0928` is derived from the hex value `28 00 9f e5` in the ROM.
+>Note: `PTR_DAT_<address>` is a naming convention from older versions of Ghidra. More recent versions of Ghidra use the naming convention `DAT_<address>`.
+* The __addresses__ contain the addresses/offsets of each instruction from the start of the file. The `ldr r0,[PTR_DAT_022e0958]` instruction at the start of `FUN_022e0928` is at address 0x22E0928 in the ROM.
 * The __branches__ section contains arrows that denote branches in the function; the start of the arrow is the branch instruction, and the end of the arrow is the instruction that the branch will set `pc` to.
-* __References to labels__ lists the places that branch to each label. Listed here is the address of each branch instruction to a given label. For example, `LAB_022e0948` is referenced by the `beq` instruction at address 0x22E0938.
+* __References to labels__ lists the places that branch to each label. Listed here is the address of each branch instruction to a given label. For example, `LAB_022e0948` is referenced by the `beq` instruction at address 0x22E0928.
 * The __decompiled function code__ in the decompiler window contains decompiled C code for the function.
 
 ### Decompiler
@@ -971,11 +972,11 @@ Since this is the start of the function and no other functions have been called 
 We can see the function call for `FUN_023152e4` at 0x231C0C4. Back to finding where `r2` was assigned to 0x64, there is a reference to `r2` a few lines up. Look at lines 0x231C0A4 and 0x231C0AC.
 
 ```
-ldr r1,[PTR_DAT_0231c730]
+ldr r1,[DAT_0231c730]
 ...
 ldrsh r2,[r1,#0x0]
 ```
-This loads an address into `r1` from data value `PTR_DAT_0231c730`, then loads the value at the address into `r2`. To the right of these instructions, Ghidra's analysis has found that `PTR_DAT_0231c730` points to the address 0x22C45EC.
+This loads an address into `r1` from data value `DAT_0231c730`, then loads the value at the address into `r2`. To the right of these instructions, Ghidra's analysis has found that `DAT_0231c730` points to the address 0x22C45EC.
 
 With this address in mind, go back to DeSmuME and go to address 0x22C45EC in the memory viewer. You will find the value 0x64 at the address, confirming that this is the location of the Oran Berry's HP heal amount.
 >![](/assets/img/reverse-engineering/oran-berry-found-ds.png)<br>
